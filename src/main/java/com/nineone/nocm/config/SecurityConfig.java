@@ -19,8 +19,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setForceEncoding(true);
         http
                 .authorizeRequests()
-                .antMatchers("/")
-                .addFilter(filter, CsrfFilter.class)
-
+                .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(filter, CsrfFilter.class)
+                .csrf().disable();
     }
+
 }

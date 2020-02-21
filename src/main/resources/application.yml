@@ -5,7 +5,13 @@ spring:
     username: hkoo
     password: dlwngur12
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 494197804420-1ke3o3d15mt52k0n5k54ip8920ciujjp.apps.googleusercontent.com
+            client-secret: sdZkIXaOdfTnBiIsP8VUdok8
   thymeleaf:
     cache: false
   devtools:
