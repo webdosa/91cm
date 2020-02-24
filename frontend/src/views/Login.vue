@@ -14,15 +14,15 @@
             Remember me
           </label>
         </div>
-        <div class="btn btn-outline-primary btn-block" onclick="window.location.href='/'">로그인</div>
+        <router-link :to="{name : 'About'}"><div class="btn btn-outline-primary btn-block" >로그인</div></router-link>
         <div class="btn btn-outline-secondary btn-block" onclick="window.location.href='/'">회원가입</div>
       </form>
-      <br><br>
+      <br>
       <p class="h6">소셜로그인</p>
       <hr>
       <div>
-        <a href="/"><img class="social-logo" src="../assets/images/github_logo.png"></a>
-        <a href="/"><img class="social-logo" src="../assets/images/google_logo.png"></a>
+        <a href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
+        <a href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
       </div>
     </div>
   </div>
