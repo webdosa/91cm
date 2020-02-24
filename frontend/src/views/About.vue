@@ -8,9 +8,17 @@
 import axios from 'axios'
 export default {
   mounted () {
-    axios.get('http://localhost:9191/api/test')
+    axios.get('http://localhost:9191/api')
       .then(res => {
-        alert(JSON.stringify(res.data))
+        console.log(res)
+        console.log(res.status)
+        console.log(JSON.stringify(res.data))
+        console.log(res.data)
+        console.log(res.data.toString())
+        console.log(res.config)
+        console.log(res.headers)
+        console.log(res.statusText)
+        console.log(res.data.value())
       })
   }
 }

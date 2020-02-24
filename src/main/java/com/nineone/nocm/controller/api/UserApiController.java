@@ -1,5 +1,6 @@
 package com.nineone.nocm.controller.api;
 
+import com.nineone.nocm.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +13,10 @@ import java.util.Map;
 public class UserApiController {
 
     @RequestMapping("/api")
-    public Map<String, String> test(){
-        log.info("api");
-        Map<String, String> map = new HashMap<>();
-        map.put("test","test");
-        return map;
+    public User test(){
+        return User.builder()
+                .nickName("test")
+                .email("test")
+                .build();
     }
 }
