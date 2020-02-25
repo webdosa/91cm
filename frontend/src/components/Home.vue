@@ -6,7 +6,7 @@
 
 <script>
 // @ is an alias to /src
-import Login from './Login'
+import Login from '../views/Login'
 export default {
   name: 'Home',
   components: {

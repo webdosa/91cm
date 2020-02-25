@@ -28,8 +28,20 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import router from '../router'
 export default {
-  name: 'Login'
+  name: 'Login',
+  beforeCreate () {
+    axios.get('http://localhost:9191/api/user/login')
+      .then(res => {
+        if (res.data) {
+          router.replace('/about')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+  }
 }
 </script>
 <style scoped>

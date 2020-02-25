@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../components/Home.vue'
 import NotFound from '../views/NotFound.vue'
+import Clock from "../views/Clock";
 Vue.use(VueRouter)
 
 const routes = [
@@ -21,6 +22,10 @@ const routes = [
   {
     path: '*',
     component: NotFound
+  },
+  {
+    path: '/clock',
+    component: Clock
   }
 ]
 
