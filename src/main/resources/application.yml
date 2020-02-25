@@ -5,7 +5,17 @@ spring:
     username: hkoo
     password: dlwngur12
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 494197804420-1ke3o3d15mt52k0n5k54ip8920ciujjp.apps.googleusercontent.com
+            client-secret: sdZkIXaOdfTnBiIsP8VUdok8
+            scope: profile,email
+          github:
+            client-id: 5089d89ade5c8cad7fdb
+            client-secret: 4085f7bb1d0d5af8a36ada6f26110fed1fdd3de4
   thymeleaf:
     cache: false
   devtools:
@@ -13,5 +23,13 @@ spring:
       enabled: true
     restart:
       enabled: true
+
+custom:
+  oauth2:
+    kakao:
+      client-id: 18b1b2deaa6aec3e53d07899549f8587
+    naver:
+      client-id: HylBNrnld2nVNQPLdZ6V
+      client-secret: GgJ8FmAMz5
 server:
   port: 9191
