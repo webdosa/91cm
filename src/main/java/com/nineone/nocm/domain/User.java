@@ -1,21 +1,30 @@
 package com.nineone.nocm.domain;
 
 import com.nineone.nocm.domain.enums.Role;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
+@Setter
 public class User{
 
     private Long idx;
-
+    
+    private String userid;
+    private String password;
+    private String name;
+    private String phone;
+    private String email;
+    private String icon;
+    
+    private String picture;
+    
     private String nickName;
 
-    private String email;
-
-    private String picture;
 
     private Role role;
 
