@@ -6,11 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Getter
 @NoArgsConstructor
 @Setter
-public class User{
+public class User implements UserDetails {
 
     private Long idx;
     
@@ -29,7 +33,13 @@ public class User{
     private Role role;
 
     @Builder
-    public User(String nickName, String email, String picture, Role role) {
+    public User(String userid, String password, String name, String phone, String icon,
+                String nickName, String email, String picture, Role role) {
+        this.userid = userid;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.icon = icon;
         this.nickName = nickName;
         this.email = email;
         this.picture = picture;
@@ -47,4 +57,33 @@ public class User{
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return userid;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

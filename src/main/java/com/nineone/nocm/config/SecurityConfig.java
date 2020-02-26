@@ -2,10 +2,12 @@ package com.nineone.nocm.config;
 
 import com.nineone.nocm.domain.enums.Role;
 import com.nineone.nocm.service.CustomOAuthUserService;
+import com.nineone.nocm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpSession;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final HttpSession httpSession;
     private final CustomOAuthUserService customOAuthUserService;
+    private final UserService userService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,11 +41,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**").permitAll()
-                .antMatchers("/api/**").hasRole(Role.USERS.name())
                 .anyRequest().authenticated()
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
+                .and()
+                .formLogin()
+                .loginPage("/")
+                .defaultSuccessUrl("/about")
+                .failureForwardUrl("/")
                 .and()
                 .oauth2Login()
                 .defaultSuccessUrl("/about")
@@ -51,4 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+    }
 }

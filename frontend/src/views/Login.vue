@@ -6,15 +6,15 @@
     <div class="d-inline-block" id="login-box">
       <img src="../assets/images/nineonesoft_logo.png" class="d-inline-block img-thumbnail">
       <form id="login-form">
-        <input id="userId" name="userId" type="text" class="form-control" placeholder="아이디를 입력해주세요">
-        <input id="pwd" name="pwd" type="password" class="form-control" placeholder="비밀번호를 입력해주세요">
+        <input v-model="userid" id="userId" name="userId" type="text" class="form-control" placeholder="아이디를 입력해주세요">
+        <input v-model="password" id="pwd" name="pwd" type="password" class="form-control" placeholder="비밀번호를 입력해주세요">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" value="" id="id_save">
           <label class="form-check-label text-left" for="id_save">
             Remember me
           </label>
         </div>
-        <router-link :to="{name : 'About'}"><div class="btn btn-outline-primary btn-block" >로그인</div></router-link>
+        <div class="btn btn-outline-primary btn-block" @click="login">로그인</div>
         <div class="btn btn-outline-secondary btn-block" onclick="window.location.href='/'">회원가입</div>
       </form>
       <br>
@@ -32,6 +32,25 @@ import axios from 'axios'
 import router from '../router'
 export default {
   name: 'Login',
+  data () {
+    return {
+      userid: '',
+      password: ''
+    }
+  },
+  methods: {
+    login: function () {
+      const form = new FormData()
+      form.append('userid', this.userid)
+      form.append('password', this.password)
+      axios.post('http://localhost:9191/', form)
+        .then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
+    }
+  },
   beforeCreate () {
     axios.get('http://localhost:9191/api/user/login')
       .then(res => {

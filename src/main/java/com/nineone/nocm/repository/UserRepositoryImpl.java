@@ -25,4 +25,9 @@ public class UserRepositoryImpl implements UserRepository{
 		return sqlSession.selectOne(namespace + ".getUserid", userid);
 	}
 
+	@Override
+	public User getUserfindByUserId(String userid) {
+		return sqlSession.selectOne(namespace + ".getUserfindByUserId", userid);
+	}
+
 }
