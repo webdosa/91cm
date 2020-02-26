@@ -9,5 +9,9 @@
     	insert member (userid,password,name,phone,email,icon)
     		values(#{userid},#{password},#{name},#{phone},#{email},#{icon})
     </insert>
+    
+    <select id="getUserid" resultType="java.lang.String">
+    	select userid from member where userid = #{userid}
+    </select>
 
     </mapper>

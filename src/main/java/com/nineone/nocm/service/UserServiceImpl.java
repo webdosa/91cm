@@ -22,5 +22,10 @@ public class UserServiceImpl implements UserService{
 		return (userRepository.insertUser(user) > 0) ? true : false;
 		
 	}
+
+	@Override
+	public boolean idcheck(String userid) {
+		return (userRepository.getUserid(userid) == null) ? true : false;
+	}
 	
 }

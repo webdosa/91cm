@@ -14,11 +14,15 @@ public class UserRepositoryImpl implements UserRepository{
 	
 	private String namespace = "com.nineone.nocm.mapper.user"; 
 
-	
-
 	@Override
 	public int insertUser(User user) {
 		return sqlSession.insert(namespace + ".insertUser", user);
+	}
+
+
+	@Override
+	public String getUserid(String userid) {
+		return sqlSession.selectOne(namespace + ".getUserid", userid);
 	}
 
 }
