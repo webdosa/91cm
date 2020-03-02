@@ -86,4 +86,16 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("userid : "+this.userid);
+        builder.append("password : "+this.password);
+        builder.append("name : "+this.name);
+        builder.append("phone : "+this.phone);
+        builder.append("email : "+this.email);
+        builder.append("icon : "+this.icon);
+        return builder.toString();
+    }
 }

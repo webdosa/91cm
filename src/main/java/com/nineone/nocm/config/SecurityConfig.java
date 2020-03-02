@@ -44,15 +44,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .logout()
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .and()
                 .formLogin()
                 .loginPage("/")
-                .defaultSuccessUrl("/about")
+                .defaultSuccessUrl("/main")
                 .failureForwardUrl("/")
                 .and()
                 .oauth2Login()
-                .defaultSuccessUrl("/about")
+                .defaultSuccessUrl("/main")
                 .loginPage("/")
                 .userInfoEndpoint().userService(customOAuthUserService);
 

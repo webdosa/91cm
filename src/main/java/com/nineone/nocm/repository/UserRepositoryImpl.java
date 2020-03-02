@@ -30,4 +30,9 @@ public class UserRepositoryImpl implements UserRepository{
 		return sqlSession.selectOne(namespace + ".getUserfindByUserId", userid);
 	}
 
+	@Override
+	public User getUserfindByEmail(String email) {
+		return sqlSession.selectOne(namespace + ".getUserfindByEmail", email);
+	}
+
 }
