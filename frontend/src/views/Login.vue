@@ -23,13 +23,16 @@
       <div>
         <a href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
         <a href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
+        <a href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
+        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>
       </div>
     </div>
   </div>
 </template>
 <script>
-import axios from 'axios'
 import router from '../router'
+import { AxiosInstance as axios } from 'axios'
+
 export default {
   name: 'Login',
   data () {
@@ -68,6 +71,11 @@ export default {
   @import '~bootstrap-vue/dist/bootstrap-vue.min.css';
   @import "../assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css";
 
+  .social-logo{
+    width: 5vw;
+    height: 10vh;
+    margin: 1vh;
+  }
   .h6{
     color: darkgray;
   }
