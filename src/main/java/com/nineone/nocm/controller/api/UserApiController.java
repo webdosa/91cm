@@ -18,7 +18,11 @@ public class UserApiController {
     public boolean userInit(@Socialuser User user){
 	    return user != null? true : false;
     }
-    
+
+    @RequestMapping(value = "/info")
+    public String userInfo(@Socialuser User user){
+	    return user.getUserid();
+    }
     @RequestMapping(value="/signup",method=RequestMethod.POST)
     public boolean signup(@RequestBody User user) {
     	userService.insertUser(user);
