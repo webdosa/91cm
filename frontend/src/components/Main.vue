@@ -319,31 +319,67 @@
         <!-- 메뉴하나끝 -->
       </div>
     </nav>
-    <b-modal id="channel-create" centered title="채널 생성">
-      <p class="my-4">Vertically centered modal!</p>
+    <b-modal id="channel-create" centered title="채널 생성" ref="modal" @show="resetModal" @hidden="resetModal" @ok="handleOk">
+      <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
+        <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
+          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
+          </b-form-input>
+        </b-form-group>
+      </form>
     </b-modal>
   </div>
 </template>
 <script>
-import Sidebar from '../views/main/Sidebar'
-import MainHeader from '../views/main/MainHeader'
-export default {
-  name: 'Main',
-  components: { MainHeader, Sidebar },
-  data () {
-    return {
-      isRActive: false
-    }
-  },
-  methods: {
-    rightbaropen: function () {
-      this.isRActive = true
+  import Sidebar from '../views/main/Sidebar'
+  import MainHeader from '../views/main/MainHeader'
+
+  export default {
+    name: 'Main',
+    components: {MainHeader, Sidebar},
+    data() {
+      return {
+        isRActive: false,
+        channelTitle: '',
+        nameState: null
+      }
     },
-    rightbarclose: function () {
-      this.isRActive = false
+    methods: {
+      checkFormValidity: function () {
+        const valid = this.$refs.channelCreateForm.checkValidity()
+        this.nameState = valid
+        return valid
+      },
+      resetModal() {
+        this.channelTitle = ''
+        this.nameState = null
+      },
+      handleOk(bvModalEvt) {
+        // Prevent modal from closing
+        bvModalEvt.preventDefault()
+        // Trigger submit handler
+        this.channelForm()
+      },
+      channelForm: function () {
+        if (!this.checkFormValidity()) {
+          return
+        }
+        this.$refs['modal'].hide()
+
+
+        this.$nextTick(() => {
+          this.$bvModal.hide('channel-create')
+        })
+        alert("채널 생성")
+      },
+      rightbaropen: function () {
+        this.isRActive = true
+
+      },
+      rightbarclose: function () {
+        this.isRActive = false
+      }
     }
   }
-}
 </script>
 
 <style scoped>

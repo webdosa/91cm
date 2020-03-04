@@ -28,6 +28,7 @@
 <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
       </div>
     </div>
+    <a href="/main">TEST</a>
   </div>
 </template>
 <script>
@@ -59,7 +60,7 @@ export default {
     axios.get('http://localhost:9191/api/user/login')
       .then(res => {
         if (res.data) {
-          router.replace('/about')
+          router.replace('/main')
         }
       }).catch(error => {
         console.log(error)
