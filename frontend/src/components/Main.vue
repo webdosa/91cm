@@ -332,6 +332,7 @@
 <script>
   import Sidebar from '../views/main/Sidebar'
   import MainHeader from '../views/main/MainHeader'
+  import axios from 'axios'
 
   export default {
     name: 'Main',
@@ -369,7 +370,7 @@
         this.$nextTick(() => {
           this.$bvModal.hide('channel-create')
         })
-        alert("채널 생성")
+        axios.get('http://localhost:9191/api/user')
       },
       rightbaropen: function () {
         this.isRActive = true
