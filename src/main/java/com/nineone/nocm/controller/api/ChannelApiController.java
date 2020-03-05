@@ -16,6 +16,9 @@ public class ChannelApiController {
     private ChannelService channelService;
 
     @RequestMapping("/create")
-    public void createChannel(@RequestBody Channel channel){
+
+    public boolean createChannel(@RequestBody Channel channel){
+        log.info(channel.getName());
+        return channelService.createChannel(channel);
     }
 }

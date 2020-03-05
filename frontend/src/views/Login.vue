@@ -33,7 +33,7 @@
 </template>
 <script>
 import router from '../router'
-import { AxiosInstance as axios } from 'axios'
+import axios from 'axios'
 
 export default {
   name: 'Login',
@@ -56,7 +56,7 @@ export default {
         })
     }
   },
-  beforeCreate () {
+  mounted () {
     axios.get('http://localhost:9191/api/user/login')
       .then(res => {
         if (res.data) {
