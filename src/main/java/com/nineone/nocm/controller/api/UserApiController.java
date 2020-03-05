@@ -14,6 +14,11 @@ public class UserApiController {
 	@Autowired
 	private UserService userService;
 
+	@RequestMapping(value = "/test")
+    public boolean test(){
+	    return true;
+    }
+
 	@RequestMapping(value="/login")
     public boolean userInit(@Socialuser User user){
 	    return user != null? true : false;

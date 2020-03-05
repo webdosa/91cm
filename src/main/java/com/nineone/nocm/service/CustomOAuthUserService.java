@@ -35,7 +35,6 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
-
         OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
                 oAuth2User.getAttributes());
 

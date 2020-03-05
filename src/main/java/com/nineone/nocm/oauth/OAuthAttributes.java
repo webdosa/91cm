@@ -30,26 +30,25 @@ public class OAuthAttributes {
     public static OAuthAttributes Of(String registrationId, String userNameAttributeName,
                                      Map<String, Object> attributes) {
         for (String st : attributes.keySet()){
-            log.info("key = {} value = {}",st,attributes.get(st));
+            log.info("key = {} \t value = {}",st,attributes.get(st));
         }
         if ("naver".equals(registrationId)){
             return ofNaver("id",attributes);
         }
         if ("kakao".equals(registrationId)){
-            return ofKakao("id",attributes);
+            return ofKakao(userNameAttributeName,attributes);
         }
         return ofGoogle(userNameAttributeName, attributes);
     }
 
     private static OAuthAttributes ofKakao(String id, Map<String, Object> attributes) {
-        log.info("kakaoOf");
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
         return OAuthAttributes.builder()
                 .name((String) response.get("nickname"))
                 .email((String) response.get("email"))
                 .picture((String) response.get("profile_image"))
                 .attributes(response)
-                .nameAttributeKey("id")
+                .nameAttributeKey("code")
                 .build();
     }
 
