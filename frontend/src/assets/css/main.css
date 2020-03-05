@@ -41,7 +41,7 @@
 
 /*CHAT MESSAGE*/
 .chat-message {
-    padding: 10px;
+    padding: 10px !important;
     display: flex;
 }
 
@@ -70,7 +70,7 @@ MainContents
 .c-c-wrapper {
     overflow: auto;
     height: calc(100% - 141px);
-    padding: 20px 25px 0px 25px;
+    padding: 20px 25px 0px 25px !important;
     margin-bottom: 0px;
 }
 
@@ -136,8 +136,8 @@ MainContents
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 body {
-    font-family: "Poppins", sans-serif;
-    background: #fafafa;
+    font-family: "Poppins", sans-serif !important;
+    background: #fafafa !important;
 }
 
 p {
@@ -259,7 +259,7 @@ a:focus {
 #sidebar ul li a {
     padding: 10px;
     font-size: 15px;
-    display: block;
+    display: flex;
 }
 
 #sidebar ul li a:hover {
@@ -276,6 +276,7 @@ a[aria-expanded="true"] {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-right: 30px;
+    display:flex;
 }
 
 .dropdown-toggle {
