@@ -4,21 +4,19 @@ import com.nineone.nocm.domain.Channel;
 import com.nineone.nocm.service.ChannelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RestController("/api/channel")
+@RestController
+@RequestMapping("/api/channel")
 public class ChannelApiController {
 
     @Autowired
     private ChannelService channelService;
 
-    @RequestMapping("/create")
-
-    public boolean createChannel(@RequestBody Channel channel){
-        log.info(channel.getName());
-        return channelService.createChannel(channel);
+    @RequestMapping(method = RequestMethod.GET, path = "/create")
+    public boolean createChannel(@RequestParam(value = "name") String channelName){
+        log.info(channelName);
+        return true;
     }
 }

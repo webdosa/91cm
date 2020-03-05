@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class RouterController {
 
-    @RequestMapping(value = "/api/test")
-    public String error(){
-        return "error";
-    }
-
     @RequestMapping(value = "/{path:[^\\.]*}")
     public String redirect(){
         return "forward:/";

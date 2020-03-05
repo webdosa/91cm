@@ -8,16 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RestController("/api/user")
+@RestController
+@RequestMapping("/api/user")
 public class UserApiController {
 	
 	@Autowired
 	private UserService userService;
-
-	@RequestMapping(value = "/test")
-    public boolean test(){
-	    return true;
-    }
 
 	@RequestMapping(value="/login")
     public boolean userInit(@Socialuser User user){

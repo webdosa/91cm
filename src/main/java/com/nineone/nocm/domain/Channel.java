@@ -11,14 +11,11 @@ import java.time.LocalDateTime;
 public class Channel {
     private int id;
     private String name;
-    private LocalDateTime dateTime;
-    private User user;
+
 
     @Builder
-    public Channel(int id, String name, LocalDateTime dateTime, User user){
+    public Channel(int id, String name){
         this.id = id;
         this.name = name;
-        this.dateTime = dateTime;
-        this.user = user;
     }
 }

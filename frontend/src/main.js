@@ -6,6 +6,8 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
+import './assets/css/main.css'
+
 
 Vue.prototype.$http = axios
 Vue.use(BootstrapVue)
