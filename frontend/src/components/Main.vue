@@ -332,12 +332,7 @@
 <script>
   import Sidebar from '../views/main/Sidebar'
   import MainHeader from '../views/main/MainHeader'
-<<<<<<< HEAD
-  import axios from 'axios'
 
-=======
-  import { AxiosInstance as axios } from 'axios'
->>>>>>> 426ad81ec3669da4855d6da636ce51681162305c
   export default {
     name: 'Main',
     components: {MainHeader, Sidebar},
@@ -367,14 +362,24 @@
       channelForm: function () {
         if (!this.checkFormValidity()) {
           return
-        }
+        } 
         this.$refs['modal'].hide()
 
 
         this.$nextTick(() => {
           this.$bvModal.hide('channel-create')
         })
-        axios.get('http://localhost:9191/api/user')
+        const form  = new FormData()
+        form.append('name', this.channelTitle)
+        this.$http.get('http://localhost:9191/api/channel/create', {
+          'name': this.channelTitle
+        })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(error => {
+            console.log(error)
+          })
 
       },
       rightbaropen: function () {
