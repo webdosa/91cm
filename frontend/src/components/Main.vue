@@ -362,7 +362,7 @@
       channelForm: function () {
         if (!this.checkFormValidity()) {
           return
-        } 
+        }
         this.$refs['modal'].hide()
 
 
