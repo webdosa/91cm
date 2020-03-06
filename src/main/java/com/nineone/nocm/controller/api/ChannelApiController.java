@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/channel")
@@ -14,9 +16,9 @@ public class ChannelApiController {
     @Autowired
     private ChannelService channelService;
 
-    @RequestMapping(method = RequestMethod.GET, path = "/create")
-    public boolean createChannel(@RequestParam(value = "name") String channelName){
-        log.info(channelName);
+    @PostMapping("/create")
+    public boolean createChannel(@RequestBody Map<String,String> test){
+        log.info(test.get("name"));
         return true;
     }
 }

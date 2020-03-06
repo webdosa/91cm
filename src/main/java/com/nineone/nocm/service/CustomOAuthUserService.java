@@ -38,7 +38,6 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
                 .getUserNameAttributeName();
         OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
                 oAuth2User.getAttributes());
-
         User user = saveOrUpdate(attributes);
         httpSession.setAttribute("user", user);
         return new DefaultOAuth2User(

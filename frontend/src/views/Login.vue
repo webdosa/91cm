@@ -28,7 +28,6 @@
 <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
       </div>
     </div>
-    <a href="/main">TEST</a>
   </div>
 </template>
 <script>

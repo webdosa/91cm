@@ -40,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         filter.setForceEncoding(true);
         http
+                .addFilterBefore(filter, CsrfFilter.class)
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**").permitAll()
                 .anyRequest().authenticated()
