@@ -5,7 +5,7 @@
 
 <mapper namespace="com.nineone.nocm.mapper.channel">
     <insert id="insertChannel">
-    	insert channel (id, name, register_date, member_userid)
-    		values(#{id}, #{name}, #{register_date}, #{member_userid})
+    	insert channel (name, member_id)
+    		values(#{name}, #{member_id})
     </insert>
 </mapper>
