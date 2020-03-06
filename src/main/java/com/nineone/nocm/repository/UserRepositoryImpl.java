@@ -21,18 +21,23 @@ public class UserRepositoryImpl implements UserRepository{
 
 
 	@Override
-	public String getUserid(String userid) {
-		return sqlSession.selectOne(namespace + ".getUserid", userid);
+	public String getUserid(String id) {
+		return sqlSession.selectOne(namespace + ".getUserid", id);
 	}
 
 	@Override
-	public User getUserfindByUserId(String userid) {
-		return sqlSession.selectOne(namespace + ".getUserfindByUserId", userid);
+	public User getUserfindByUserId(String id) {
+		return sqlSession.selectOne(namespace + ".getUserfindByUserId", id);
 	}
 
 	@Override
 	public User getUserfindByEmail(String email) {
 		return sqlSession.selectOne(namespace + ".getUserfindByEmail", email);
+	}
+
+	@Override
+	public User getUserById(String id) {
+		return sqlSession.selectOne(namespace+".getUserById",id);
 	}
 
 }

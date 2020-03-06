@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService{
 	public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
 		Map<String,String> userInfo = (Map<String, String>) userRepository.getUserfindByUserId(userid);
 		User user = User.builder()
-				.userid(userInfo.get("userid"))
 				.name(userInfo.get("name"))
 				.email(userInfo.get("email"))
 				.phone(userInfo.get("phone"))
@@ -43,6 +42,6 @@ public class UserServiceImpl implements UserService{
 		if (user == null){
 			throw new UsernameNotFoundException("can not find user");
 		}
-		return user;
+		return (UserDetails) user;
 	}
 }

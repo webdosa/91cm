@@ -41,7 +41,7 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         User user = saveOrUpdate(attributes);
         httpSession.setAttribute("user", user);
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
+                Collections.singleton(new SimpleGrantedAuthority("USER")),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey());
     }
@@ -49,16 +49,11 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
     private User saveOrUpdate(OAuthAttributes attributes) {
         // 임시 setter로 저장 해준 값은 소셜 로그인을 통해서 가져올 수 없는 값
         // 사용자에게 값을 받거나 해서 지정 해줘야 함으로 지금은 임시로 지정
-//        User user = userRepository.getUserfindByEmail(attributes.getEmail());
-        User user = new User();
-        user = attributes.toEntity();
-        user.setUserid("test");
-        user.setPassword("test");
-        user.setPhone("test");
-        user.setIcon("test");
-        user.setRole(Role.USERS);
-        userRepository.insertUser(user);
-
+        User user = userRepository.getUserById(attributes.getId());
+        if (user == null){
+            user = attributes.toEntity();
+            userRepository.insertUser(user);
+        }
         return user;
     }
 }

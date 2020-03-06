@@ -8,4 +8,5 @@ public interface UserRepository {
 	public String getUserid(String userid);
 	public User getUserfindByUserId(String userid);
 	public User getUserfindByEmail(String email);
+	User getUserById(String id);
 }

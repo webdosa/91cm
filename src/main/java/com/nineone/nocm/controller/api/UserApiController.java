@@ -22,7 +22,7 @@ public class UserApiController {
 
     @RequestMapping(value = "/info")
     public String userInfo(@Socialuser User user){
-	    return user.getUserid();
+	    return user.getId();
     }
     @RequestMapping(value="/signup",method=RequestMethod.POST)
     public boolean signup(@RequestBody User user) {
