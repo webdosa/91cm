@@ -5,6 +5,8 @@ build/
 !**/src/main/**
 !**/src/test/**
 
+**/npm-v6.13.4/**
+
 ### STS ###
 .apt_generated
 .classpath

@@ -20,6 +20,7 @@
   import axios from 'axios'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
+
   export default {
     name: 'Main',
     components: {MainHeader, LSidebar,RSidebar,ContentWrapper},

@@ -6,15 +6,15 @@
     <div class="d-inline-block" id="login-box">
       <img src="../assets/images/nineonesoft_logo.png" class="d-inline-block img-thumbnail">
       <form id="login-form">
-        <input id="userId" name="userId" type="text" class="form-control" placeholder="아이디를 입력해주세요">
-        <input id="pwd" name="pwd" type="password" class="form-control" placeholder="비밀번호를 입력해주세요">
+        <input v-model="userid" id="userId" name="userId" type="text" class="form-control" placeholder="아이디를 입력해주세요">
+        <input v-model="password" id="pwd" name="pwd" type="password" class="form-control" placeholder="비밀번호를 입력해주세요">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" value="" id="id_save">
           <label class="form-check-label text-left" for="id_save">
             Remember me
           </label>
         </div>
-        <router-link :to="{name : 'About'}"><div class="btn btn-outline-primary btn-block" >로그인</div></router-link>
+        <div class="btn btn-outline-primary btn-block" @click="login">로그인</div>
         <div class="btn btn-outline-secondary btn-block" onclick="window.location.href='/'">회원가입</div>
       </form>
       <br>
@@ -23,20 +23,44 @@
       <div>
         <a href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
         <a href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
+        <a href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
+<!--        동작 에로 인해 주석처리-->
+<!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
       </div>
     </div>
+    <a href="/main">TEST</a>
   </div>
 </template>
 <script>
-import axios from 'axios'
 import router from '../router'
+import axios from 'axios'
+
 export default {
   name: 'Login',
-  beforeCreate () {
+  data () {
+    return {
+      userid: '',
+      password: ''
+    }
+  },
+  methods: {
+    login: function () {
+      const form = new FormData()
+      form.append('userid', this.userid)
+      form.append('password', this.password)
+      axios.post('http://localhost:9191/', form)
+        .then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
+    }
+  },
+  mounted () {
     axios.get('http://localhost:9191/api/user/login')
       .then(res => {
         if (res.data) {
-          router.replace('/about')
+          router.replace('/main')
         }
       }).catch(error => {
         console.log(error)
@@ -49,6 +73,11 @@ export default {
   @import '~bootstrap-vue/dist/bootstrap-vue.min.css';
   @import "../assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css";
 
+  .social-logo{
+    width: 5vw;
+    height: 10vh;
+    margin: 1vh;
+  }
   .h6{
     color: darkgray;
   }

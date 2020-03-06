@@ -27,6 +27,7 @@ export default {
       msgCountObj: {}
     }
   },
+
   created () {
     this.channelList = channelList
   },

@@ -1,5 +1,6 @@
 package com.nineone.nocm.config;
 
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final HttpSession httpSession;
     private final CustomOAuthUserService customOAuthUserService;
+    private final UserService userService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -75,4 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+    }
 }

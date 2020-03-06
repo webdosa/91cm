@@ -1,7 +1,9 @@
 package com.nineone.nocm.service;
 
 import com.nineone.nocm.domain.User;
+import com.nineone.nocm.domain.enums.Role;
 import com.nineone.nocm.oauth.OAuthAttributes;
+import com.nineone.nocm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +24,8 @@ import java.util.Collections;
 @Service
 public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final HttpSession httpSession;
+    private final UserRepository userRepository;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService delegate = new DefaultOAuth2UserService();
@@ -32,7 +36,6 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
-
         OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
                 oAuth2User.getAttributes());
 
@@ -43,8 +46,20 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey());
     }
+
     private User saveOrUpdate(OAuthAttributes attributes) {
-        User user = attributes.toEntity();
+        // 임시 setter로 저장 해준 값은 소셜 로그인을 통해서 가져올 수 없는 값
+        // 사용자에게 값을 받거나 해서 지정 해줘야 함으로 지금은 임시로 지정
+//        User user = userRepository.getUserfindByEmail(attributes.getEmail());
+        User user = new User();
+        user = attributes.toEntity();
+        user.setUserid("test");
+        user.setPassword("test");
+        user.setPhone("test");
+        user.setIcon("test");
+        user.setRole(Role.USERS);
+        userRepository.insertUser(user);
+
         return user;
     }
 }

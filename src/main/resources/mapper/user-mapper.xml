@@ -13,5 +13,8 @@
     <select id="getUserid" resultType="java.lang.String">
     	select userid from member where userid = #{userid}
     </select>
-
+    
+    <select id="getUserfindByEmail" resultType="java.util.Map">
+        select * from member where email = #{email}
+    </select>
     </mapper>

@@ -12,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class RouterController {
 
+    @RequestMapping(value = "/api/test")
+    public String error(){
+        return "error";
+    }
+
     @RequestMapping(value = "/{path:[^\\.]*}")
-    public String redirect(/*@Socialuser User user*/){
-//        log.info("url : forward:/");
-//        log.info("user : "+user.getEmail());
-//        log.info("user : "+user.getRole());
+    public String redirect(){
         return "forward:/";
     }
 
