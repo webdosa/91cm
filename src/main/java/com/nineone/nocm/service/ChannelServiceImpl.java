@@ -19,12 +19,17 @@ public class ChannelServiceImpl implements ChannelService{
     }
 
     @Override
-    public boolean deleteChannel() {
-        return false;
+    public boolean deleteChannel(int id) {
+        return (channelRepository.deleteChannel(id) > 0) ? true : false;
     }
 
     @Override
     public List<Channel> channelList(String userId) {
         return channelRepository.channelList(userId);
+    }
+
+    @Override
+    public boolean updateChannel(Channel channel) {
+        return (channelRepository.updateChannel(channel) > 0) ? true : false;
     }
 }

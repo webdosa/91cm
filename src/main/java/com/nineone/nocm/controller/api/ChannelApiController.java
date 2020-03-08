@@ -34,11 +34,23 @@ public class ChannelApiController {
         return channelService.createChannel(channel);
     }
 
+    @PostMapping("/update")
+    public boolean updateChannel(@RequestBody  Map<String,String> channelInfo, @Socialuser User user){
+        if (channelInfo.get("member_id").equals(user.getId())){
+
+            return channelService.updateChannel(Channel.builder()
+                    .id(Integer.valueOf(channelInfo.get("id")))
+                    .name(channelInfo.get("name"))
+                    .build());
+        }
+        return false;
+    }
+
     @PostMapping("/delete")
     public boolean deleteChannel(@RequestBody Map<String, String> channelInfo, @Socialuser User user){
         // 유저 정보가 맞는지 비교 하는 코드
         if (channelInfo.get("member_id").equals(user.getId())){
-            return channelService.deleteChannel();
+            return channelService.deleteChannel(Integer.valueOf(channelInfo.get("id")));
         }
         // 삭제 실패 이유 메시지를 넣으면 좋을듯
         return false;

@@ -8,7 +8,9 @@ public interface ChannelService {
 
     boolean createChannel(Channel channel);
 
-    boolean deleteChannel();
+    boolean deleteChannel(int id);
 
     List<Channel> channelList(String userId);
+
+    boolean updateChannel(Channel name);
 }
