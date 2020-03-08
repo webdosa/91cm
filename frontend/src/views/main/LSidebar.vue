@@ -30,38 +30,8 @@
           </a>
           <b-collapse id="collapse-1">
             <ul class="list-unstyled">
-              <li>
-                <a>cha1</a>
-              </li>
-              <li>
-                <a>cha2</a>
-              </li>
-              <li>
-                <a>cha3</a>
-              </li>
-              <li>
-                <a>cha1</a>
-              </li>
-              <li>
-                <a>cha1</a>
-              </li>
-              <li>
-                <a>cha1</a>
-              </li>
-              <li>
-                <a>cha1</a>
-              </li>
-              <li>
-                <a>cha1</a>
-              </li>
-              <li>
-                <a>cha1</a>
-              </li>
-              <li>
-                <a>cha1</a>
-              </li>
-              <li>
-                <a>cha1</a>
+              <li v-for="item in items">
+                <a>{{ item.name }}</a>
               </li>
             </ul>
           </b-collapse>
@@ -74,11 +44,27 @@
         </li>
       </ul>
     </div>
-  </nav>  
+  </nav>
 </template>
 
 <script>
 export default {
-  name: 'LSidebar'
+  name: 'LSidebar',
+  data () {
+    return {
+      items: ''
+    }
+  },
+  methods: {
+    testList: function () {
+      this.$http.get('http://localhost:9191/api/channel/list')
+        .then(res => {
+          this.items = res.data
+        })
+    }
+  },
+  mounted() {
+    this.testList()
+  }
 }
 </script>
