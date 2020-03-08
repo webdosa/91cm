@@ -8,4 +8,7 @@
     	insert channel (name, member_id)
     		values(#{name}, #{member_id})
     </insert>
+    <select id="channelList">
+        select * from channel where member_id = #{userId}
+    </select>
 </mapper>

@@ -5,6 +5,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ChannelRepositoryImpl implements ChannelRepository{
     @Autowired
@@ -24,5 +26,10 @@ public class ChannelRepositoryImpl implements ChannelRepository{
     @Override
     public int updateChannel(Channel channel) {
         return sqlSession.update(namespace + ".updateChannel",channel);
+    }
+
+    @Override
+    public List<Channel> channelList(String userId) {
+        return sqlSession.selectList(namespace + ".channelList",userId);
     }
 }
