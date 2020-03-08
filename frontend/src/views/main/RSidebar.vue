@@ -138,8 +138,13 @@ export default {
         this.$nextTick(() => {
           this.$bvModal.hide('channel-create')
         })
-        axios.get('http://localhost:9191/api/user')
-    }
+         axios.get('http://localhost:9191/api/user')
+    },
+    checkFormValidity: function () {
+        const valid = this.$refs.channelCreateForm.checkValidity()
+        this.nameState = valid
+        return valid
+      }
   }
 }
 

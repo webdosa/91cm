@@ -5,11 +5,12 @@ import store from './store'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+Vue.use(BootstrapVue)
 import './assets/css/main.css'
 import Axios from 'axios'
 
-Vue.use(Axios)
-Vue.use(BootstrapVue)
+//Vue.use(Axios)
 Vue.config.productionTip = false
 
 new Vue({
