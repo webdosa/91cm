@@ -9,7 +9,6 @@ export default new Vuex.Store({
     isRActive: false
   },
   mutations: {
-    get
   },
   actions: {
   },
