@@ -5,7 +5,11 @@
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <ContentWrapper></ContentWrapper>
+      <ContentWrapper 
+        :currentChannel="currentChannel" 
+        :stompClient="stompClient"
+        :msgArray="msgArray" >
+      </ContentWrapper>
     </div>
     <RSidebar></RSidebar>
   </div>
@@ -25,9 +29,10 @@
     components: {MainHeader, LSidebar,RSidebar,ContentWrapper},
     data() {
       return {
+        stompClient: null,
         channelList: [],
         isRActive: false,
-        array: [],
+        msgArray: [],
         currentChannel: 0,
         msgCountObj: {}
       }
@@ -41,18 +46,15 @@
             this.msgCountObj[this.channelList[i]] = 0
           }
           console.log(this.channelList)   
-          console.log(this.msgCountObj)   
+          console.log(this.msgCountObj)
+          //사용자가 채널을 선택하지 않았다면.   
+          this.currentChannel = this.channelList[0]
+
           this.connect()
         }
       )
-      //this.channelList = channelList
     },
     methods: {
-      send: function() {
-        if (this.stompClient && this.stompClient.connected) {
-          this.stompClient.send("/pub/chat/message", JSON.stringify(this.message),{})
-        }
-      },
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
         this.stompClient.connect({},() => {
@@ -61,13 +63,12 @@
           for(let i in this.channelList){
             this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i],(e)=>{
               let data = JSON.parse(e.body);
-            
-              if(data.channel_id == this.currentChannel){
-                this.array.push(data)  
+              console.log(data)
+              if(data.message.channel_id == this.currentChannel){
+                this.msgArray.push(data)  
               }else{
-                this.msgCountObj[data.channel_id] += 1
+                this.msgCountObj[data.message.channel_id] += 1
               }
-            
             })
           }
         })

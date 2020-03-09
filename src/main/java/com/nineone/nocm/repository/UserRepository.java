@@ -6,5 +6,7 @@ public interface UserRepository {
 	
 	public int insertUser(User user);
 	public String getUserid(String userid);
-	
+	public User getUserfindByUserId(String userid);
+	public User getUserfindByEmail(String email);
+	User getUserById(String id);
 }

@@ -1,8 +1,7 @@
 package com.nineone.nocm.oauth;
 
-import com.nineone.nocm.annotation.Socialuser;
-import com.nineone.nocm.domain.User;
-import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -10,7 +9,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.servlet.http.HttpSession;
+import com.nineone.nocm.annotation.Socialuser;
+import com.nineone.nocm.domain.User;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
