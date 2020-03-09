@@ -6,7 +6,7 @@
               <template #m-info>
                 <!-- #으로 단축해서 사용 -->
                 <strong>{{ msg.user.name }}</strong>
-                <span style="font-size: 11px; margin-left:3px; ">&nbsp;11:09 AM May 1</span>
+                <span style="font-size: 11px; margin-left:3px; ">{{ msg.message.send_date }}</span>
               </template>
               <template #m-content>
                 <!-- #으로 단축해서 사용 -->

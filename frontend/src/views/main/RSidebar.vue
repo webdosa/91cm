@@ -42,8 +42,22 @@
         <!-- 콜랩스 -->
         <b-collapse id="channel-info">
           <div class="s-coll-style">
-            <p>Channel Name</p>
-            <li class="list-unstyled">Cha1</li>
+            <div>
+              <div style="display:flex;">
+                <p>Channel Name</p>
+                <a class="verti-align" v-b-modal.channel-edit>Edit</a>
+                <a class="verti-align" >Delete</a>
+              </div>
+              <li class="list-unstyled">Cha1</li>
+            </div>
+            <div>
+            <p>Created</p>
+              <!-- MMMM dd, yyyy 형식으로 출력하는게 나을 듯-->
+              <li class="list-unstyled">Created by username on March 09, 2020</li>
+            </div>
+            <div style="display:flex; justify-content:flex-start;">
+              <b-button variant="primary">나가기</b-button>
+            </div>
           </div>
         </b-collapse>
 
@@ -68,8 +82,14 @@
         <!-- 메뉴하나끝 -->
         <b-collapse id="user-info">
           <div class="s-coll-style">
-            <p>Channel Name</p>
-            <li class="list-unstyled">Cha1</li>
+            <div>
+              <li class="list-unstyled">user1</li>
+              <li class="list-unstyled">user2</li>
+              <li class="list-unstyled">user3</li>
+            </div>
+            <div style="display:flex; justify-content:flex-start;">
+              <b-button variant="primary">초대하기</b-button>
+            </div>
           </div>
         </b-collapse>
         <!-- 메뉴하나시작 -->
@@ -93,58 +113,25 @@
         </a>
         <!-- 메뉴하나끝 -->
       </div>
-      <b-modal id="channel-create" centered title="채널 생성" ref="modal" @show="resetModal" @hidden="resetModal" @ok="handleOk">
-      <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
-        <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
-          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
-          </b-form-input>
-        </b-form-group>
-      </form>
-    </b-modal>
+     
+    
+      
+
     </nav>
     
 </template>
 <script>
-import axios from 'axios'
 export default {
     name: 'RSidebar',
     data() {
     return {
-      channelTitle: '',
-      nameState: null
+    
     }
   },
   methods: {
     RSidebarClose: function () {
       this.$store.state.isRActive= false
-    },
-    resetModal() {
-        this.channelTitle = ''
-        this.nameState = null
-    },
-    handleOk(bvModalEvt) {
-        // Prevent modal from closing
-        bvModalEvt.preventDefault()
-        // Trigger submit handler
-        this.channelForm()
-    },
-    channelForm: function () {
-        if (!this.checkFormValidity()) {
-          return
-        }
-        this.$refs['modal'].hide()
-
-
-        this.$nextTick(() => {
-          this.$bvModal.hide('channel-create')
-        })
-         axios.get('http://localhost:9191/api/user')
-    },
-    checkFormValidity: function () {
-        const valid = this.$refs.channelCreateForm.checkValidity()
-        this.nameState = valid
-        return valid
-      }
+    }
   }
 }
 
