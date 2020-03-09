@@ -40,11 +40,30 @@
     padding: 12px 16px;
     border-bottom: 1px solid #e6e6e6;
 }
-.s-coll-style > p {
-    margin-bottom: 5px;
+.s-coll-style > div{
+    margin-bottom:15px;
 }
-.s-coll-style > li {
+.s-coll-style > div p {
+    margin-bottom: 0px;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+    display:flex;
+}
+.s-coll-style > div a:not([href]) {
+    margin-left:5px;
+    color: #007bff;
+    text-decoration: none;
+}
+.s-coll-style > div a:not([href]):hover {
+    color: #007bff;
+    text-decoration: underline;
+}
+.s-coll-style > div li {
     font-size: 14px;
+    display:flex;
 }
 
 .barRtoggle {
@@ -152,13 +171,6 @@ body {
     background: #fafafa !important;
 }
 
-.s-coll-style p {
-    font-family: "Poppins", sans-serif;
-    font-size: 1.1em;
-    font-weight: 300;
-    line-height: 1.7em;
-    color: #999;
-}
 
 a,
 a:hover,
@@ -321,16 +333,6 @@ ul.CTAs a {
     margin-bottom: 5px;
 }
 
-a.download {
-    background: #fff;
-    color: #7386D5;
-}
-
-a.article,
-a.article:hover {
-    background: #6d7fcc !important;
-    color: #fff !important;
-}
 
 /* ---------------------------------------------------
     CONTENT STYLE

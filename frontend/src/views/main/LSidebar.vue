@@ -74,11 +74,58 @@
         </li>
       </ul>
     </div>
+    <b-modal id="channel-create" centered title="채널 생성" ref="modal" @show="resetModal" @hidden="resetModal" @ok="handleOk">
+      <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
+        <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
+          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
+          </b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
+    <b-modal id="channel-edit" centered title="채널 이름 수정">
+        <p class="my-4">Vertically centered modal!</p>
+      </b-modal>
   </nav>  
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  name: 'LSidebar'
+  name: 'LSidebar',
+    data() {
+    return {
+      channelTitle: '',
+      nameState: null
+    }
+  },
+  methods: {
+    resetModal() {
+        this.channelTitle = ''
+        this.nameState = null
+    },
+    handleOk(bvModalEvt) {
+        // Prevent modal from closing
+        bvModalEvt.preventDefault()
+        // Trigger submit handler
+        this.channelForm()
+    },
+    channelForm: function () {
+        if (!this.checkFormValidity()) {
+          return
+        }
+        this.$refs['modal'].hide()
+
+
+        this.$nextTick(() => {
+          this.$bvModal.hide('channel-create')
+        })
+         axios.get('http://localhost:9191/api/user')
+    },
+    checkFormValidity: function () {
+        const valid = this.$refs.channelCreateForm.checkValidity()
+        this.nameState = valid
+        return valid
+      }
+  }
 }
 </script>
