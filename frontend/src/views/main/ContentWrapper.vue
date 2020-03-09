@@ -10,7 +10,7 @@
               </template>
               <template #m-content>
                 <!-- #으로 단축해서 사용 -->
-                <div v-html="msg.message.content"></div>
+                <div v-html="msg.message.content" class="mychat-content"></div>
               </template>
             </MsgBox>
           </ul>

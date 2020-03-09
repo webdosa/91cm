@@ -58,13 +58,12 @@
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
         this.stompClient.connect({},() => {
-          console.log('연결')
-
           for(let i in this.channelList){
             this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i],(e)=>{
               let data = JSON.parse(e.body);
-              console.log(data)
               if(data.message.channel_id == this.currentChannel){
+                data.message.content = this.replacemsg(data.message.content)
+                console.log(data);
                 this.msgArray.push(data)  
               }else{
                 this.msgCountObj[data.message.channel_id] += 1
@@ -72,6 +71,14 @@
             })
           }
         })
+      },
+      replacemsg (originContent) {
+        let array = originContent.split("\n")
+        let content = ''
+        for(let i in array){
+          content += '<p>' + array[i] + '</p>'
+        }
+        return content.replace(/ /gi, '&nbsp;')
       }
     },
     mounted() {
