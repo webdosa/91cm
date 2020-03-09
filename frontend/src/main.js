@@ -8,7 +8,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
 import './assets/css/main.css'
 
-
 Vue.prototype.$http = axios
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false

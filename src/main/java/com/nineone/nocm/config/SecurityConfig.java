@@ -1,24 +1,29 @@
 package com.nineone.nocm.config;
 
-import com.nineone.nocm.domain.enums.Role;
-import com.nineone.nocm.service.CustomOAuthUserService;
+
+import javax.servlet.http.HttpSession;
+
 import com.nineone.nocm.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import javax.servlet.http.HttpSession;
+import com.nineone.nocm.domain.enums.Role;
+import com.nineone.nocm.service.CustomOAuthUserService;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Configuration
@@ -41,26 +46,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setForceEncoding(true);
         http
                 .addFilterBefore(filter, CsrfFilter.class)
-                .csrf().disable()
+                .csrf().disable().headers().frameOptions().disable()
+        		.and()
                 .authorizeRequests()
-                .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**").permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**","/**").permitAll()
+                .antMatchers("/api/**").hasRole(Role.USERS.name())
                 .anyRequest().authenticated()
+                .and()
+                .cors()
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .and()
-                .formLogin()
-                .loginPage("/")
-                .defaultSuccessUrl("/main")
-                .failureForwardUrl("/")
-                .and()
                 .oauth2Login()
                 .defaultSuccessUrl("/main")
                 .loginPage("/")
                 .userInfoEndpoint().userService(customOAuthUserService);
 
+    }
+    
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // - (3)
+        configuration.addAllowedOrigin("http://localhost:8080");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Override
