@@ -5,5 +5,9 @@ class AboutChannel{
     getChannelList () {
         return axios.get('http://localhost:9191/user')        
     }
+
+    getMsgList (){
+        return axios.get('')
+    }
 }
 export default new AboutChannel()
