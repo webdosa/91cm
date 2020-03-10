@@ -37,11 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
-
         filter.setForceEncoding(true);
         http
                 .addFilterBefore(filter, CsrfFilter.class)
-                .csrf().disable()
+                .csrf().disable().headers().frameOptions().disable()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**").permitAll()
                 .anyRequest().authenticated()
