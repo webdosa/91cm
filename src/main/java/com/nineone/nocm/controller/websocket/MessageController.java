@@ -6,8 +6,6 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import com.nineone.nocm.domain.Message;
-import com.nineone.nocm.domain.Notification;
-import com.nineone.nocm.listener.WebsocketEventListener;
 
 @Controller
 public class MessageController {
