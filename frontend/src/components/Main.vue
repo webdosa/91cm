@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <!-- Sidebar  -->
-    <LSidebar></LSidebar>
+    <LSidebar :modalObj="modalObj" @passData="passData"></LSidebar>
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
@@ -11,7 +11,7 @@
         :msgArray="msgArray" >
       </ContentWrapper>
     </div>
-    <RSidebar></RSidebar>
+    <RSidebar :modalObj="modalObj" @passData="passData"></RSidebar>
   </div>
 </template>
 <script>
@@ -34,7 +34,8 @@
         isRActive: false,
         msgArray: [],
         currentChannel: 0,
-        msgCountObj: {}
+        msgCountObj: {},
+        modalObj:{modalTitle:'',channelTitle:''}
       }
     },
     created () {
@@ -55,6 +56,10 @@
       )
     },
     methods: {
+      passData(modalObj) {
+        this.modalObj.modalTitle = modalObj.modalTitle
+        this.modalObj.channelTitle = modalObj.channelTitle
+      },
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
         this.stompClient.connect({},() => {

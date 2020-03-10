@@ -9,7 +9,7 @@
         <div class="menulist-header">
           <span>Channels</span>
           <div class="menulist-header-icon">
-            <a v-b-modal.channel-create>
+            <a data-mode="create" @click="prepareModal">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -74,33 +74,41 @@
         </li>
       </ul>
     </div>
-    <b-modal id="channel-create" centered title="채널 생성" ref="modal" @show="resetModal" @hidden="resetModal" @ok="handleOk">
+    <b-modal id="channelCU" centered  ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
+      <template #modal-title>
+        {{modalObj.modalTitle}}
+      </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
-          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
+          <b-form-input id="channel-input" :state="nameState" v-model="modalObj.channelTitle" required>
           </b-form-input>
         </b-form-group>
       </form>
     </b-modal>
-    <b-modal id="channel-edit" centered title="채널 이름 수정">
-        <p class="my-4">Vertically centered modal!</p>
-      </b-modal>
   </nav>  
 </template>
 
 <script>
 import axios from 'axios'
 export default {
+  props: ['modalObj'],
   name: 'LSidebar',
     data() {
     return {
-      channelTitle: '',
-      nameState: null
+      nameState: null,
+      channelmode: ''
     }
   },
   methods: {
+    prepareModal: function (e){
+      if(e.target.parentNode.dataset.mode=='create'){
+        this.channelmode = 'create'
+        this.modalObj.modalTitle = '채널 생성'
+        this.$bvModal.show('channelCU')
+      }
+    },
     resetModal() {
-        this.channelTitle = ''
+        this.modalObj.channelTitle = ''
         this.nameState = null
     },
     handleOk(bvModalEvt) {
@@ -117,9 +125,20 @@ export default {
 
 
         this.$nextTick(() => {
-          this.$bvModal.hide('channel-create')
+          this.$bvModal.hide('channelCU')
         })
-         axios.get('http://localhost:9191/api/user')
+        if(this.channelmode=='create'){
+          // 나중에 post함수로 사용해야할 듯
+          // 추후 채널 생성 api로 변경
+          console.log('채널생성 api')
+          //axios.get('http://localhost:9191/api/user')
+        }
+        else{
+          // 추후 채널 수정 api로 변경
+          console.log('채널수정 api')
+          //axios.get('http://localhost:9191/api/user')
+        }
+         
     },
     checkFormValidity: function () {
         const valid = this.$refs.channelCreateForm.checkValidity()
