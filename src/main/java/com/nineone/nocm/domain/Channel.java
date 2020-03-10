@@ -1,22 +1,23 @@
 package com.nineone.nocm.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Channel {
     private int id;
     private String name;
+    private LocalDateTime register_date;
     private String member_id;
 
     @Builder
-    public Channel(int id, String name, String member_id){
+    public Channel(int id, String name, LocalDateTime register_date, String member_id){
         this.id = id;
         this.name = name;
+        this.register_date = register_date;
         this.member_id = member_id;
     }
 }

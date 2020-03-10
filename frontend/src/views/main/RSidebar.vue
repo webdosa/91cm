@@ -141,23 +141,31 @@
         }
         this.$refs['modal'].hide()
 
-
         this.$nextTick(() => {
           this.$bvModal.hide('channel-create')
         })
-        const form = new FormData()
-        form.append("name",this.channelTitle)
-        axios.post('http://localhost:9191/api/channel/create',form, {
-          headers: {
-            'Content-Type' : 'application/json'
-          }
-        })
+        axios.get('http://localhost:9191/api/user/info')
           .then(res => {
-            console.log(res)
+            axios.post('http://localhost:9191/api/channel/create',{
+              name: this.channelTitle,
+              member_id: res.data
+            }, {
+              headers: {
+                'Content-Type' : 'application/json'
+              }
+            })
+              .then(res => {
+                console.log(res)
+              })
+              .catch(error => {
+                console.warn(error)
+              })
           })
           .catch(error => {
-            console.log(error)
+            console.warn(error)
           })
+
+
       }
     }
   }
