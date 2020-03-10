@@ -13,7 +13,6 @@ public class Channel {
     private String name;
     private String member_id;
 
-
     @Builder
     public Channel(int id, String name, String member_id){
         this.id = id;
