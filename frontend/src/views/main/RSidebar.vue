@@ -45,7 +45,7 @@
             <div>
               <div style="display:flex;">
                 <p>Channel Name</p>
-                <a class="verti-align" v-b-modal.channel-edit>Edit</a>
+                <a class="verti-align" data-mode="edit" @click="prepareModal">Edit</a>
                 <a class="verti-align" >Delete</a>
               </div>
               <li class="list-unstyled">Cha1</li>
@@ -121,18 +121,29 @@
     
 </template>
 <script>
+
 export default {
+  props: ['modalObj'],
     name: 'RSidebar',
     data() {
     return {
-    
+      
     }
   },
   methods: {
     RSidebarClose: function () {
       this.$store.state.isRActive= false
+    },
+    prepareModal: function (e){
+      if(e.target.dataset.mode=='edit'){
+        this.modalObj.modalTitle = '채널 수정'
+        //Cha1는 나중에 현재 채널 정보에서 가져올 채널 이름값
+        this.modalObj.channelTitle ='Cha1'
+        this.$emit('passData',this.modalObj)
+        this.$bvModal.show('channelCU')
+      }
     }
-  }
+     }
 }
 
 </script>
