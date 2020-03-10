@@ -8,7 +8,8 @@
       <ContentWrapper 
         :currentChannel="currentChannel" 
         :stompClient="stompClient"
-        :msgArray="msgArray" >
+        :msgArray="msgArray"
+        @msgArrayUnshift="msgArrayUnshift" >
       </ContentWrapper>
     </div>
     <RSidebar :modalObj="modalObj" @passData="passData"></RSidebar>
@@ -50,10 +51,16 @@
           console.log(this.msgCountObj)
           //사용자가 채널을 선택하지 않았다면.   
           this.currentChannel = this.channelList[0]
+          
+          // 현재 채널에 저장되어있는 메시지 가져오기
+          // AboutChannel.getMsgList(this.currentChannel).then(
+          //   res=> {
 
+          // })
           this.connect()
         }
       )
+      
     },
     methods: {
       passData(modalObj) {
@@ -84,6 +91,9 @@
           content += '<p>' + array[i] + '</p>'
         }
         return content.replace(/ /gi, '&nbsp;')
+      },
+      msgArrayUnshift () {
+        //console.log('함수실행')
       }
     },
     mounted() {

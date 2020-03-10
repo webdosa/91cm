@@ -1,7 +1,7 @@
 <template>
     <main class="mainwrapper">
         <div class="h-inherit">
-          <ul class="c-c-wrapper list-unstyled">
+          <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt">
             <MsgBox v-for="msg in msgArray" :key="msg.message.id">
               <template #m-info>
                 <!-- #으로 단축해서 사용 -->
@@ -57,6 +57,14 @@ export default {
         if (this.stompClient && this.stompClient.connected) {
           this.stompClient.send("/pub/chat/message", JSON.stringify(this.message),{})
           this.message.content = ''
+        }
+      },
+      scrollEvt (e){
+        let element = e.target;
+        if(element.scrollTop <= 0){
+          //추후 아래에 저장되어있는 메시지 가져오는 코드 추가
+          // 저 emit코드는 .then(res=>{}) 안에다가 넣을 코드 emit 옆에 받은 데이터 전달
+          // this.$emit('msgArrayUnshift')
         }
       }
 
