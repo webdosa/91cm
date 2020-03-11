@@ -6,12 +6,18 @@
     <mapper namespace="com.nineone.nocm.mapper.user">
 
     <insert id="insertUser">
-    	insert member (userid,password,name,phone,email,icon)
-    		values(#{userid},#{password},#{name},#{phone},#{email},#{icon})
+    	insert member (id,name,phone,email,icon)
+    		values(#{id},#{name},#{phone},#{email},#{icon})
     </insert>
     
     <select id="getUserid" resultType="java.lang.String">
-    	select userid from member where userid = #{userid}
+    	select userid from member where userid = #{id}
     </select>
-
+    
+    <select id="getUserfindByEmail" resultType="java.util.Map">
+        select * from member where email = #{email}
+    </select>
+    <select id="getUserById" resultType="com.nineone.nocm.domain.User">
+        select * from member where id = #{id}
+    </select>
     </mapper>
