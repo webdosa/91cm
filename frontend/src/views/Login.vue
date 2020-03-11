@@ -60,7 +60,7 @@ export default {
       .then(res => {
         if (res.data) {
           console.log(res.data)
-          // router.replace('/main')
+          router.replace('/main')
         }
       }).catch(error => {
         console.log(error)

@@ -44,8 +44,11 @@
         </li>
       </ul>
     </div>
-    <b-modal id="channel-create" centered title="채널 생성" ref="modal" @show="resetModal" @hidden="resetModal"
+    <b-modal id="channelCU" centered ref="modal" @show="resetModal" @hidden="resetModal"
              @ok="handleOk">
+      <template #modal-title>
+        {{modalObj.modalTitle}}
+      </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
           <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
@@ -104,10 +107,11 @@ export default {
       this.$refs['modal'].hide()
 
       this.$nextTick(() => {
-        this.$bvModal.hide('channel-create')
+        this.$bvModal.hide('channelCU')
       })
       axios.get('http://localhost:9191/api/user/info')
         .then(res => {
+          console.log(res)
           axios.post('http://localhost:9191/api/channel/create',{
             name: this.channelTitle,
             member_email: res.data
@@ -118,6 +122,7 @@ export default {
           })
             .then(res => {
               console.log(res)
+              this.testList()
             })
             .catch(error => {
               console.warn(error)

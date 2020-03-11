@@ -46,15 +46,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .addFilterBefore(filter, CsrfFilter.class)
                 .csrf().disable()
-//                .headers().frameOptions().disable()
-//                .and()
+                .headers().frameOptions().disable()
+                .and()
                 .authorizeRequests()
-//                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //개발 임시 설정
-                .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**","/**").permitAll()
-                .antMatchers("/api/**").hasRole(Role.USERS.name())
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //개발 임시 설정
+                .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**").permitAll()
                 .anyRequest().authenticated()
-//                .and()
-//                .cors()
+                .and()
+                .cors()
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -67,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint().userService(customOAuthUserService);
 
     }
-    
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
