@@ -18,7 +18,7 @@
         <div class="btn btn-outline-secondary btn-block" onclick="window.location.href='/'">회원가입</div>
       </form>
       <br>
-      <p class="h6">소셜로그인</p>
+      <p class="h6">소셜로그인 {{ $store.state.isLActive }}</p>
       <hr>
       <div>
         <a href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
@@ -33,14 +33,14 @@ import router from '../router'
 export default {
   name: 'Login',
   beforeCreate () {
-    axios.get('http://localhost:9191/api/user/login')
-      .then(res => {
-        if (res.data) {
-          router.replace('/about')
-        }
-      }).catch(error => {
-        console.log(error)
-      })
+    // axios.get('http://localhost:9191/api/user/login')
+    //   .then(res => {
+    //     if (res.data) {
+    //       router.replace('/about')
+    //     }
+    //   }).catch(error => {
+    //     console.log(error)
+    //   })
   }
 }
 </script>

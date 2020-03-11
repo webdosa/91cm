@@ -1,41 +1,34 @@
 package com.nineone.nocm.domain;
 
-import com.nineone.nocm.domain.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
+@Setter
 public class User{
 
-    private Long idx;
-
-    private String nickName;
-
+	private String id;
+    private String name;
+    private String phone;
     private String email;
+    private String icon;
 
-    private String picture;
-
-    private Role role;
 
     @Builder
-    public User(String nickName, String email, String picture, Role role) {
-        this.nickName = nickName;
+    public User(String id,String name, String phone, String icon, String email) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.icon = icon;
         this.email = email;
-        this.picture = picture;
-        this.role = role;
     }
 
-    public User update(String nickName, String picture) {
-        this.nickName = nickName;
-        this.picture = picture;
+    public User update(String name, String icon) {
+        this.name = name;
+        this.icon = icon;
         return this;
     }
-
-    public String getRoleKey(){
-        return this.role.getKey();
-    }
-
-
 }
