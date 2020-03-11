@@ -2,7 +2,7 @@
     <main class="mainwrapper">
         <div class="h-inherit">
           <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt">
-            <MsgBox v-for="msg in msgArray" :key="msg.message.id">
+            <MsgBox v-for="msg in msgArray" :key="msg.message.content">
               <template #m-info>
                 <!-- #으로 단축해서 사용 -->
                 <strong>{{ msg.user.name }}</strong>
