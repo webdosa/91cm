@@ -52,7 +52,7 @@
           console.log(this.msgCountObj)
           //사용자가 채널을 선택하지 않았다면.
           this.currentChannel = this.channelList[0]
-          //this.connect()
+          this.connect()
         }
       )
       //this.channelList = channelList
