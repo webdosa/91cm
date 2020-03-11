@@ -5,12 +5,18 @@
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <ContentWrapper 
+      <router-view name="ChannelHeader"></router-view>
+      <router-view  :currentChannel="currentChannel" 
+        :stompClient="stompClient"
+        :msgArray="msgArray"
+        @msgArrayUnshift="msgArrayUnshift"></router-view>
+      <!-- <ContentWrapper 
         :currentChannel="currentChannel" 
         :stompClient="stompClient"
         :msgArray="msgArray"
         @msgArrayUnshift="msgArrayUnshift" >
-      </ContentWrapper>
+      </ContentWrapper> -->
+
     </div>
     <RSidebar :modalObj="modalObj" @passData="passData"></RSidebar>
   </div>
@@ -69,7 +75,9 @@
       },
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
+        console.log('asd1')
         this.stompClient.connect({},() => {
+          console.log('asd2')
           for(let i in this.channelList){
             this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i],(e)=>{
               let data = JSON.parse(e.body);

@@ -4,6 +4,7 @@ module.exports = {
   lintOnSave: false,
   outputDir: path.resolve(__dirname, "../"+"src/main/resources/static"),
   devServer: {
+    host: 'localhost'
     // proxy: {
     //   '/': {
     //     target: 'http://localhost:9191',
@@ -15,5 +16,8 @@ module.exports = {
     //     }
     //   }
     // }
+  },
+  configureWebpack: {
+    entry: ["babel-polyfill", "./src/main.js"]
   }
 }
