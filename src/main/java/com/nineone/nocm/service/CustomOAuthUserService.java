@@ -1,7 +1,6 @@
 package com.nineone.nocm.service;
 
 import com.nineone.nocm.domain.User;
-import com.nineone.nocm.domain.enums.Role;
 import com.nineone.nocm.oauth.OAuthAttributes;
 import com.nineone.nocm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -34,8 +34,9 @@
 </template>
 <script>
   import MsgBox from './MsgBox'
+
   export default {
-    props: ['currentChannel','stompClient','msgArray'],
+    props: ['currentChannel', 'stompClient', 'msgArray'],
     name: 'ContentWrapper',
     components: {
       MsgBox
@@ -50,23 +51,24 @@
       }
     },
     methods: {
-      send(){
+      send() {
         console.log(this.currentChannel)
         console.log(this.stompClient)
         this.message.channel_id = this.currentChannel
         if (this.stompClient && this.stompClient.connected) {
-          this.stompClient.send("/pub/chat/message", JSON.stringify(this.message),{})
+          this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
           this.message.content = ''
         }
       },
-      scrollEvt (e){
+      scrollEvt(e) {
         let element = e.target;
-        if(element.scrollTop <= 0){
+        if (element.scrollTop <= 0) {
           //추후 아래에 저장되어있는 메시지 가져오는 코드 추가
           // 저 emit코드는 .then(res=>{}) 안에다가 넣을 코드 emit 옆에 받은 데이터 전달
           // this.$emit('msgArrayUnshift')
         }
       }
     }
+
   }
 </script>

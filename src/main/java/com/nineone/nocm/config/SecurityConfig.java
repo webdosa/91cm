@@ -44,10 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
         http
-                .addFilterBefore(filter, CsrfFilter.class)
-                .csrf().disable()
-                .headers().frameOptions().disable()
-                .and()
+                .addFilterBefore(filter, CsrfFilter.class).csrf().disable().headers().frameOptions().disable()
+        		.and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //개발 임시 설정
                 .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**").permitAll()

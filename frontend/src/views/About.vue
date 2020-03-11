@@ -3,6 +3,7 @@
     <h1>This is an about page!!</h1>
     <button @click="send">전송</button>
     <button @click="check">확인</button>
+    <a href="/" @click="check">확인</a>
   </div>
 </template>
 <script>
@@ -58,8 +59,7 @@ export default {
       })
     },
     check() {
-      console.log(this.array)
-      console.log(this.msgCountObj)
+      this.$store.state.isLActive = true
     }
 
     },

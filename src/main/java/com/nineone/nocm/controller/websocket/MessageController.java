@@ -1,13 +1,12 @@
 package com.nineone.nocm.controller.websocket;
 
+import com.nineone.nocm.domain.Message;
 import com.nineone.nocm.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-
-import com.nineone.nocm.domain.Message;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,8 +29,8 @@ public class MessageController {
 	public void message(Message message) {
 		Map<String,Object> msgmap = new HashMap<>();
 		// 메세지 전송하기 전에 DB에 메세지 저장하는 로직이 있어야함. and 유저정보 가져오는 로직..?
-
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm aa MMMM dd", Locale.ENGLISH);
+		
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm aa MMMM dd",Locale.ENGLISH);
 		Calendar time = Calendar.getInstance();
 		//time.getTime()해서 data 저장하면 될 듯..?
 		String format_time = format.format(time.getTime());

@@ -44,14 +44,13 @@
         </li>
       </ul>
     </div>
-    <b-modal id="channelCU" centered ref="modal" @show="resetModal" @hidden="resetModal"
-             @ok="handleOk">
+    <b-modal id="channelCU" centered  ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
       <template #modal-title>
         {{modalObj.modalTitle}}
       </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
-          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
+          <b-form-input id="channel-input" :state="nameState" v-model="modalObj.channelTitle" required>
           </b-form-input>
         </b-form-group>
       </form>
@@ -60,17 +59,14 @@
 </template>
 
 <script>
-import axios from "axios";
-
+import axios from 'axios'
 export default {
   props: ['modalObj'],
   name: 'LSidebar',
-  data () {
+    data() {
     return {
       nameState: null,
-      channelmode: '',
-      channelTitle: '',
-      items: ''
+      channelmode: ''
     }
   },
   methods: {
@@ -113,7 +109,7 @@ export default {
         .then(res => {
           console.log(res)
           axios.post('http://localhost:9191/api/channel/create',{
-            name: this.channelTitle,
+            name: this.modalObj.channelTitle,
             member_email: res.data
           }, {
             headers: {

@@ -5,12 +5,13 @@
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <ContentWrapper
+      <router-view name="ChannelHeader"></router-view>
+      <router-view
         :currentChannel="currentChannel"
         :stompClient="stompClient"
         :msgArray="msgArray"
         @msgArrayUnshift="msgArrayUnshift"
-      ></ContentWrapper>
+      ></router-view>
     </div>
     <RSidebar :modalObj="modalObj" @passData="passData"></RSidebar>
   </div>
@@ -47,15 +48,20 @@
           for(let i in this.channelList){
             this.msgCountObj[this.channelList[i]] = 0
           }
-          console.log('123')
           console.log(this.channelList)
           console.log(this.msgCountObj)
           //사용자가 채널을 선택하지 않았다면.
           this.currentChannel = this.channelList[0]
+
+          // 현재 채널에 저장되어있는 메시지 가져오기
+          // AboutChannel.getMsgList(this.currentChannel).then(
+          //   res=> {
+
+          // })
           this.connect()
         }
       )
-      //this.channelList = channelList
+
     },
     methods: {
       passData(modalObj) {
@@ -64,7 +70,9 @@
       },
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
+        console.log('asd1')
         this.stompClient.connect({},() => {
+          console.log('asd2')
           for(let i in this.channelList){
             this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i],(e)=>{
               let data = JSON.parse(e.body);

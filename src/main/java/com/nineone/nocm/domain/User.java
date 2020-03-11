@@ -28,5 +28,4 @@ public class User {
         this.picture = icon;
         return this;
     }
-
 }

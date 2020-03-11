@@ -113,10 +113,15 @@
       </a>
       <!-- 메뉴하나끝 -->
     </div>
+
+
+
+
   </nav>
 
 </template>
 <script>
+
   export default {
     props: ['modalObj'],
     name: 'RSidebar',
@@ -140,4 +145,5 @@
       }
     }
   }
+
 </script>

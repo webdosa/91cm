@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import com.nineone.nocm.annotation.Socialuser;
 import com.nineone.nocm.domain.User;
 import com.nineone.nocm.service.UserService;
@@ -49,7 +50,4 @@ public class UserApiController {
 
     	return arr;
     }
-
-
-
 }

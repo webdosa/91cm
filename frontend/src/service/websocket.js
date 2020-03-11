@@ -22,7 +22,6 @@ class WebSocket {
       for(let i in channelList){
         this.stompClient.subscribe("/sub/chat/room/"+channelList[i],(e)=>{
           let data = JSON.parse(e.body);
-
           if(data.channel_id == this.currentChannel){
             this.array.push(data)
           }else{
@@ -39,12 +38,9 @@ class WebSocket {
       this.stompClient.send("/pub/chat/message", JSON.stringify(message),{})
     }
   }
-
   // set setCurrentChannel(currentChannel){
   //   this.currentChannel = currentChannel
   // }
-
-
 
 }
 export default new WebSocket()
