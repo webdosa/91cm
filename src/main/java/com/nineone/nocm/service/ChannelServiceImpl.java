@@ -24,8 +24,8 @@ public class ChannelServiceImpl implements ChannelService{
     }
 
     @Override
-    public List<Channel> channelList(String userId) {
-        return channelRepository.channelList(userId);
+    public List<Channel> channelList(String userEmail) {
+        return channelRepository.channelList(userEmail);
     }
 
     @Override

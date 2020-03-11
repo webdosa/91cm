@@ -45,15 +45,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setForceEncoding(true);
         http
                 .addFilterBefore(filter, CsrfFilter.class)
-                .csrf().disable().headers().frameOptions().disable()
-                .and()
+                .csrf().disable()
+//                .headers().frameOptions().disable()
+//                .and()
                 .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+//                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //개발 임시 설정
                 .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**","/**").permitAll()
                 .antMatchers("/api/**").hasRole(Role.USERS.name())
                 .anyRequest().authenticated()
-                .and()
-                .cors()
+//                .and()
+//                .cors()
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -71,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // - (3)
-        configuration.addAllowedOrigin("http://localhost:8080");
+        configuration.addAllowedOrigin("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);

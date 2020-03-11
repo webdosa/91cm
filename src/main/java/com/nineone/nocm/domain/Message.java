@@ -12,5 +12,5 @@ public class Message {
 	int channel_id;
 	String content;
 	String sender;
-	Date send_date;
+	String send_date;
 }

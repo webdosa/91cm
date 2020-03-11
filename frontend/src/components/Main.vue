@@ -1,13 +1,18 @@
 <template>
   <div class="wrapper">
     <!-- Sidebar  -->
-    <LSidebar></LSidebar>
+    <LSidebar :modalObj="modalObj" @passData="passData"></LSidebar>
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <ContentWrapper></ContentWrapper>
+      <ContentWrapper
+        :currentChannel="currentChannel"
+        :stompClient="stompClient"
+        :msgArray="msgArray"
+        @msgArrayUnshift="msgArrayUnshift"
+      ></ContentWrapper>
     </div>
-    <RSidebar></RSidebar>
+    <RSidebar :modalObj="modalObj" @passData="passData"></RSidebar>
   </div>
 </template>
 <script>
@@ -25,11 +30,13 @@
     components: {MainHeader, LSidebar,RSidebar,ContentWrapper},
     data() {
       return {
+        stompClient: null,
         channelList: [],
         isRActive: false,
-        array: [],
+        msgArray: [],
         currentChannel: 0,
-        msgCountObj: {}
+        msgCountObj: {},
+        modalObj:{modalTitle:'',channelTitle:''}
       }
     },
     created () {
@@ -40,37 +47,48 @@
           for(let i in this.channelList){
             this.msgCountObj[this.channelList[i]] = 0
           }
+          console.log('123')
           console.log(this.channelList)
           console.log(this.msgCountObj)
-          this.connect()
+          //사용자가 채널을 선택하지 않았다면.
+          this.currentChannel = this.channelList[0]
+          //this.connect()
         }
       )
       //this.channelList = channelList
     },
     methods: {
-      send: function() {
-        if (this.stompClient && this.stompClient.connected) {
-          this.stompClient.send("/pub/chat/message", JSON.stringify(this.message),{})
-        }
+      passData(modalObj) {
+        this.modalObj.modalTitle = modalObj.modalTitle
+        this.modalObj.channelTitle = modalObj.channelTitle
       },
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
         this.stompClient.connect({},() => {
-          console.log('연결')
-
           for(let i in this.channelList){
             this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i],(e)=>{
               let data = JSON.parse(e.body);
-
-              if(data.channel_id == this.currentChannel){
-                this.array.push(data)
+              if(data.message.channel_id == this.currentChannel){
+                data.message.content = this.replacemsg(data.message.content)
+                console.log(data);
+                this.msgArray.push(data)
               }else{
-                this.msgCountObj[data.channel_id] += 1
+                this.msgCountObj[data.message.channel_id] += 1
               }
-
             })
           }
         })
+      },
+      replacemsg (originContent) {
+        let array = originContent.split("\n")
+        let content = ''
+        for(let i in array){
+          content += '<p>' + array[i] + '</p>'
+        }
+        return content.replace(/ /gi, '&nbsp;')
+      },
+      msgArrayUnshift () {
+        //console.log('함수실행')
       }
     },
     mounted() {

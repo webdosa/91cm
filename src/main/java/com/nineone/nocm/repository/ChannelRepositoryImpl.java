@@ -29,7 +29,7 @@ public class ChannelRepositoryImpl implements ChannelRepository{
     }
 
     @Override
-    public List<Channel> channelList(String userId) {
-        return sqlSession.selectList(namespace + ".channelList",userId);
+    public List<Channel> channelList(String userEmail) {
+        return sqlSession.selectList(namespace + ".channelList",userEmail);
     }
 }

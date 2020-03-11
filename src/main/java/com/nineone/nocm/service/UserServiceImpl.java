@@ -26,18 +26,18 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean idcheck(String userid) {
-		return (userRepository.getUserid(userid) == null) ? true : false;
+	public boolean emailCheck(String userEmail) {
+		return (userRepository.getUserfindByEmail(userEmail) == null) ? true : false;
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
-		Map<String,String> userInfo = (Map<String, String>) userRepository.getUserfindByUserId(userid);
+	public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+		Map<String,String> userInfo = (Map<String, String>) userRepository.getUserfindByEmail(userEmail);
 		User user = User.builder()
 				.name(userInfo.get("name"))
 				.email(userInfo.get("email"))
 				.phone(userInfo.get("phone"))
-				.icon(userInfo.get("icon"))
+				.picture(userInfo.get("picture"))
 				.build();
 		if (user == null){
 			throw new UsernameNotFoundException("can not find user");

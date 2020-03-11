@@ -5,8 +5,8 @@
 
 <mapper namespace="com.nineone.nocm.mapper.channel">
     <insert id="insertChannel">
-    	insert channel (name, member_id)
-    		values(#{name}, #{member_id})
+    	insert channel (name, member_email)
+    		values(#{name}, #{member_email})
     </insert>
     <update id="updateChannel">
         update channel set name = #{name} where id = #{id}
@@ -15,6 +15,6 @@
         delete from channel where id = #{channelId}
     </delete>
     <select id="channelList" resultType="com.nineone.nocm.domain.Channel">
-        select * from channel where member_id = #{userId}
+        select * from channel where member_email = #{userEmail}
     </select>
 </mapper>

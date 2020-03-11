@@ -6,6 +6,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
 	
 	public boolean insertUser(User user);
-	public boolean idcheck(String userid);
+	public boolean emailCheck(String userid);
 	
 }

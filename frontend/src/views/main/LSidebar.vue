@@ -9,7 +9,7 @@
         <div class="menulist-header">
           <span>Channels</span>
           <div class="menulist-header-icon">
-            <a v-b-modal.channel-create>
+            <a data-mode="create" @click="prepareModal">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -26,15 +26,15 @@
         </div>
         <li>
           <a v-b-toggle.collapse-1 class="dropdown-toggle">
-            <li>Channels</li>
-          </a>
-          <b-collapse id="collapse-1">
-            <ul class="list-unstyled">
-              <li v-for="item in items">
-                <a>{{ item.name }}</a>
-              </li>
-            </ul>
-          </b-collapse>
+        <li>Channels</li>
+        </a>
+        <b-collapse id="collapse-1">
+          <ul class="list-unstyled">
+            <li v-for="item in items">
+              <a>{{ item.name }}</a>
+            </li>
+          </ul>
+        </b-collapse>
         </li>
         <div class="menulist-header">
           <span>Users</span>
@@ -44,18 +44,91 @@
         </li>
       </ul>
     </div>
+    <b-modal id="channel-create" centered title="채널 생성" ref="modal" @show="resetModal" @hidden="resetModal"
+             @ok="handleOk">
+      <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
+        <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
+          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
+          </b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
   </nav>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
+  props: ['modalObj'],
   name: 'LSidebar',
   data () {
     return {
+      nameState: null,
+      channelmode: '',
+      channelTitle: '',
       items: ''
     }
   },
   methods: {
+    prepareModal: function (e){
+      if(e.target.parentNode.dataset.mode=='create'){
+        this.channelmode = 'create'
+        this.modalObj.modalTitle = '채널 생성'
+        this.$bvModal.show('channelCU')
+      }
+    },
+    // 채널 생성 부분
+    checkFormValidity: function () {
+      const valid = this.$refs.channelCreateForm.checkValidity()
+      this.nameState = valid
+      return valid
+    },
+    RSidebarClose: function () {
+      this.$store.state.isRActive = false
+    },
+    resetModal() {
+      this.channelTitle = ''
+      this.nameState = null
+    },
+    handleOk(bvModalEvt) {
+      // Prevent modal from closing
+      bvModalEvt.preventDefault()
+      // Trigger submit handler
+      this.channelForm()
+    },
+    channelForm: function () {
+      if (!this.checkFormValidity()) {
+        return
+      }
+      this.$refs['modal'].hide()
+
+      this.$nextTick(() => {
+        this.$bvModal.hide('channel-create')
+      })
+      axios.get('http://localhost:9191/api/user/info')
+        .then(res => {
+          axios.post('http://localhost:9191/api/channel/create',{
+            name: this.channelTitle,
+            member_email: res.data
+          }, {
+            headers: {
+              'Content-Type' : 'application/json'
+            }
+          })
+            .then(res => {
+              console.log(res)
+            })
+            .catch(error => {
+              console.warn(error)
+            })
+        })
+        .catch(error => {
+          console.warn(error)
+        })
+    },
+    // 채널 리스트 가져오기
+    // 함수 이름 변경 필요
     testList: function () {
       this.$http.get('http://localhost:9191/api/channel/list')
         .then(res => {

@@ -24,7 +24,7 @@
         <a href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
         <a href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
         <a href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
-<!--        동작 에로 인해 주석처리-->
+<!--        동작 에러 인해 주석처리-->
 <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
       </div>
     </div>
@@ -59,7 +59,8 @@ export default {
     axios.get('http://localhost:9191/api/user/login')
       .then(res => {
         if (res.data) {
-          router.replace('/main')
+          console.log(res.data)
+          // router.replace('/main')
         }
       }).catch(error => {
         console.log(error)

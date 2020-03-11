@@ -28,8 +28,7 @@ public class DataSourceConfig {
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setJdbcUrl("jdbc:mysql://localhost:3306/nocm?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&verifyServerCertificate=false&useSSL=false");
         config.addDataSourceProperty("user", "hkoo");
-        config.addDataSourceProperty("password", "hkoo");
-
+        config.addDataSourceProperty("password", "dlwngur12");
 		return config;
 	}
 	

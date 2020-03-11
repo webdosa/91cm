@@ -15,17 +15,17 @@ public class OAuthAttributes {
     private String id;
     private String name;
     private String email;
-    private String icon;
+    private String picture;
 
     @Builder
     public OAuthAttributes(Map<String, Object> attributes, String id, String nameAttributeKey, String name,
-                           String email, String icon){
+                           String email, String picture){
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.id = id;
         this.name = name;
         this.email = email;
-        this.icon = icon;
+        this.picture = picture;
     }
 
     public static OAuthAttributes Of(String registrationId, String userNameAttributeName,
@@ -47,7 +47,7 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .name((String) response.get("nickname"))
                 .email((String) response.get("email"))
-                .icon((String) response.get("profile_image"))
+                .picture((String) response.get("profile_image"))
                 .attributes(response)
                 .nameAttributeKey("code")
                 .build();
@@ -58,7 +58,7 @@ public class OAuthAttributes {
                 .id((String) attributes.get("sub"))
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
-                .icon((String) attributes.get("profileImage"))
+                .picture((String) attributes.get("profileImage"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
@@ -71,7 +71,7 @@ public class OAuthAttributes {
                 .id((String) response.get("id"))
                 .name((String) response.get("name"))
                 .email((String) response.get("email"))
-                .icon((String) response.get("profile_image"))
+                .picture((String) response.get("profile_image"))
                 .attributes(response)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
@@ -81,8 +81,9 @@ public class OAuthAttributes {
         return User.builder()
                 .id(id)
                 .name(name)
+                .phone("test") //phone이 not null임으로 만들어놓은 임시 설정
                 .email(email)
-                .icon(icon)
+                .picture(picture)
                 .build();
     }
 }
