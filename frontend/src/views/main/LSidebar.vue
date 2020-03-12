@@ -31,7 +31,7 @@
         <b-collapse id="collapse-1">
           <ul class="list-unstyled">
             <li v-for="item in items">
-              <a>{{ item.name }}</a>
+              <a @click="modalObj.currentChannel = item">{{ item.name }}</a>
             </li>
           </ul>
         </b-collapse>
@@ -50,7 +50,7 @@
       </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
-          <b-form-input id="channel-input" :state="nameState" v-model="modalObj.channelTitle" required>
+          <b-form-input id="channel-input" :state="nameState" v-model="modalObj.currentChannel.name" required>
           </b-form-input>
         </b-form-group>
       </form>
@@ -109,7 +109,7 @@ export default {
         .then(res => {
           console.log(res)
           axios.post('http://localhost:9191/api/channel/create',{
-            name: this.modalObj.channelTitle,
+            name: this.modalObj.currentChannel.name,
             member_email: res.data.email
           }, {
             headers: {
