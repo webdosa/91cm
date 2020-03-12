@@ -34,7 +34,7 @@ const routes = [
   {
     path: '/main',
     component: Main,
-    children:[  
+    children:[
       { path:'', components: {default:ContentWrapper,ChannelHeader:ChannelHeader }},
     ]
   },

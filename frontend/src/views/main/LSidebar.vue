@@ -30,8 +30,8 @@
         </a>
         <b-collapse id="collapse-1">
           <ul class="list-unstyled">
-            <li v-for="item in items">
-              <a @click="modalObj.currentChannel = item">{{ item.name }}</a>
+            <li v-for="(channel, index) in channelList">
+              <a @click="sendChannelTitle(index)">{{ channel.name }}</a>
             </li>
           </ul>
         </b-collapse>
@@ -66,10 +66,15 @@ export default {
     data() {
     return {
       nameState: null,
-      channelmode: ''
+      channelmode: '',
+      channelList: [],
+      channelTitle: ''
     }
   },
   methods: {
+    sendChannelTitle : function(channelIndex){
+      this.$emit('sendTitle', this.channelList[channelIndex])
+    },
     prepareModal: function (e){
       if(e.target.parentNode.dataset.mode=='create'){
         this.channelmode = 'create'
@@ -110,6 +115,7 @@ export default {
           console.log(res)
           axios.post('http://localhost:9191/api/channel/create',{
             name: this.modalObj.currentChannel.name,
+            id: this.modalObj.currentChannel.id,
             member_email: res.data.email
           }, {
             headers: {
@@ -133,7 +139,7 @@ export default {
     testList: function () {
       this.$http.get('http://localhost:9191/api/channel/list')
         .then(res => {
-          this.items = res.data
+          this.channelList = res.data
         })
     }
   },

@@ -137,6 +137,7 @@
           this.modalObj.modalTitle = '채널 수정'
           //Cha1는 나중에 현재 채널 정보에서 가져올 채널 이름값
           // this.modalObj.channelTitle ='Cha1'
+
           this.$emit('passData', this.modalObj)
           this.$bvModal.show('channelCU')
         }

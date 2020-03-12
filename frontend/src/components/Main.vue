@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper">
     <!-- Sidebar  -->
-    <LSidebar :modalObj="modalObj" @passData="passData"></LSidebar>
+    <LSidebar :modalObj="modalObj" @sendTitle="sendTitle"></LSidebar>
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <router-view name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
+      <router-view name="ChannelHeader" :channelTitle="channelTitle"></router-view>
       <router-view
         :currentChannel="modalObj.currentChannel"
         :stompClient="stompClient"
@@ -41,7 +41,6 @@
       }
     },
     created() {
-
       AboutChannel.getChannelList().then(
         res => {
           this.channelList = res.data
@@ -52,7 +51,7 @@
           console.log(this.msgCountObj)
           //사용자가 채널을 선택하지 않았다면.
           if (this.modalObj.currentChannel == null) {
-            this.modalObj.currentChannel = this.channelList.lastItem
+            this.modalObj.currentChannel = this.channelList[0]
           }
           // 현재 채널에 저장되어있는 메시지 가져오기
           // AboutChannel.getMsgList(this.currentChannel).then(
@@ -64,12 +63,12 @@
       )
 
     },
-    mounted() {
-    },
     methods: {
+      sendTitle(channel){
+        this.channelTitle = channel.name
+      },
       passData(modalObj) {
         this.modalObj.modalTitle = modalObj.modalTitle
-        this.modalObj.currentChannel = modalObj.currentChannel
       },
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
