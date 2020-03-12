@@ -36,20 +36,11 @@ const routes = [
   },
   {
     path: '/main',
+    name: 'main',
     component: Main,
     children:[  
       { path:'', components: {default:ContentWrapper,ChannelHeader:ChannelHeader }},
     ]
-    ,
-    beforeEnter: function(to,from,next){
-      Axios.get('http://localhost:9191/api/user/login').then(res=>{
-        if(res.data){
-          next()
-        }else{
-          next('/signup')
-        }
-      })
-    }
   },
   {
     path: '/user',

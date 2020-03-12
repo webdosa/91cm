@@ -35,6 +35,15 @@
             <li v-for="item in items" :key="item.id">
               <a>{{ item.name }}</a>
             </li>
+            <li>
+              <a>asd</a>
+            </li>
+            <li>
+              <a>asd</a>
+            </li>
+            <li>
+              <a>asd</a>
+            </li>
           </ul>
         </b-collapse>
         </li>

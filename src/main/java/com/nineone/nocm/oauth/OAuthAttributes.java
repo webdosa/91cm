@@ -1,5 +1,6 @@
 package com.nineone.nocm.oauth;
 
+import java.util.List;
 import java.util.Map;
 
 import com.nineone.nocm.domain.User;
@@ -59,7 +60,7 @@ public class OAuthAttributes {
                 .id((String) attributes.get("sub"))
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
-                .picture((String) attributes.get("profileImage"))
+                .picture((String) attributes.get("picture"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();

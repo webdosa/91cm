@@ -31,7 +31,7 @@
                     <label for="name">이메일</label>
                   </th>
                   <td>
-                   <b-input type="email" name="email"></b-input>
+                   <b-input type="email" name="email" disabled="true" value="username@test.com"></b-input>
                   </td>
                 </tr>
                 <tr>

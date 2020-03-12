@@ -44,31 +44,33 @@
     },
     created () {
 
-      AboutChannel.getChannelList().then(
-        res => {
-          this.channelList = res.data
-          for(let i in this.channelList){
-            this.msgCountObj[this.channelList[i]] = 0
+      axios.get('http://localhost:9191/api/user/getsession').then(res=>{
+        if(res.data.phone == null || res.data.phone == ''){
+          this.$router.replace('/signup')    
+        }else{
+          localStorage.setItem('user',JSON.stringify(res.data))
+          AboutChannel.getChannelList().then(
+          res => {
+            this.channelList = res.data
+            for(let i in this.channelList){
+              this.msgCountObj[this.channelList[i]] = 0
+            }
+            console.log(this.channelList)
+            console.log(this.msgCountObj)
+            //사용자가 채널을 선택하지 않았다면.
+            this.currentChannel = this.channelList[0]
+
+            // 현재 채널에 저장되어있는 메시지 가져오기
+            // AboutChannel.getMsgList(this.currentChannel).then(
+            //   res=> {
+
+            // })
+
+            this.connect()
           }
-          console.log(this.channelList)
-          console.log(this.msgCountObj)
-          //사용자가 채널을 선택하지 않았다면.
-          this.currentChannel = this.channelList[0]
-
-          // 현재 채널에 저장되어있는 메시지 가져오기
-          // AboutChannel.getMsgList(this.currentChannel).then(
-          //   res=> {
-
-          // })
-          axios.get('http://localhost:9191/api/user/ss').then(res => {
-            console.log(res.data);
-          })
-          let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
-          console.log(csrfToken? csrfToken[2] : null)
-          this.connect()
+        )
         }
-      )
-
+      })
     },
     methods: {
       passData(modalObj) {
