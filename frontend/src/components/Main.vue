@@ -5,7 +5,7 @@
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <router-view name="ChannelHeader"></router-view>
+      <router-view name="ChannelHeader" :channelTitle="currentChannel.name"></router-view>
       <router-view
         :currentChannel="currentChannel"
         :stompClient="stompClient"
@@ -35,7 +35,7 @@
         channelList: [],
         isRActive: false,
         msgArray: [],
-        currentChannel: 0,
+        currentChannel: {},
         msgCountObj: {},
         modalObj:{modalTitle:'',channelTitle:''}
       }
@@ -45,14 +45,14 @@
       AboutChannel.getChannelList().then(
         res => {
           this.channelList = res.data
-          for(let i in this.channelList){
-            this.msgCountObj[this.channelList[i]] = 0
+          for(let channel in this.channelList){
+            this.msgCountObj[this.channelList[channel.id]] = 0
           }
           console.log(this.channelList)
           console.log(this.msgCountObj)
           //사용자가 채널을 선택하지 않았다면.
-          this.currentChannel = this.channelList[0]
 
+          this.currentChannel = this.channelList[0]
           // 현재 채널에 저장되어있는 메시지 가져오기
           // AboutChannel.getMsgList(this.currentChannel).then(
           //   res=> {
@@ -74,9 +74,10 @@
         this.stompClient.connect({},() => {
           console.log('asd2')
           for(let i in this.channelList){
-            this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i],(e)=>{
+            this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i].id,(e)=>{
               let data = JSON.parse(e.body);
-              if(data.message.channel_id == this.currentChannel){
+              console.log(data)
+              if(data.message.channel_id == this.currentChannel.id){
                 data.message.content = this.replacemsg(data.message.content)
                 console.log(data);
                 this.msgArray.push(data)

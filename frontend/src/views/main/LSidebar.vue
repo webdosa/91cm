@@ -110,7 +110,7 @@ export default {
           console.log(res)
           axios.post('http://localhost:9191/api/channel/create',{
             name: this.modalObj.channelTitle,
-            member_email: res.data
+            member_email: res.data.email
           }, {
             headers: {
               'Content-Type' : 'application/json'
