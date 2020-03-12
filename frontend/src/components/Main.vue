@@ -26,6 +26,8 @@
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
 
+
+  
   export default {
     name: 'Main',
     components: {MainHeader, LSidebar,RSidebar,ContentWrapper},
@@ -58,6 +60,9 @@
           //   res=> {
 
           // })
+          var csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)');
+          console.log('asdadsasd')
+          console.log(csrfToken? csrfToken[2] : null)
           this.connect()
         }
       )

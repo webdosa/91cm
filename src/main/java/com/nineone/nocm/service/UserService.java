@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
 	
 	boolean insertUser(User user);
-	boolean emailCheck(String userid);
+	boolean emailCheck(String userEmail);
 	UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException;
 
 }

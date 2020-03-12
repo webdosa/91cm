@@ -27,10 +27,6 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
-	@Override
-	public boolean emailCheck(String userEmail) {
-		return (userRepository.getUserfindByEmail(userEmail) == null) ? true : false;
-	}
 
 	@Override
 	public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
@@ -45,6 +41,12 @@ public class UserServiceImpl implements UserService{
 			throw new UsernameNotFoundException("can not find user");
 		}
 		return (UserDetails) user;
+	}
+
+
+	@Override
+	public boolean emailCheck(String userEmail) {
+		return (userRepository.getUserfindByEmail(userEmail) == null) ? true : false;
 	}
 
 }

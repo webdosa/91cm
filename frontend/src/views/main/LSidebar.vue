@@ -30,7 +30,7 @@
         </a>
         <b-collapse id="collapse-1">
           <ul class="list-unstyled">
-            <li v-for="item in items">
+            <li v-for="item in items" :key="item.id">
               <a>{{ item.name }}</a>
             </li>
           </ul>

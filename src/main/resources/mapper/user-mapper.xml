@@ -14,7 +14,7 @@
 <!--    	select userid from member where userid = #{id}-->
 <!--    </select>-->
     
-    <select id="getUserfindByEmail" resultType="com.nineone.nocm.domain.User">
+    <select id="getUserfindByEmail" parameterType="java.lang.String" resultType="com.nineone.nocm.domain.User">
         select * from member where email = #{email}
     </select>
 <!--    <select id="getUserById" resultType="com.nineone.nocm.domain.User">-->
