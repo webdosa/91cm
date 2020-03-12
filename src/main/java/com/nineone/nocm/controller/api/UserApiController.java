@@ -32,8 +32,17 @@ public class UserApiController {
 
 	@RequestMapping(value="/login")
     public boolean userInit(@Socialuser User user){
-	    return user != null? true : false;
+		if(user!= null) {
+			return user.getPhone() != null? true : false;
+		}else {
+			return false;
+		}
     }
+	
+	@RequestMapping(value="/getsession")
+	public User test(@Socialuser User user) {
+		return user;
+	}
 
     @RequestMapping(value = "/info")
     public String userInfo(@Socialuser User user){

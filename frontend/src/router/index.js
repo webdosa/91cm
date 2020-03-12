@@ -7,6 +7,9 @@ import Main from '../components/Main'
 import ContentWrapper from '../views/main/ContentWrapper'
 import ChannelHeader from '../views/main/ChannelHeader'
 import test from '../views/user/test'
+import EditProfile from '../views/user/EditProfile'
+import SignUp from '../components/SignUp'
+import Axios from 'axios'
 Vue.use(VueRouter)
 
 const routes = [
@@ -37,13 +40,29 @@ const routes = [
     children:[  
       { path:'', components: {default:ContentWrapper,ChannelHeader:ChannelHeader }},
     ]
+    ,
+    beforeEnter: function(to,from,next){
+      Axios.get('http://localhost:9191/api/user/login').then(res=>{
+        if(res.data){
+          next()
+        }else{
+          next('/signup')
+        }
+      })
+    }
   },
   {
     path: '/user',
     component: Main,
     children:[
       { path:'', component: test},
+      { path:'edit', component: EditProfile},
     ]
+  },
+  {
+    path: '/signup',
+    component: SignUp
+
   }
 ]
 

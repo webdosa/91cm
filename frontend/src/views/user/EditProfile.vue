@@ -1,7 +1,7 @@
 <template>
     <main class="mainwrapper">
         <div class="h-inherit cetered-align" style="flex-direction:column;">
-            <h4>회원정보</h4>
+            <h4>회원정보 수정</h4>
           <div class="info-wrapper">
             <div class="hori-align" style="margin: 24px 0px 35px 0;">
               <svg
@@ -16,14 +16,14 @@
                 ></path>
               </svg>
             </div>
-            <table>
+           <table>
               <tbody>
                 <tr>
                   <th>
                     <label for="name">이름</label>
                   </th>
                   <td>
-                    <span>username</span>
+                    <b-input type="text" name="name"></b-input>
                   </td>
                 </tr>
                 <tr>
@@ -31,7 +31,7 @@
                     <label for="name">이메일</label>
                   </th>
                   <td>
-                    <span>useremail@email.com</span>
+                   <b-input type="email" name="email"></b-input>
                   </td>
                 </tr>
                 <tr>
@@ -39,7 +39,7 @@
                     <label for="name">전화번호</label>
                   </th>
                   <td>
-                    <span>010-1234-5678</span>
+                    <b-input type="text" name="phone"></b-input>
                   </td>
                 </tr>
               </tbody>
@@ -51,6 +51,6 @@
 </template>
 <script>
 export default {
-    name: 'test'
+    name:'EditUser'
 }
 </script>

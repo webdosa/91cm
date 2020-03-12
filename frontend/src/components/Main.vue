@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <!-- Sidebar  -->
-    <LSidebar :modalObj="modalObj" @passData="passData"></LSidebar>
+    <LSidebar :modalObj="modalObj"></LSidebar>
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
@@ -60,8 +60,10 @@
           //   res=> {
 
           // })
-          var csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)');
-          console.log('asdadsasd')
+          axios.get('http://localhost:9191/api/user/ss').then(res => {
+            console.log(res.data);
+          })
+          let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
           console.log(csrfToken? csrfToken[2] : null)
           this.connect()
         }

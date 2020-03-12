@@ -1,3 +1,33 @@
+.info-wrapper tr {
+    margin-bottom: 15px;
+    display: flex;
+  }
+  .info-wrapper label {
+    margin: 0 35px 0 0;
+    width: 100px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .info-wrapper table,
+  .hori-align {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .info-wrapper {
+    width: 450px;
+    height: auto;
+    background-color: white;
+    border: solid 1px #e6e6e6;
+    padding: 40px;
+  }
+  .cetered-align {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
 .mychat-content > p {
     margin:0px;
     display:flex;
@@ -118,6 +148,7 @@ MainContents
     margin-right: 3px;
 }
 
+.info-wrapper th,
 .verti-align {
     display: flex;
     align-items: center;
@@ -365,6 +396,10 @@ ul.CTAs a {
 ----------------------------------------------------- */
 
 @media (max-width: 768px) {
+    .info-wrapper {
+        width: 350px;
+        padding: 40px 0;
+      }
     #sidebar {
         margin-left: -250px;
     }

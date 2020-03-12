@@ -82,7 +82,6 @@ public class OAuthAttributes {
         return User.builder()
                 .id(id)
                 .name(name)
-                .phone("test") //phone이 not null임으로 만들어놓은 임시 설정
                 .email(email)
                 .picture(picture)
                 .build();
