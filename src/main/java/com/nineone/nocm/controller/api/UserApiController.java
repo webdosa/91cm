@@ -26,8 +26,8 @@ public class UserApiController {
     }
 
     @RequestMapping(value = "/info")
-    public String userInfo(@Socialuser User user){
-	    return user.getEmail();
+    public User userInfo(@Socialuser User user){
+	    return user;
     }
 
     @RequestMapping(value="/signup",method=RequestMethod.POST)
@@ -39,15 +39,5 @@ public class UserApiController {
     @RequestMapping("/idcheck")
     public boolean idcheck(@RequestParam String userid) {
     	return userService.emailCheck(userid);
-    }
-
-    @GetMapping
-    public List<Integer> getchannel() {
-    	List<Integer> arr = new ArrayList<>();
-    	arr.add(0);
-    	arr.add(2);
-    	arr.add(3);
-
-    	return arr;
     }
 }
