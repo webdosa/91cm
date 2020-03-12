@@ -2,8 +2,12 @@ HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**
+!**/src/main/java/**
 !**/src/test/**
+
+**/src/main/resources/static/**
+frontend/node_modules/**
+frontend/npm-v6.13.4/**
 
 ### STS ###
 .apt_generated

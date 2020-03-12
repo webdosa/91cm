@@ -29,7 +29,6 @@ public class DataSourceConfig {
         config.setJdbcUrl("jdbc:mysql://localhost:3306/nocm?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&verifyServerCertificate=false&useSSL=false");
         config.addDataSourceProperty("user", "root");
         config.addDataSourceProperty("password", "0221");
-
 		return config;
 	}
 	
