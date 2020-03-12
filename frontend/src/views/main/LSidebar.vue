@@ -50,7 +50,7 @@
       </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
-          <b-form-input id="channel-input" :state="nameState" v-model="modalObj.currentChannel.name" required>
+          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
           </b-form-input>
         </b-form-group>
       </form>
@@ -114,7 +114,7 @@ export default {
         .then(res => {
           console.log(res)
           axios.post('http://localhost:9191/api/channel/create',{
-            name: this.modalObj.currentChannel.name,
+            name: this.channelTitle,
             id: this.modalObj.currentChannel.id,
             member_email: res.data.email
           }, {
