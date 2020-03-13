@@ -20,6 +20,11 @@ public class UserApiController {
 	@Autowired
 	private UserService userService;
 
+	@RequestMapping("/list")
+    public List<User> userList(){
+	    return userService.getAllUserList();
+    }
+
 	@RequestMapping(value="/login")
     public boolean userInit(@Socialuser User user){
 	    return user != null? true : false;

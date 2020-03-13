@@ -44,9 +44,9 @@
     data() {
       return {
         message: {
-          channel_id: 0,
+          channel_id: this.currentChannel.channel_id,
           content: '',
-          sender: 'userid'
+          sender: this.$store.state.currentUser.email
         }
       }
     },

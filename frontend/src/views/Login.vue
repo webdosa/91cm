@@ -27,6 +27,7 @@
         <!--        동작 에러 인해 주석처리-->
         <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
       </div>
+      <span>{{ $store.state.currentUser.name }}</span>
     </div>
   </div>
 </template>

@@ -83,9 +83,7 @@
       <b-collapse id="user-info">
         <div class="s-coll-style">
           <div>
-            <li class="list-unstyled">user1</li>
-            <li class="list-unstyled">user2</li>
-            <li class="list-unstyled">user3</li>
+            <li class="list-unstyled" v-for="user in $store.state.userList">{{ user.name }}</li>
           </div>
           <div style="display:flex; justify-content:flex-start;">
             <b-button variant="primary">초대하기</b-button>

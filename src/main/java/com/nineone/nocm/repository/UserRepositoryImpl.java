@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import com.nineone.nocm.domain.User;
 
+import java.util.List;
+
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
@@ -22,6 +24,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getUserfindByEmail(String email) {
         return sqlSession.selectOne(namespace + ".getUserfindByEmail", email);
+    }
+
+    @Override
+    public List<User> getAllUserList() {
+        return sqlSession.selectList(namespace +".getAllUserList");
     }
 
 }
