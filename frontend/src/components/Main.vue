@@ -40,6 +40,10 @@
       }
     },
     created() {
+      // 적용은 mounted 이후에 가능한 것으로 보임...
+      this.$store.dispatch('userListUpdate')
+      this.$store.dispatch('initCurrentUser')
+
       AboutChannel.getChannelList().then(
         res => {
           this.channelList = res.data
