@@ -1,11 +1,15 @@
 HELP.md
 .gradle
 build/
+<<<<<<< HEAD
 bin/**
+=======
+bin/
+>>>>>>> hyeok-develop
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/java/**
 !**/src/test/**
-
+bin
 **/src/main/resources/static/**
 frontend/node_modules/**
 frontend/npm-v6.13.4/**

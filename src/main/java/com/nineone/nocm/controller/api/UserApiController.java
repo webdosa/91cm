@@ -1,15 +1,11 @@
 package com.nineone.nocm.controller.api;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,8 +40,8 @@ public class UserApiController {
 	}
 
     @RequestMapping(value = "/info")
-    public String userInfo(@Socialuser User user){
-	    return user.getEmail();
+    public User userInfo(@Socialuser User user){
+	    return user;
     }
 
     @RequestMapping(value="/signup",method=RequestMethod.POST)
@@ -54,19 +50,5 @@ public class UserApiController {
     	return userService.insertUser(user,oauth2user,httpsession);
     }
     
-//    @RequestMapping("/idcheck")
-//    public boolean idcheck(@RequestParam String userid) {
-//    	return userService.emailCheck(userid);
-//    }
 
-    @GetMapping 
-    public List<Integer> getchannel() { 
-    	List<Integer> arr = new ArrayList<>();
-    	arr.add(0);
-    	arr.add(2);
-    	arr.add(3);
-
-    	return arr;
-    } 
-     
 }

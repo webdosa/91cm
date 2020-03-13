@@ -7,8 +7,10 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
+import VueSession from 'vue-session'
 import './assets/css/main.css'
 
+Vue.use(VueSession, { persist: true})
 Vue.prototype.$http = axios
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false

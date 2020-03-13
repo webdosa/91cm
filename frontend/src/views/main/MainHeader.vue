@@ -28,7 +28,7 @@
               <b-dropdown-item href="#">RU</b-dropdown-item>
               <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
-            <div class="verti-align useridsty">useridorname</div>
+            <div class="verti-align useridsty">{{ userInfo.name }}</div>
             <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
               <!-- Using 'button-content' slot -->
               <template v-slot:button-content style="padding:0px;">
@@ -60,7 +60,7 @@ export default {
   name: 'MainHeader',
   data() {
     return {
-
+      userInfo: null
     }
   },
   methods: {
@@ -74,7 +74,15 @@ export default {
       localStorage.removeItem('user');
       window.location.href="/logout"
     }
-
+  },
+  created() {
+    this.userInfo = this.$http.get('http://localhost:9191/api/user/info')
+      .then(res => {
+        this.userInfo = res.data
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 }
 </script>
