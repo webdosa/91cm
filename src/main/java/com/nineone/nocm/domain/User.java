@@ -1,5 +1,10 @@
 package com.nineone.nocm.domain;
 
+
+
+
+
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +19,13 @@ public class User {
     private String email;
     private String picture;
 
-
     @Builder
     public User(String id, String name, String phone, String picture, String email) {
         this.name = name;
         this.phone = phone;
         this.picture = picture; 
         this.email = email;
+        
     }
 
     public User update(String name, String icon) {

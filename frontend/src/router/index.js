@@ -7,6 +7,9 @@ import Main from '../components/Main'
 import ContentWrapper from '../views/main/ContentWrapper'
 import ChannelHeader from '../views/main/ChannelHeader'
 import test from '../views/user/test'
+import EditProfile from '../views/user/EditProfile'
+import SignUp from '../components/SignUp'
+import Axios from 'axios'
 Vue.use(VueRouter)
 
 const routes = [
@@ -33,6 +36,7 @@ const routes = [
   },
   {
     path: '/main',
+    name: 'main',
     component: Main,
     children:[  
       { path:'', components: {default:ContentWrapper,ChannelHeader:ChannelHeader }},
@@ -43,7 +47,13 @@ const routes = [
     component: Main,
     children:[
       { path:'', component: test},
+      { path:'edit', component: EditProfile},
     ]
+  },
+  {
+    path: '/signup',
+    component: SignUp
+
   }
 ]
 

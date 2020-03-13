@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //개발 임시 설정
                 .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**","/**").permitAll()
+                //.antMatchers("/api/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .cors()

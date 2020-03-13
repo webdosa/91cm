@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class NocmApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NocmApplication.class, args);
+        SpringApplication.run(NocmApplication.class, args); 
     }
 
 }

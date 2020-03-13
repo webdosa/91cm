@@ -1,5 +1,6 @@
 package com.nineone.nocm.oauth;
 
+import java.util.List;
 import java.util.Map;
 
 import com.nineone.nocm.domain.User;
@@ -59,7 +60,7 @@ public class OAuthAttributes {
                 .id((String) attributes.get("sub"))
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
-                .picture((String) attributes.get("profileImage"))
+                .picture((String) attributes.get("picture"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
@@ -82,7 +83,6 @@ public class OAuthAttributes {
         return User.builder()
                 .id(id)
                 .name(name)
-                .phone("test") //phone이 not null임으로 만들어놓은 임시 설정
                 .email(email)
                 .picture(picture)
                 .build();

@@ -1,15 +1,14 @@
 package com.nineone.nocm.controller.api;
 
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.server.csrf.CsrfToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +31,17 @@ public class UserApiController {
 
 	@RequestMapping(value="/login")
     public boolean userInit(@Socialuser User user){
-	    return user != null? true : false;
+		if(user!= null) {
+			return user.getPhone() != null? true : false;
+		}else {
+			return false;
+		}
     }
+	
+	@RequestMapping(value="/getsession")
+	public User test(@Socialuser User user) { 
+		return user;
+	}
 
     @RequestMapping(value = "/info")
     public String userInfo(@Socialuser User user){
@@ -41,9 +49,9 @@ public class UserApiController {
     }
 
     @RequestMapping(value="/signup",method=RequestMethod.POST)
-    public boolean signup(@RequestBody User user) {
-    	userService.insertUser(user);
-    	return true;
+    public boolean signup(@RequestBody User user ,Authentication authentication,HttpSession httpsession) {
+    	DefaultOAuth2User oauth2user = (DefaultOAuth2User)authentication.getPrincipal();
+    	return userService.insertUser(user,oauth2user,httpsession);
     }
     
 //    @RequestMapping("/idcheck")
@@ -51,14 +59,14 @@ public class UserApiController {
 //    	return userService.emailCheck(userid);
 //    }
 
-    @GetMapping
-    public List<Integer> getchannel() {
+    @GetMapping 
+    public List<Integer> getchannel() { 
     	List<Integer> arr = new ArrayList<>();
     	arr.add(0);
     	arr.add(2);
     	arr.add(3);
 
     	return arr;
-    }
-    
+    } 
+     
 }

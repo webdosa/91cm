@@ -1,7 +1,9 @@
 <template>
   <nav id="sidebar" class="myflex-column" v-bind:class="{active: $store.state.isLActive}">
     <div class="sidebar-header">
+      <a href="/main">
       <img style="width: 100%;" src="../../assets/images/nineone.png">
+      </a>
       <h3>91CM</h3>
     </div>
     <div class="myflex-column menulist">
@@ -32,6 +34,15 @@
           <ul class="list-unstyled">
             <li v-for="item in items" :key="item.id">
               <a>{{ item.name }}</a>
+            </li>
+            <li>
+              <a>asd</a>
+            </li>
+            <li>
+              <a>asd</a>
+            </li>
+            <li>
+              <a>asd</a>
             </li>
           </ul>
         </b-collapse>
@@ -65,6 +76,7 @@ export default {
   name: 'LSidebar',
     data() {
     return {
+      items: [],
       nameState: null,
       channelmode: ''
     }

@@ -10,12 +10,17 @@
     		values(#{name},#{phone},#{email},#{picture})
     </insert>
     
+    <insert id="insertSNSInfo">
+    	insert sns_info (identifier,member_email)
+    		values(#{identifier},#{email})
+    </insert>
+    
 <!--    <select id="getUserid" resultType="java.lang.String">-->
 <!--    	select userid from member where userid = #{id}-->
 <!--    </select>-->
     
-    <select id="getUserfindByEmail" parameterType="java.lang.String" resultType="com.nineone.nocm.domain.User">
-        select * from member where email = #{email}
+    <select id="getUserfindById" parameterType="java.lang.String" resultType="com.nineone.nocm.domain.User">
+        select * from member where email = (select member_email from sns_info where identifier = #{id})
     </select>
 <!--    <select id="getUserById" resultType="com.nineone.nocm.domain.User">-->
 <!--        select * from member where id = #{id}-->
