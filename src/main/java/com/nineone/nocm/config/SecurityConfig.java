@@ -49,8 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //개발 임시 설정
-                .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**","/**").permitAll()
-                //.antMatchers("/api/**").hasRole("USER")
+                .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()
@@ -59,10 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .and()
                 .oauth2Login()
                 .defaultSuccessUrl("/main")
-                .loginPage("/")
+                .loginPage("/") 
                 .userInfoEndpoint().userService(customOAuthUserService);
 
     }

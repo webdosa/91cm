@@ -1,6 +1,8 @@
 package com.nineone.nocm.repository;
 
 import com.nineone.nocm.domain.Channel;
+import com.nineone.nocm.domain.JoinInfo;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -32,4 +34,11 @@ public class ChannelRepositoryImpl implements ChannelRepository{
     public List<Channel> channelList(String userEmail) {
         return sqlSession.selectList(namespace + ".channelList",userEmail);
     }
+
+	@Override
+	public int joinInfo(JoinInfo joinInfo) {
+		return sqlSession.insert(namespace + ".insertJoinInfo", joinInfo);
+	}
+    
+    
 }

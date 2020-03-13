@@ -32,17 +32,8 @@
         </a>
         <b-collapse id="collapse-1">
           <ul class="list-unstyled">
-            <li v-for="item in items" :key="item.id">
-              <a>{{ item.name }}</a>
-            </li>
-            <li>
-              <a>asd</a>
-            </li>
-            <li>
-              <a>asd</a>
-            </li>
-            <li>
-              <a>asd</a>
+            <li v-for="channel in channelList" :key="channel.id">
+              <a>{{ channel.name }}</a>
             </li>
           </ul>
         </b-collapse>
@@ -71,12 +62,12 @@
 
 <script>
 import axios from 'axios'
+import AboutChannel from '../../service/aboutchannel'
 export default {
-  props: ['modalObj'],
+  props: ['modalObj','channelList'],
   name: 'LSidebar',
     data() {
     return {
-      items: [],
       nameState: null,
       channelmode: ''
     }
@@ -130,7 +121,10 @@ export default {
           })
             .then(res => {
               console.log(res)
-              this.testList()
+              //채널 추가했으니 채널 갱신
+              AboutChannel.getChannelList().then(res=>{
+                this.$emit('channelUpdate',res.data)
+              })
             })
             .catch(error => {
               console.warn(error)
@@ -140,17 +134,9 @@ export default {
           console.warn(error)
         })
     },
-    // 채널 리스트 가져오기
-    // 함수 이름 변경 필요
-    testList: function () {
-      this.$http.get('http://localhost:9191/api/channel/list')
-        .then(res => {
-          this.items = res.data
-        })
-    }
   },
   mounted() {
-    this.testList()
+    
   }
 }
 </script>

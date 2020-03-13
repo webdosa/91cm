@@ -2,6 +2,7 @@ package com.nineone.nocm.controller.api;
 
 import com.nineone.nocm.annotation.Socialuser;
 import com.nineone.nocm.domain.Channel;
+import com.nineone.nocm.domain.JoinInfo;
 import com.nineone.nocm.domain.User;
 import com.nineone.nocm.service.ChannelService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class ChannelApiController {
                 .name(channelInfo.get("name"))
                 .member_email(channelInfo.get("member_email"))
                 .build();
+        
         return channelService.createChannel(channel);
     }
 

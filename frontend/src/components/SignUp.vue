@@ -34,7 +34,6 @@ export default {
         },
         insertUser(){
             let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
-            //axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken[2];
             axios.post('http://localhost:9191/api/user/signup',JSON.stringify(this.user),{headers: { 'X-CSRF-TOKEN': csrfToken[2],'Content-Type': 'application/json'}}).then(res => {
                 if(res.data){
                     this.$router.replace('main')    
