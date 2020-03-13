@@ -35,13 +35,10 @@ public class ChannelApiController {
     }
 
     @PostMapping("/update")
-    public boolean updateChannel(@RequestBody Map<String, String> channelInfo, @Socialuser User user) {
-        if (channelInfo.get("member_id").equals(user.getEmail())) {
-
-            return channelService.updateChannel(Channel.builder()
-                    .id(Integer.valueOf(channelInfo.get("id")))
-                    .name(channelInfo.get("name"))
-                    .build());
+    public boolean updateChannel(@RequestBody Channel channel, @Socialuser User user) {
+        if (channel.getMember_email().equals(user.getEmail())){
+            channelService.updateChannel(channel);
+            return true;
         }
         return false;
     }

@@ -54,7 +54,7 @@
       send() {
         console.log(this.currentChannel)
         console.log(this.stompClient)
-        this.message.channel_id = this.currentChannel
+        this.message.channel_id = this.currentChannel.id
         if (this.stompClient && this.stompClient.connected) {
           this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
           this.message.content = ''

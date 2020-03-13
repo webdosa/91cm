@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper">
     <!-- Sidebar  -->
-    <LSidebar :modalObj="modalObj" @sendTitle="sendTitle"></LSidebar>
+    <LSidebar :modalObj="modalObj" :channelList="channelList" @sendTitle="sendTitle"></LSidebar>
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <router-view name="ChannelHeader" :channelTitle="channelTitle"></router-view>
+      <router-view name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
       <router-view
         :currentChannel="modalObj.currentChannel"
         :stompClient="stompClient"
@@ -22,7 +22,6 @@
   import MainHeader from '../views/main/MainHeader'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
-  import axios from 'axios'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
 
@@ -37,7 +36,7 @@
         isRActive: false,
         msgArray: [],
         msgCountObj: {},
-        modalObj: {modalTitle: '', currentChannel: {}}
+        modalObj: {modalTitle: '', currentChannel: null}
       }
     },
     created() {
@@ -51,7 +50,9 @@
           console.log(this.msgCountObj)
           //사용자가 채널을 선택하지 않았다면.
           if (this.modalObj.currentChannel == null) {
+            console.log("currentChannel init")
             this.modalObj.currentChannel = this.channelList[0]
+            this.channelTitle = this.modalObj.currentChannel.name
           }
           // 현재 채널에 저장되어있는 메시지 가져오기
           // AboutChannel.getMsgList(this.currentChannel).then(
@@ -66,6 +67,7 @@
     methods: {
       sendTitle(channel){
         this.channelTitle = channel.name
+        this.modalObj.currentChannel = channel
       },
       passData(modalObj) {
         this.modalObj.modalTitle = modalObj.modalTitle

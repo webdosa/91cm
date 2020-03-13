@@ -31,7 +31,7 @@
         <b-collapse id="collapse-1">
           <ul class="list-unstyled">
             <li v-for="(channel, index) in channelList">
-              <a @click="sendChannelTitle(index)">{{ channel.name }}</a>
+              <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
             </li>
           </ul>
         </b-collapse>
@@ -44,7 +44,7 @@
         </li>
       </ul>
     </div>
-    <b-modal id="channelCU" centered  ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
+    <b-modal id="channelCU" centered ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
       <template #modal-title>
         {{modalObj.modalTitle}}
       </template>
@@ -59,92 +59,111 @@
 </template>
 
 <script>
-import axios from 'axios'
-export default {
-  props: ['modalObj'],
-  name: 'LSidebar',
-    data() {
-    return {
-      nameState: null,
-      channelmode: '',
-      channelList: [],
-      channelTitle: ''
-    }
-  },
-  methods: {
-    sendChannelTitle : function(channelIndex){
-      this.$emit('sendTitle', this.channelList[channelIndex])
-    },
-    prepareModal: function (e){
-      if(e.target.parentNode.dataset.mode=='create'){
-        this.channelmode = 'create'
-        this.modalObj.modalTitle = '채널 생성'
-        this.$bvModal.show('channelCU')
-      }
-    },
-    // 채널 생성 부분
-    checkFormValidity: function () {
-      const valid = this.$refs.channelCreateForm.checkValidity()
-      this.nameState = valid
-      return valid
-    },
-    RSidebarClose: function () {
-      this.$store.state.isRActive = false
-    },
-    resetModal() {
-      this.channelTitle = ''
-      this.nameState = null
-    },
-    handleOk(bvModalEvt) {
-      // Prevent modal from closing
-      bvModalEvt.preventDefault()
-      // Trigger submit handler
-      this.channelForm()
-    },
-    channelForm: function () {
-      if (!this.checkFormValidity()) {
-        return
-      }
-      this.$refs['modal'].hide()
+  import Aboutchannel from "../../service/aboutchannel";
 
-      this.$nextTick(() => {
-        this.$bvModal.hide('channelCU')
-      })
-      axios.get('http://localhost:9191/api/user/info')
-        .then(res => {
-          console.log(res)
-          axios.post('http://localhost:9191/api/channel/create',{
-            name: this.channelTitle,
-            id: this.modalObj.currentChannel.id,
-            member_email: res.data.email
-          }, {
-            headers: {
-              'Content-Type' : 'application/json'
-            }
-          })
-            .then(res => {
-              console.log(res)
-              this.testList()
-            })
-            .catch(error => {
-              console.warn(error)
-            })
-        })
-        .catch(error => {
-          console.warn(error)
-        })
+  export default {
+    props: ['modalObj', 'channelList'],
+    name: 'LSidebar',
+    data() {
+      return {
+        nameState: null,
+        channelmode: '',
+        channelTitle: ''
+      }
     },
-    // 채널 리스트 가져오기
-    // 함수 이름 변경 필요
-    testList: function () {
-      this.$http.get('http://localhost:9191/api/channel/list')
-        .then(res => {
-          this.channelList = res.data
+    methods: {
+      sendSelectChannel: function (channelIndex) {
+        this.$emit('sendTitle', this.channelList[channelIndex])
+      },
+      prepareModal: function (e) {
+        if (e.target.parentNode.dataset.mode == 'create') {
+          this.channelmode = 'create'
+          this.modalObj.modalTitle = '채널 생성'
+          this.$bvModal.show('channelCU')
+        } else if (this.modalObj.modalTitle === '채널 수정') {
+          this.channelTitle = this.modalObj.currentChannel.name
+        }
+      },
+      // 채널 생성 부분
+      checkFormValidity: function () {
+        const valid = this.$refs.channelCreateForm.checkValidity()
+        this.nameState = valid
+        return valid
+      },
+      RSidebarClose: function () {
+        this.$store.state.isRActive = false
+      },
+      resetModal() {
+        this.channelTitle = ''
+        this.nameState = null
+      },
+      handleOk(bvModalEvt) {
+        // Prevent modal from closing
+        bvModalEvt.preventDefault()
+        // Trigger submit handler
+        this.channelForm()
+      },
+      channelForm: function () {
+        if (!this.checkFormValidity()) {
+          return
+        }
+        this.$refs['modal'].hide()
+
+        this.$nextTick(() => {
+          this.$bvModal.hide('channelCU')
         })
+        if (this.modalObj.modalTitle === '채널 생성') {
+          this.createChannel()
+        } else if (this.modalObj.modalTitle === '채널 수정') {
+          this.modalObj.currentChannel.name = this.channelTitle
+          this.updateChannel()
+        }
+      },
+      updateChannel: function () {
+        this.$http.post('http://localhost:9191/api/channel/update', this.modalObj.currentChannel,
+          {
+            headers: {'Content-Type': 'application/json'}
+          })
+          .then(res => {
+            console.log(res)
+            // 채널 수정 후 리스트를 업데이트 하는 부분
+            Aboutchannel.getChannelList().then(res => {
+              this.channelList = res.data
+            })
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      },
+      createChannel: function () {
+        this.$http.get('http://localhost:9191/api/user/info')
+          .then(res => {
+            console.log(res)
+            this.$http.post('http://localhost:9191/api/channel/create', {
+              name: this.channelTitle,
+              member_email: res.data.email
+            }, {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+              .then(res => {
+                console.log(res)
+                // 채널 생성 후 리스트를 업데이트 하는 부분
+                Aboutchannel.getChannelList().then(res => {
+                  this.channelList = res.data
+                })
+              })
+              .catch(error => {
+                console.warn(error)
+              })
+          })
+          .catch(error => {
+            console.warn(error)
+          })
+      }
+    },
+    mounted() {
     }
-  },
-  mounted() {
-    this.testList()
   }
-}
 </script>
