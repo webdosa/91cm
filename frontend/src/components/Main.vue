@@ -1,7 +1,10 @@
 <template>
   <div class="wrapper">
     <!-- Sidebar  -->
-    <LSidebar :modalObj="modalObj"></LSidebar>
+    <LSidebar 
+      :modalObj="modalObj" 
+      :channelList="channelList" 
+      @channelUpdate="channelUpdate"></LSidebar>
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
@@ -37,7 +40,7 @@
         channelList: [],
         isRActive: false,
         msgArray: [],
-        currentChannel: 0,
+        currentChannel: {},
         msgCountObj: {},
         modalObj:{modalTitle:'',channelTitle:''}
       }
@@ -46,19 +49,23 @@
 
       axios.get('http://localhost:9191/api/user/getsession').then(res=>{
         if(res.data.phone == null || res.data.phone == ''){
-          this.$router.replace('/signup')    
+            this.$router.replace('/signup')    
         }else{
           localStorage.setItem('user',JSON.stringify(res.data))
           AboutChannel.getChannelList().then(
           res => {
+            console.log('ds')
+            console.log(res.data)
+            
             this.channelList = res.data
             for(let i in this.channelList){
-              this.msgCountObj[this.channelList[i]] = 0
+              this.msgCountObj[this.channelList[i].id] = 0
             }
             console.log(this.channelList)
             console.log(this.msgCountObj)
             //사용자가 채널을 선택하지 않았다면.
             this.currentChannel = this.channelList[0]
+            console.log(this.currentChannel)
 
             // 현재 채널에 저장되어있는 메시지 가져오기
             // AboutChannel.getMsgList(this.currentChannel).then(
@@ -83,7 +90,7 @@
         this.stompClient.connect({},() => {
           console.log('asd2')
           for(let i in this.channelList){
-            this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i],(e)=>{
+            this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i].id,(e)=>{
               let data = JSON.parse(e.body);
               if(data.message.channel_id == this.currentChannel){
                 data.message.content = this.replacemsg(data.message.content)
@@ -106,6 +113,23 @@
       },
       msgArrayUnshift () {
         //console.log('함수실행')
+      },
+      channelUpdate(newChannelList) {
+          let num = newChannelList.length - this.channelList.length
+        for(let i=num; i>0; i-- ){
+          let idx = newChannelList.length-i
+          this.msgCountObj[newChannelList[idx].id] = 0
+            this.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id,(e)=>{
+              let data = JSON.parse(e.body);
+              if(data.message.channel_id == this.currentChannel){
+                data.message.content = this.replacemsg(data.message.content)
+                this.msgArray.push(data)
+              }else{
+                this.msgCountObj[data.message.channel_id] += 1
+              }
+            })
+        }
+        this.channelList = newChannelList
       }
     },
     mounted() {

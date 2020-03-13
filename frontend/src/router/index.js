@@ -55,6 +55,14 @@ const routes = [
     component: SignUp
 
   }
+  //,
+  // {
+  //   path: '/user/edit',
+  //   component: Main,
+  //   children:[
+  //     { path:'', component: EditProfile},
+  //   ]
+  // }
 ]
 
 const router = new VueRouter({

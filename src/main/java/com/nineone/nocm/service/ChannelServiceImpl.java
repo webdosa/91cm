@@ -1,11 +1,14 @@
 package com.nineone.nocm.service;
 
-import com.nineone.nocm.domain.Channel;
-import com.nineone.nocm.repository.ChannelRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.nineone.nocm.domain.Channel;
+import com.nineone.nocm.domain.JoinInfo;
+import com.nineone.nocm.repository.ChannelRepository;
 
 @Service
 public class ChannelServiceImpl implements ChannelService{
@@ -14,8 +17,15 @@ public class ChannelServiceImpl implements ChannelService{
     private ChannelRepository channelRepository;
 
     @Override
+    @Transactional
     public boolean createChannel(Channel channel) {
-        return (channelRepository.insertChannel(channel) > 0) ? true : false;
+    	channelRepository.insertChannel(channel);
+    	JoinInfo joinInfo = JoinInfo.builder()
+    			.channel_id(channel.getId())
+    			.member_email(channel.getMember_email())
+    			.build();
+    	System.out.println(joinInfo.getChannel_id());
+        return (channelRepository.joinInfo(joinInfo) > 0 ) ? true : false;
     }
 
     @Override
