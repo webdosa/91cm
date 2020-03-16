@@ -38,15 +38,14 @@
               style="height: 60px;"
               v-model="message.content"
               ref="testinput"
-              list="user-info-list"
               autofocus
-            >
-            </b-form-input>
+            ></b-form-input>
+            <datalist id="user-info-list">
+              <option>userInfo</option>
+              <option v-for="user in $store.state.userList">{{ user.name }} {{ user.email }}</option>
+            </datalist>
           </div>
-          <datalist id="user-info-list">
-            <option>userInfo</option>
-            <option v-for="user in $store.state.userList">{{ user.name }} {{ user.email }}</option>
-          </datalist>
+
         </div>
         <b-button @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송</b-button>
       </div>
