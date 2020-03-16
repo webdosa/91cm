@@ -163,14 +163,9 @@ export default {
             console.warn(error)
           })
       }
-<<<<<<< HEAD
     },
   mounted() {
     
-
-=======
-    }
->>>>>>> hyeok-develop
   }
 }
 </script>
