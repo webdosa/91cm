@@ -145,6 +145,10 @@
             })
         }
         this.channelList = newChannelList
+        if(this.modalObj.currentChannel == null){
+            this.modalObj.currentChannel = this.channelList[0]
+            this.channelTitle = this.modalObj.currentChannel.name
+        }
       }
     }
   }

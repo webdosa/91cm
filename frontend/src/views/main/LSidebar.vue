@@ -127,10 +127,6 @@ export default {
           })
             .then(res => {
               console.log(res)
-              //채널 추가했으니 채널 갱신
-              AboutChannel.getChannelList().then(res=>{
-                this.$emit('channelUpdate',res.data)
-              })
             }).catch(error => {
             console.log(error)
           })
@@ -150,10 +146,10 @@ export default {
               .then(res => {
                 console.log(res)
                 // 채널 생성 후 리스트를 업데이트 하는 부분
-                Aboutchannel.getChannelList().then(res => {
-                  this.channelList = res.data
+                this.$http.get('http://localhost:9191/api/channel/list').then(res => {
+                   this.$emit('channelUpdate',res.data)
                 })
-                this.$router.go('/main')
+                //this.$router.go('/main')
               })
               .catch(error => {
                 console.warn(error)
