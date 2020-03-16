@@ -18,14 +18,34 @@
         <!-- 더 뭔가 추가할 거 같아서 div로 감싸놓음 -->
         <div style="flex-grow:1;">
           <b-form-textarea
+            inlist=""
+            v-if="!show"
             id="textarea-no-resize"
             placeholder="Enter chat message"
             rows="3"
             no-resize
             v-model="message.content"
             @keyup.enter.exact="send"
-            @keydown.shift.50 ='test'
+            @keydown.shift.50='test'
           ></b-form-textarea>
+          <div class="input-group" v-if="show">
+            <div class="input-group-prepend">
+              <span class="input-group-text">@</span>
+            </div>
+            <b-form-input
+              @keydown.enter.exact="invite(user)"
+              list="user-info-list"
+              style="height: 60px;"
+              v-model="message.content"
+              ref="testinput"
+              autofocus
+            ></b-form-input>
+            <datalist id="user-info-list">
+              <option>userInfo</option>
+              <option v-for="user in $store.state.userList">{{ user.name }} {{ user.email }}</option>
+            </datalist>
+          </div>
+
         </div>
         <b-button @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송</b-button>
       </div>
@@ -43,6 +63,7 @@
     },
     data() {
       return {
+        show: false,
         sizes: ['Small', 'Medium', 'Large', 'Extra Large'],
         message: {
           channel_id: this.currentChannel.channel_id,
@@ -56,8 +77,15 @@
       }
     },
     methods: {
-      test : function(e) {
-        alert("test")
+      invite : function(user){
+        const userName = this.message.content.split(" ")[0]
+        this.message.content = userName+"님을 초대했습니다."
+        this.send()
+        this.show = !this.show
+      },
+      test: function (e) {
+        this.show = !this.show
+        this.$refs.testinput.focus()
       },
       send() {
         console.log(this.currentChannel)

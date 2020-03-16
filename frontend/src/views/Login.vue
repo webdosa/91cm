@@ -18,16 +18,17 @@
         <div class="btn btn-outline-secondary btn-block" onclick="window.location.href='/'">회원가입</div>
       </form>
       <br>
-      <p class="h6">소셜로그인 {{ $store.state.isLActive }}</p>
-      <hr>
-      <div>
-        <a href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
-        <a href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
-        <a href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
-        <!--        동작 에러 인해 주석처리-->
-        <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
+      <div style="text-align: center">
+        <p class="h6">소셜로그인</p>
+        <hr>
+        <div>
+          <a href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
+          <a href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
+          <a href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
+          <!--        동작 에러 인해 주석처리-->
+          <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
+        </div>
       </div>
-      <span>{{ $store.state.currentUser.name }}</span>
     </div>
   </div>
 </template>
