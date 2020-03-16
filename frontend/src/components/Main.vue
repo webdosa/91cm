@@ -24,7 +24,9 @@
         <p>채팅방을 만들거나 가입해주세요</p>
       </div>
     </div>
-    <RSidebar :modalObj="modalObj" @passData="passData"></RSidebar>
+    <RSidebar v-if="channelList[0]!=null"
+    :modalObj="modalObj" 
+    @passData="passData"></RSidebar>
   </div>
 </template>
 <script>
@@ -70,7 +72,7 @@
             console.log(this.channelList)
             console.log(this.msgCountObj)
             //사용자가 채널을 선택하지 않았다면.
-            if (this.modalObj.currentChannel == null) {
+            if (this.modalObj.currentChannel == null && this.channelList[0]!=null) {
               this.modalObj.currentChannel = this.channelList[0]
               this.channelTitle = this.modalObj.currentChannel.name
               console.log(this.currentChannel)
