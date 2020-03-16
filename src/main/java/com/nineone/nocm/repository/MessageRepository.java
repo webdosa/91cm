@@ -1,5 +1,7 @@
 package com.nineone.nocm.repository;
 
-public interface MessageRepository {
+import com.nineone.nocm.domain.Message;
 
+public interface MessageRepository {
+	int insertMessage(Message msg);
 }

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <span>email</span>
+    <span>emailasdasd</span>
     <b-input type="text" name="name" v-model="user.name"></b-input>
     <b-input type="text" name="phone" v-model="user.phone"></b-input>
      <b-button style="margin:15px;" variant="primary" @click="insertUser">등록</b-button>
