@@ -28,7 +28,7 @@
               <b-dropdown-item href="#">RU</b-dropdown-item>
               <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
-            <div class="verti-align useridsty">{{ userInfo.name }}</div>
+            <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
             <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
               <!-- Using 'button-content' slot -->
               <template v-slot:button-content style="padding:0px;">

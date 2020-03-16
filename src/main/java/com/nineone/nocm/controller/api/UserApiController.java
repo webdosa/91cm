@@ -1,6 +1,8 @@
 package com.nineone.nocm.controller.api;
 
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,11 @@ public class UserApiController {
 	
 	@Autowired
 	private UserService userService;
+
+	@RequestMapping("/list")
+    public List<User> userList(){
+	    return userService.getAllUserList();
+    }
 
 	@RequestMapping(value="/login")
     public boolean userInit(@Socialuser User user){

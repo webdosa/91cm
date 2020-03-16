@@ -47,6 +47,10 @@
     },
     created () {
 
+      // 적용은 mounted 이후에 가능한 것으로 보임...
+      this.$store.dispatch('userListUpdate')
+      this.$store.dispatch('initCurrentUser')
+      // 상의 후 수정해야할 듯
       axios.get('http://localhost:9191/api/user/getsession').then(res=>{
         if(res.data.phone == null || res.data.phone == ''){
             this.$router.replace('/signup')    
