@@ -29,7 +29,7 @@
         <li>Channels</li>
         </a>
         <b-collapse id="collapse-1">
-          <ul class="list-unstyled">
+          <ul class="list-unstyled"v-if="channelList[0] != null">
             <li v-for="(channel, index) in channelList">
               <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
             </li>
@@ -153,6 +153,7 @@
                 Aboutchannel.getChannelList().then(res => {
                   this.channelList = res.data
                 })
+                this.$router.go('/main')
               })
               .catch(error => {
                 console.warn(error)
@@ -162,8 +163,6 @@
             console.warn(error)
           })
       }
-    },
-    mounted() {
     }
   }
 </script>
