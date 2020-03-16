@@ -8,5 +8,6 @@ class AboutChannel{
     getMsgList (){
         return axios.get('')
     }
+
 }
 export default new AboutChannel()

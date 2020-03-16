@@ -32,8 +32,8 @@
         </a>
         <b-collapse id="collapse-1">
           <ul class="list-unstyled">
-            <li v-for="channel in channelList" :key="channel.id">
-              <a>{{ channel.name }}</a>
+            <li v-for="(channel, index ) in channelList" :key="channel.id">
+              <a @click="sendSelectChannel(index)">{{ channel.name }}</a>            
             </li>
           </ul>
         </b-collapse>
@@ -46,13 +46,13 @@
         </li>
       </ul>
     </div>
-    <b-modal id="channelCU" centered  ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
+    <b-modal id="channelCU" centered ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
       <template #modal-title>
         {{modalObj.modalTitle}}
       </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
-          <b-form-input id="channel-input" :state="nameState" v-model="modalObj.channelTitle" required>
+          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
           </b-form-input>
         </b-form-group>
       </form>
@@ -61,80 +61,105 @@
 </template>
 
 <script>
-import axios from 'axios'
 import AboutChannel from '../../service/aboutchannel'
 export default {
   props: ['modalObj','channelList'],
   name: 'LSidebar',
     data() {
-    return {
-      nameState: null,
-      channelmode: ''
-    }
-  },
-  methods: {
-    prepareModal: function (e){
-      if(e.target.parentNode.dataset.mode=='create'){
-        this.channelmode = 'create'
-        this.modalObj.modalTitle = '채널 생성'
-        this.$bvModal.show('channelCU')
+      return {
+        nameState: null,
+        channelmode: '',
+        channelTitle: ''
       }
     },
-    // 채널 생성 부분
-    checkFormValidity: function () {
-      const valid = this.$refs.channelCreateForm.checkValidity()
-      this.nameState = valid
-      return valid
-    },
-    RSidebarClose: function () {
-      this.$store.state.isRActive = false
-    },
-    resetModal() {
-      this.channelTitle = ''
-      this.nameState = null
-    },
-    handleOk(bvModalEvt) {
-      // Prevent modal from closing
-      bvModalEvt.preventDefault()
-      // Trigger submit handler
-      this.channelForm()
-    },
-    channelForm: function () {
-      if (!this.checkFormValidity()) {
-        return
-      }
-      this.$refs['modal'].hide()
+    methods: {
+      sendSelectChannel: function (channelIndex) {
+        this.$emit('sendTitle', this.channelList[channelIndex])
+      },
+      prepareModal: function (e) {
+        if (e.target.parentNode.dataset.mode == 'create') {
+          this.channelmode = 'create'
+          this.modalObj.modalTitle = '채널 생성'
+          this.$bvModal.show('channelCU')
+        } else if (this.modalObj.modalTitle === '채널 수정') {
+          this.channelTitle = this.modalObj.currentChannel.name
+        }
+      },
+      // 채널 생성 부분
+      checkFormValidity: function () {
+        const valid = this.$refs.channelCreateForm.checkValidity()
+        this.nameState = valid
+        return valid
+      },
+      RSidebarClose: function () {
+        this.$store.state.isRActive = false
+      },
+      resetModal() {
+        this.channelTitle = ''
+        this.nameState = null
+      },
+      handleOk(bvModalEvt) {
+        // Prevent modal from closing
+        bvModalEvt.preventDefault()
+        // Trigger submit handler
+        this.channelForm()
+      },
+      channelForm: function () {
+        if (!this.checkFormValidity()) {
+          return
+        }
+        this.$refs['modal'].hide()
 
-      this.$nextTick(() => {
-        this.$bvModal.hide('channelCU')
-      })
-      axios.get('http://localhost:9191/api/user/info')
-        .then(res => {
-          console.log(res)
-          axios.post('http://localhost:9191/api/channel/create',{
-            name: this.modalObj.channelTitle,
-            member_email: res.data
-          }, {
-            headers: {
-              'Content-Type' : 'application/json'
-            }
+        this.$nextTick(() => {
+          this.$bvModal.hide('channelCU')
+        })
+        if (this.modalObj.modalTitle === '채널 생성') {
+          this.createChannel()
+        } else if (this.modalObj.modalTitle === '채널 수정') {
+          this.modalObj.currentChannel.name = this.channelTitle
+          this.updateChannel()
+        }
+      },
+      updateChannel: function () {
+        this.$http.post('http://localhost:9191/api/channel/update', this.modalObj.currentChannel,
+          {
+            headers: {'Content-Type': 'application/json'}
           })
             .then(res => {
               console.log(res)
-              //채널 추가했으니 채널 갱신
-              AboutChannel.getChannelList().then(res=>{
-                this.$emit('channelUpdate',res.data)
+            }).catch(error => {
+            console.log(error)
+          })
+      },
+      createChannel: function () {
+        this.$http.get('http://localhost:9191/api/user/info')
+          .then(res => {
+            console.log(res)
+            this.$http.post('http://localhost:9191/api/channel/create', {
+              name: this.channelTitle,
+              member_email: res.data.email
+            }, {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+              .then(res => {
+                console.log(res)
+                // 채널 생성 후 리스트를 업데이트 하는 부분
+                this.$http.get('http://localhost:9191/api/channel/list').then(res => {
+                   this.$emit('channelUpdate',res.data)
+                })
+                //this.$router.go('/main')
               })
-            })
-            .catch(error => {
-              console.warn(error)
-            })
-        })
-        .catch(error => {
-          console.warn(error)
-        })
+              .catch(error => {
+                console.warn(error)
+              })
+          })
+          .catch(error => {
+            console.warn(error)
+          })
+      }
     },
-  },
   mounted() {
     
   }

@@ -24,7 +24,7 @@
             no-resize
             v-model="message.content"
             @keyup.enter.exact="send"
-
+            @keydown.shift.50 ='test'
           ></b-form-textarea>
         </div>
         <b-button @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송</b-button>
@@ -43,18 +43,22 @@
     },
     data() {
       return {
+        sizes: ['Small', 'Medium', 'Large', 'Extra Large'],
         message: {
-          channel_id: 0,
+          channel_id: this.currentChannel.channel_id,
           content: '',
-          sender: 'userid'
+          sender: this.$store.state.currentUser.email
         }
       }
     },
     methods: {
+      test : function(e) {
+        alert("test")
+      },
       send() {
         console.log(this.currentChannel)
         console.log(this.stompClient)
-        this.message.channel_id = this.currentChannel
+        this.message.channel_id = this.currentChannel.id
         if (this.stompClient && this.stompClient.connected) {
           this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
           this.message.content = ''

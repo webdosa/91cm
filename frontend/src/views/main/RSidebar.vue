@@ -46,9 +46,9 @@
             <div style="display:flex;">
               <p>Channel Name</p>
               <a class="verti-align" data-mode="edit" @click="prepareModal">Edit</a>
-              <a class="verti-align" >Delete</a>
+              <a class="verti-align" @click="deleteChannel">Delete</a>
             </div>
-            <li class="list-unstyled">Cha1</li>
+            <li class="list-unstyled">{{ modalObj.currentChannel.name }}</li>
           </div>
           <div>
             <p>Created</p>
@@ -83,9 +83,7 @@
       <b-collapse id="user-info">
         <div class="s-coll-style">
           <div>
-            <li class="list-unstyled">user1</li>
-            <li class="list-unstyled">user2</li>
-            <li class="list-unstyled">user3</li>
+            <li class="list-unstyled" v-for="user in $store.state.userList">{{ user.name }}</li>
           </div>
           <div style="display:flex; justify-content:flex-start;">
             <b-button variant="primary">초대하기</b-button>
@@ -115,33 +113,57 @@
     </div>
 
 
-
-
   </nav>
 
 </template>
 <script>
 
+  import Main from "../../components/Main";
+
   export default {
     props: ['modalObj'],
     name: 'RSidebar',
     data() {
-      return {
-
-      }
+      return {}
     },
     methods: {
       RSidebarClose: function () {
-        this.$store.state.isRActive= false
+        this.$store.state.isRActive = false
       },
-      prepareModal: function (e){
-        if(e.target.dataset.mode=='edit'){
+      prepareModal: function (e) {
+        if (e.target.dataset.mode == 'edit') {
           this.modalObj.modalTitle = '채널 수정'
           //Cha1는 나중에 현재 채널 정보에서 가져올 채널 이름값
-          this.modalObj.channelTitle ='Cha1'
-          this.$emit('passData',this.modalObj)
+          // this.modalObj.channelTitle ='Cha1'
+          this.$emit('passData', this.modalObj)
           this.$bvModal.show('channelCU')
         }
+      },
+      deleteChannel: function () {
+        this.$http.get('http://localhost:9191/api/user/info')
+          .then(res => {
+            const user = res.data
+            console.log(user)
+            console.log(this.modalObj.currentChannel)
+            if (this.modalObj.currentChannel.member_email == user.email) {
+              this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
+                , {
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                }).then(res => {
+                  console.log(res)
+                this.modalObj.currentChannel = null
+                this.modalObj.modalTitle = null
+                  this.$router.go('/main')
+              }).catch(error => {
+                console.log(error)
+              })
+            }
+          })
+          .catch(error => {
+            console.log(error)
+          })
       }
     }
   }
