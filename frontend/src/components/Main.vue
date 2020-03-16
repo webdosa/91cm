@@ -28,7 +28,7 @@
   import AboutChannel from '../service/aboutchannel'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
-
+  import axios from 'axios'
 
   
   export default {
