@@ -48,6 +48,10 @@
           channel_id: this.currentChannel.channel_id,
           content: '',
           sender: this.$store.state.currentUser.email
+        },
+        cursorPoint:{
+          first:true,
+          cursorId:0
         }
       }
     },
@@ -70,6 +74,10 @@
           //추후 아래에 저장되어있는 메시지 가져오는 코드 추가
           // 저 emit코드는 .then(res=>{}) 안에다가 넣을 코드 emit 옆에 받은 데이터 전달
           // this.$emit('msgArrayUnshift')
+          this.$http.get('http://localhost:9191/api/message/getmsg').then(res=>{
+
+          })
+          
         }
       }
     }
