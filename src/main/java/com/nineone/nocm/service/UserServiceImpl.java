@@ -1,5 +1,6 @@
 package com.nineone.nocm.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,11 @@ public class UserServiceImpl implements UserService{
 			throw new UsernameNotFoundException("can not find user");
 		}
 		return (UserDetails) user;
+	}
+
+	@Override
+	public List<User> getAllUserList() {
+		return userRepository.getAllUserList();
 	}
 
 }

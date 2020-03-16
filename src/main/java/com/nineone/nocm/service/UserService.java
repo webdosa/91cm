@@ -6,10 +6,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.nineone.nocm.domain.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
+
 public interface UserService extends UserDetailsService {
 	
 	boolean insertUser(User user);
 	boolean emailCheck(String userid);
 	UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException;
-
+	List<User> getAllUserList();
 }

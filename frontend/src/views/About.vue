@@ -1,5 +1,6 @@
 <template>
   <div class='about'>
+    <span> {{$store.state.currentUser.name }}</span>
     <h1>This is an about page!!</h1>
     <button @click="send">전송</button>
     <button @click="check">확인</button>
@@ -47,13 +48,13 @@ export default {
         for(let i in channelList){
         this.stompClient.subscribe("/sub/chat/room/"+channelList[i],(e)=>{
           let data = JSON.parse(e.body);
-          
+
           if(data.channel_id == this.currentChannel){
-            this.array.push(data)  
+            this.array.push(data)
           }else{
             this.msgCountObj[data.channel_id] += 1
           }
-          
+
         })
       }
       })
