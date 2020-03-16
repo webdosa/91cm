@@ -9,13 +9,20 @@
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <router-view name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
-      <router-view
-        :currentChannel="modalObj.currentChannel"
-        :stompClient="stompClient"
-        :msgArray="msgArray"
-        @msgArrayUnshift="msgArrayUnshift"
-      ></router-view>
+      <!-- 채널 리스트가 있는지 없는지 확인  -->
+      <div v-if="channelList[0]!=null">
+        <router-view name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
+        <router-view
+          :currentChannel="modalObj.currentChannel"
+          :stompClient="stompClient"
+          :msgArray="msgArray"
+          @msgArrayUnshift="msgArrayUnshift"
+        ></router-view>
+      </div>
+      <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
+      <div v-else>
+        <p>채팅방을 만들거나 가입해주세요</p>
+      </div>
     </div>
     <RSidebar :modalObj="modalObj" @passData="passData"></RSidebar>
   </div>
@@ -46,7 +53,6 @@
       }
     },
     created () {
-
       // 적용은 mounted 이후에 가능한 것으로 보임...
       this.$store.dispatch('userListUpdate')
       this.$store.dispatch('initCurrentUser')
@@ -82,7 +88,7 @@
       })
     },
     methods: {
-      sendTitle(channel){
+      sendTitle(channel) {
         this.channelTitle = channel.name
         this.modalObj.currentChannel = channel
       },

@@ -153,6 +153,7 @@ export default {
                 Aboutchannel.getChannelList().then(res => {
                   this.channelList = res.data
                 })
+                this.$router.go('/main')
               })
               .catch(error => {
                 console.warn(error)
@@ -162,10 +163,14 @@ export default {
             console.warn(error)
           })
       }
+<<<<<<< HEAD
     },
   mounted() {
     
 
+=======
+    }
+>>>>>>> hyeok-develop
   }
 }
 </script>
