@@ -4,22 +4,22 @@ spring:
       client:
         registration:
           google:
-            client-id: 494197804420-1ke3o3d15mt52k0n5k54ip8920ciujjp.apps.googleusercontent.com
-            client-secret: sdZkIXaOdfTnBiIsP8VUdok8
+            client-id: 
+            client-secret: 
             scope: profile,email
           github:
-            client-id: 5089d89ade5c8cad7fdb
-            client-secret: 4085f7bb1d0d5af8a36ada6f26110fed1fdd3de4
+            client-id: 
+            client-secret: 
           naver:
-            client-id: HylBNrnld2nVNQPLdZ6V
-            client-secret: GgJ8FmAMz5
+            client-id: 
+            client-secret: 
             redirect-uri: http://localhost:9191/login/oauth2/code/{registrationId}
             authorization-grant-type: authorization_code
             scope: name,email,profile_image
             client-name: Naver
           kakao:
-            client-id: 18b1b2deaa6aec3e53d07899549f8587
-            client-secret: AuIzW2KqTo2lgNG23naAIM02fnJtVCPd
+            client-id: 
+            client-secret: 
             redirect-uri: http://localhost:9191/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             scope: profile
