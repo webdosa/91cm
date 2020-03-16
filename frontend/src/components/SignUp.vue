@@ -12,7 +12,7 @@
                 </div>
                 <div class="card-body">
                   <label>가입할 이메일을 입력해주세요</label>
-                  <b-input type="text" name="email" v-model="user.email" placeholder="이메일"></b-input>
+                  <b-input v-if="!user.email" type="text" name="email" v-model="email" placeholder="이메일"></b-input>
                   <label>91cm에서 사용할 이름을 입력해주세요</label>
                   <b-input type="text" name="name" v-model="user.name" placeholder="이름"></b-input>
                   <label>업무에 사용하는 핸드폰 번호를 입력해주세요</label>
@@ -48,18 +48,19 @@
     },
     methods: {
       phoneFormatter: function () {
-        if (this.user.phone.length >= 10)
-          this.user.phone = this.user.phone.replace(/(^02.{0}|^01.{1}|[0-9]{4})([0-9]+)([0-9]{4})/, "$1-$2-$3");
+
       },
       getUser() {
         axios.get('http://localhost:9191/api/user/getsession').then(res => {
           this.user.name = res.data.name
           this.user.phone = res.data.phone
           this.user.email = res.data.email
+          this.email = this.user.email
           this.user.picture = res.data.picture
         })
       },
       insertUser() {
+        this.user.email = this.email
         let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
         axios.post('http://localhost:9191/api/user/signup', JSON.stringify(this.user), {
           headers: {

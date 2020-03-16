@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
     <!-- Sidebar  -->
-    <LSidebar 
-      :modalObj="modalObj" 
-      :channelList="channelList" 
+    <LSidebar
+      :modalObj="modalObj"
+      :channelList="channelList"
       @channelUpdate="channelUpdate"
       @sendTitle="sendTitle"></LSidebar>
     <!-- Page Content  -->
@@ -25,7 +25,7 @@
       </div>
     </div>
     <RSidebar v-if="channelList[0]!=null"
-    :modalObj="modalObj" 
+    :modalObj="modalObj"
     @passData="passData"></RSidebar>
   </div>
 </template>
@@ -39,7 +39,7 @@
   import Stomp from 'webstomp-client'
   import axios from 'axios'
 
-  
+
   export default {
     name: 'Main',
     components: {MainHeader, LSidebar, RSidebar, ContentWrapper},
@@ -61,10 +61,10 @@
       // 상의 후 수정해야할 듯
       axios.get('http://localhost:9191/api/user/getsession').then(res=>{
         if(res.data.phone == null || res.data.phone == ''){
-            this.$router.replace('/signup')    
+            this.$router.replace('/signup')
         }else{
           AboutChannel.getChannelList().then(
-          res => {            
+          res => {
             this.channelList = res.data
             for(let i in this.channelList){
               this.msgCountObj[this.channelList[i].id] = 0
@@ -102,7 +102,7 @@
         console.log('asd1')
         this.stompClient.connect({}, () => {
           console.log('asd2')
-          
+
           for (let i in this.channelList) {
             this.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
               let data = JSON.parse(e.body)
