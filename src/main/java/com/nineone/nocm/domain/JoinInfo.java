@@ -13,10 +13,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class JoinInfo {
-	int id;
-	int channel_id;
-	String register_date;
-	String member_email;
+	private int id;
+	private int channel_id;
+	private String register_date;
+	private String member_email;
 	
 	 @Builder
 	 public JoinInfo(int id, int channel_id, String register_date, String member_email){
