@@ -42,7 +42,7 @@
             ></b-form-input>
             <datalist id="user-info-list">
               <option>userInfo</option>
-              <option v-for="user in $store.state.userList">{{ user.name }} {{ user.email }}</option>
+              <option v-for="(user, index)in $store.state.userList">{{ user.name }} {{ user.email }} {{index}}</option>
             </datalist>
           </div>
 
@@ -105,7 +105,7 @@
           this.$http.get('http://localhost:9191/api/message/getmsg').then(res=>{
 
           })
-          
+
         }
       }
     }
