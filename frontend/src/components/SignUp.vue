@@ -2,7 +2,7 @@
   <div class="bg">
     <div class="container">
       <div class="row">
-
+        <!--   이메일, 이름, 핸드폰 번호 규격에 맞는지 확인 하는 정규식 추후에 추가     -->
         <div class="col-md-12 min-vh-100 d-flex flex-column justify-content-center">
           <div class="row">
             <div class="col-lg-6 col-md-8 mx-auto">
@@ -17,7 +17,7 @@
                   <b-input type="text" name="name" v-model="user.name" placeholder="이름"></b-input>
                   <label>업무에 사용하는 핸드폰 번호를 입력해주세요</label>
                   <b-input type="text" name="phone" v-model="user.phone" placeholder="핸드폰 번호"
-                           @keydown="phoneFormatter"></b-input>
+                           @keyup="phoneFormatter" ref="phoneNum"></b-input>
                   <b-button class="float-right" style="margin:15px;" variant="primary" @click="insertUser">등록</b-button>
                 </div>
               </div>
@@ -48,7 +48,8 @@
     },
     methods: {
       phoneFormatter: function () {
-
+        this.user.phone=this.user.phone.replace(/[^0-9]/g, "") // 숫자만 추출 되도록하는 정규식
+        this.user.phone=this.user.phone.replace(/(^02.{0}|^01.{1}|[0-9]{4})([0-9]+)([0-9]{4})/, "$1-$2-$3");// 휴대폰번호 자동 하이픈 넣어주는 정규식
       },
       getUser() {
         axios.get('http://localhost:9191/api/user/getsession').then(res => {
