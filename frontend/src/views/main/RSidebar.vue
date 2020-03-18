@@ -45,15 +45,12 @@
           <div>
             <div style="display:flex;">
               <p>Channel Name</p>
-              <a class="verti-align" data-mode="edit" @click="prepareModal">Edit</a>
-              <a class="verti-align" @click="deleteChannel">Delete</a>
+              <template v-if="modalObj.currentChannel.member_email == $store.state.currentUser.email">
+                <a class="verti-align" data-mode="edit" @click="prepareModal">Edit</a>
+                <a class="verti-align" @click="deleteChannel">Delete</a>
+              </template>
             </div>
             <li class="list-unstyled">{{ modalObj.currentChannel.name }}</li>
-          </div>
-          <div>
-            <p>Created</p>
-            <!-- MMMM dd, yyyy 형식으로 출력하는게 나을 듯-->
-            <li class="list-unstyled">Created by username on March 09, 2020</li>
           </div>
           <div style="display:flex; justify-content:flex-start;">
             <b-button variant="primary">나가기</b-button>
@@ -117,7 +114,6 @@
 
 </template>
 <script>
-
   import Main from "../../components/Main";
 
   export default {
@@ -125,6 +121,9 @@
     name: 'RSidebar',
     data() {
       return {}
+    },
+    mounted(){
+      console.log('잉?')
     },
     methods: {
       RSidebarClose: function () {
