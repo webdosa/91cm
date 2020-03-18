@@ -62,6 +62,7 @@
       },
       insertUser() {
         this.user.email = this.email
+        console.log(this.user)
         let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
         axios.post('http://localhost:9191/api/user/signup', JSON.stringify(this.user), {
           headers: {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface JoinInfoRepository {
     List<JoinInfo> getAllList();
-    JoinInfo channelAuthorityCheck(JoinInfo joinInfo);
+    boolean channelAuthorityCheck(Invite invite);
     int insertJoinInfo(JoinInfo joinInfo);
 
 }

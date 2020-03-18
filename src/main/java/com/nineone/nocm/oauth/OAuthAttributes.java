@@ -32,16 +32,27 @@ public class OAuthAttributes {
 
     public static OAuthAttributes Of(String registrationId, String userNameAttributeName,
                                      Map<String, Object> attributes) {
-        for (String st : attributes.keySet()){
-            log.info("key = {} \t value = {}",st,attributes.get(st));
-        }
         if ("naver".equals(registrationId)){
             return ofNaver("id",attributes);
         }
         if ("kakao".equals(registrationId)){
             return ofKakao(userNameAttributeName,attributes);
         }
+        if ("github".equals(registrationId)){
+            return OfGithub(userNameAttributeName,attributes);
+        }
         return ofGoogle(userNameAttributeName, attributes);
+    }
+
+    private static OAuthAttributes OfGithub(String userNameAttributeName, Map<String, Object> attributes) {
+        return OAuthAttributes.builder()
+                .id(String.valueOf(attributes.get("id")))
+                .name((String) attributes.get("name"))
+                .email((String) attributes.get("email"))
+                .picture((String) attributes.get("avatar_url"))
+                .attributes(attributes)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
     }
 
     private static OAuthAttributes ofKakao(String id, Map<String, Object> attributes) {
@@ -81,7 +92,6 @@ public class OAuthAttributes {
 
     public User toEntity(){
         return User.builder()
-                .id(id)
                 .name(name)
                 .email(email)
                 .picture(picture)

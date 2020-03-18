@@ -1,5 +1,6 @@
 package com.nineone.nocm.service;
 
+import com.nineone.nocm.domain.Invite;
 import com.nineone.nocm.domain.JoinInfo;
 import com.nineone.nocm.repository.JoinInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,8 @@ public class JoinInfoServiceImpl implements JoinInfoService {
     private JoinInfoRepository joinInfoRepository;
 
     @Override
-    public boolean AuthorityCheck(JoinInfo joinInfo) {
-        if (joinInfoRepository.channelAuthorityCheck(joinInfo) == null) {
-            return false;
-        }
-        return true;
+    public boolean AuthorityCheck(Invite invite) {
+       return joinInfoRepository.channelAuthorityCheck(invite);
     }
 
     @Override

@@ -31,7 +31,10 @@
             <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
             <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
               <!-- Using 'button-content' slot -->
-              <template v-slot:button-content style="padding:0px;">
+              <template v-slot:button-content style="padding:0px;" v-if="$store.state.currentUser.picture">
+                <img :src="$store.state.currentUser.picture" style="height: 40px; width: 40px;">
+              </template>
+              <template v-slot:button-content style="padding:0px;" v-else>
                 <svg
                   style="fill:#e6e6e6;"
                   xmlns="http://www.w3.org/2000/svg"

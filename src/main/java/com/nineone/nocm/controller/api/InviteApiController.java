@@ -29,11 +29,7 @@ public class InviteApiController {
     @PostMapping
     public boolean inviteUser(@RequestBody Invite invite){
         inviteService.saveInvite(invite);
-        JoinInfo joinInfo = JoinInfo.builder()
-                .channel_id(invite.getChannel_id())
-                .member_email(invite.getSender())
-                .build();
-        if (joinInfoService.AuthorityCheck(joinInfo)){
+        if (joinInfoService.AuthorityCheck(invite)){
             log.info("권한 있음");
             joinInfoService.insertJoinInfo(JoinInfo.builder()
                     .channel_id(invite.getChannel_id())
@@ -42,15 +38,7 @@ public class InviteApiController {
             return true;
         }else{
             log.info("권한 없음");
+            return false;
         }
-        // 슈도코드
-//        String channelId = map.get("channelId");
-//        String 생성자id = map.get("생성자id");
-//        String 초대자id = map.get("초대자id");
-//        if (생성자가 채널 권한이 있는지 확인){
-//            channelService.해당채널에유저추가(channelId,초대자id);
-//            userService.유저에채널권한부여(channelId,생성자id);
-//        }
-        return false;
     }
 }

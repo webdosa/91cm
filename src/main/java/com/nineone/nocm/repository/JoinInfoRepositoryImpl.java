@@ -24,8 +24,8 @@ public class JoinInfoRepositoryImpl implements JoinInfoRepository {
     }
 
     @Override
-    public JoinInfo channelAuthorityCheck(JoinInfo joinInfo) {
-        return sqlSession.selectOne(namespace + ".channelAuthorityCheck",joinInfo);
+    public boolean channelAuthorityCheck(Invite invite) {
+        return sqlSession.selectOne(namespace + ".channelAuthorityCheck", invite);
     }
 
     @Override

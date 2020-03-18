@@ -7,8 +7,9 @@
     <select id="getAllList" resultType="com.nineone.nocm.domain.JoinInfo">
         select * from joininfo
     </select>
-    <select id="channelAuthorityCheck" resultType="com.nineone.nocm.domain.JoinInfo">
-        select * from joininfo where channel_id = #{channel_id} and member_email = #{member_email}
+    <select id="channelAuthorityCheck" parameterType="com.nineone.nocm.domain.Invite" resultType="java.lang.Boolean">
+        select exists (select * from joininfo where channel_id = #{channel_id}
+        and member_email = #{sender} )
     </select>
     <insert id="insertJoinInfo">
         insert joininfo (channel_id,member_email) values (#{channel_id},#{member_email})

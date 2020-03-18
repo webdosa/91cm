@@ -16,13 +16,6 @@ member_email varchar(100) not null,
 foreign key (member_email) references member(email) on delete cascade on update cascade
 );
 
-create table auth (
-id int unsigned  primary key auto_increment not null,
-name varchar(30) not null,
-member_email varchar(100) not null,
-foreign key (member_email) references member(email) on delete cascade on update cascade
-);
-
 
 create table channel(
 id int unsigned  primary key auto_increment not null,
@@ -102,3 +95,11 @@ position int not null,
 foreign key (list_id) references list(id) on delete cascade on update cascade,
 foreign key (register) references member(email) on delete cascade on update cascade
 );
+
+
+delete from member;
+delete from channel;
+delete from invite;
+delete from message;
+delete from sns_info;
+delete from joininfo;
