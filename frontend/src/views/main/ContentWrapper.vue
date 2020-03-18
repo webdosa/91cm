@@ -3,6 +3,9 @@
     <div class="h-inherit">
       <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt" >
         <MsgBox v-for="msg in msgArray" :key="msg.id">
+          <template #m-icon>
+            <img class="icon-round" :src="msg.user.picture" width="40" height="40"/>
+          </template>
           <template #m-info>
             <!-- #으로 단축해서 사용 -->
             <strong>{{ msg.user.name }}</strong>
