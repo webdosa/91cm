@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
     <!-- Sidebar  -->
-    <LSidebar 
-      :modalObj="modalObj" 
-      :channelList="channelList" 
+    <LSidebar
+      :modalObj="modalObj"
+      :channelList="channelList"
       @channelUpdate="channelUpdate"
       @sendTitle="sendTitle"></LSidebar>
     <!-- Page Content  -->
@@ -16,7 +16,7 @@
           :currentChannel="modalObj.currentChannel"
           :stompClient="stompClient"
           :msgArray="msgArray"
-          @msgArrayUnshift="msgArrayUnshift"
+          @msgArrayUpdate="msgArrayUpdate"
         ></router-view>
       </div>
       <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
@@ -25,7 +25,7 @@
       </div>
     </div>
     <RSidebar v-if="channelList[0]!=null"
-    :modalObj="modalObj" 
+    :modalObj="modalObj"
     @passData="passData"></RSidebar>
   </div>
 </template>
@@ -39,7 +39,7 @@
   import Stomp from 'webstomp-client'
   import axios from 'axios'
 
-  
+
   export default {
     name: 'Main',
     components: {MainHeader, LSidebar, RSidebar, ContentWrapper},
@@ -61,10 +61,10 @@
       // 상의 후 수정해야할 듯
       axios.get('http://localhost:9191/api/user/getsession').then(res=>{
         if(res.data.phone == null || res.data.phone == ''){
-            this.$router.replace('/signup')    
+            this.$router.replace('/signup')
         }else{
           AboutChannel.getChannelList().then(
-          res => {            
+          res => {
             this.channelList = res.data
             for(let i in this.channelList){
               this.msgCountObj[this.channelList[i].id] = 0
@@ -99,20 +99,20 @@
       },
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
-        console.log('asd1')
         this.stompClient.connect({}, () => {
-          console.log('asd2')
-          
           for (let i in this.channelList) {
             this.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
               let data = JSON.parse(e.body)
               console.log(data)
-              if (data.message.channel_id == this.modalObj.currentChannel.id) {
-                data.message.content = this.replacemsg(data.message.content)
-                console.log(data)
+              if (data.channel_id == this.modalObj.currentChannel.id) {
+                data.content = this.replacemsg(data.content)
                 this.msgArray.push(data)
+                // let wrapper = this.$el.querySelector(".c-c-wrapper")
+                // console.log('main')
+                // console.log(wrapper)
+                // wrapper.scrollTop = wrapper.scrollHeight;
               } else {
-                this.msgCountObj[data.message.channel_id] += 1
+                this.msgCountObj[data.channel_id] += 1
               }
             })
           }
@@ -126,9 +126,6 @@
         }
         return content.replace(/ /gi, '&nbsp;')
       },
-      msgArrayUnshift() {
-        //console.log('함수실행')
-      },
       channelUpdate(newChannelList) {
           let num = newChannelList.length - this.channelList.length
         for(let i=num; i>0; i-- ){
@@ -136,11 +133,11 @@
           this.msgCountObj[newChannelList[idx].id] = 0
             this.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id,(e)=>{
               let data = JSON.parse(e.body);
-              if(data.message.channel_id == this.modalObj.currentChannel.id){
-                data.message.content = this.replacemsg(data.message.content)
+              if(data.channel_id == this.modalObj.currentChannel.id){
+                data.content = this.replacemsg(data.content)
                 this.msgArray.push(data)
               }else{
-                this.msgCountObj[data.message.channel_id] += 1
+                this.msgCountObj[data.channel_id] += 1
               }
             })
         }
@@ -149,7 +146,11 @@
             this.modalObj.currentChannel = this.channelList[0]
             this.channelTitle = this.modalObj.currentChannel.name
         }
+      },
+      msgArrayUpdate(newmsgArray) {
+        this.msgArray = newmsgArray
       }
     }
+    
   }
 </script>

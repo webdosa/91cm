@@ -1,5 +1,7 @@
 package com.nineone.nocm.domain;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,5 +12,7 @@ public class Message {
 	int channel_id;
 	String content;
 	String sender;
-	String send_date;
+	Date send_date;
+	String str_send_date;
+	User user;
 }

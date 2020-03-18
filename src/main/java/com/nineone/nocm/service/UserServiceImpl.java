@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -62,6 +63,7 @@ public class UserServiceImpl implements UserService{
 		map.put("email", user.getEmail());
 		if (userRepository.insertUser(user) > 0 && userRepository.insertSNSInfo(map) > 0) {
 			User settingUser = (User)httpsession.getAttribute("user");
+			settingUser.setName(user.getName());
 			settingUser.setPhone(user.getPhone());
 			httpsession.setAttribute("user", settingUser);
 			return true;
