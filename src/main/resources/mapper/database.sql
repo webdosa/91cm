@@ -11,7 +11,7 @@ picture varchar(100)
 );
 
 create table sns_info (
-identifier int primary key not null,
+identifier varchar(50) primary key not null,
 member_email varchar(100) not null,
 foreign key (member_email) references member(email) on delete cascade on update cascade
 );

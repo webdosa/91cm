@@ -1,5 +1,8 @@
 package com.nineone.nocm.repository;
 
+import java.util.List;
+import java.util.Map;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,6 +20,11 @@ public class MessageRepositoryImpl implements MessageRepository {
 	@Override
 	public int insertMessage(Message msg) {
 		return sqlSession.insert(namespace + ".insertMessage",msg);
+	}
+
+	@Override
+	public List<Message> getMessageList(Map<String, Object> map) {
+		return sqlSession.selectList(namespace + ".getMessageList",map);
 	}
 
 }

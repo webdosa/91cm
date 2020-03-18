@@ -2,7 +2,6 @@ package com.nineone.nocm.domain;
 
 import java.time.LocalDateTime;
 
-import com.nineone.nocm.domain.Channel.ChannelBuilder;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -4,13 +4,34 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     <mapper namespace="com.nineone.nocm.mapper.message">
     
+    
+    <resultMap type="com.nineone.nocm.domain.Message" id="messageList">
+    	<result property="id" column="id"/>
+    	<result property="channel_id" column="channel_id"/>
+    	<result property="content" column="content"/>
+    	<result property="sender" column="sender"/>
+    	<result property="send_date" column="send_date"/>
+    	<association property="user"  javaType="com.nineone.nocm.domain.User" >
+    		<result property="name" column="name"/>
+             <result property="picture" column="picture"/>
+        </association>
+    </resultMap>
+    
     <insert id="insertMessage" useGeneratedKeys="true" keyProperty="id">
-    	insert message (channel_id,content,sender)
-			values (#{channel_id},#{content},#{sender}) 
+    	insert message (channel_id,content,sender,send_date)
+			values (#{channel_id},#{content},#{sender},#{send_date}) 
     </insert>
     
-    <select id="getMessageList">
-   
+    <select id="getMessageList" resultMap="messageList">
+    
+   		select * from message join member on member.email = message.sender
+			where channel_id = #{channel_id} 
+			<if test="first.equals(false)">
+				and (send_date <![CDATA[<]]> (select send_date from message where id = #{cursorId}) or 
+				(send_date = (select send_date from message where id = #{cursorId}) and id <![CDATA[<]]> #{cursorId}))  
+			</if>
+				order by send_date desc, id desc limit 12
+				
     </select>
     
     </mapper>

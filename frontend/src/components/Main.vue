@@ -16,7 +16,7 @@
           :currentChannel="modalObj.currentChannel"
           :stompClient="stompClient"
           :msgArray="msgArray"
-          @msgArrayUnshift="msgArrayUnshift"
+          @msgArrayUpdate="msgArrayUpdate"
         ></router-view>
       </div>
       <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
@@ -99,20 +99,20 @@
       },
       connect() {
         this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
-        console.log('asd1')
         this.stompClient.connect({}, () => {
-          console.log('asd2')
-
           for (let i in this.channelList) {
             this.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
               let data = JSON.parse(e.body)
               console.log(data)
-              if (data.message.channel_id == this.modalObj.currentChannel.id) {
-                data.message.content = this.replacemsg(data.message.content)
-                console.log(data)
+              if (data.channel_id == this.modalObj.currentChannel.id) {
+                data.content = this.replacemsg(data.content)
                 this.msgArray.push(data)
+                // let wrapper = this.$el.querySelector(".c-c-wrapper")
+                // console.log('main')
+                // console.log(wrapper)
+                // wrapper.scrollTop = wrapper.scrollHeight;
               } else {
-                this.msgCountObj[data.message.channel_id] += 1
+                this.msgCountObj[data.channel_id] += 1
               }
             })
           }
@@ -126,9 +126,6 @@
         }
         return content.replace(/ /gi, '&nbsp;')
       },
-      msgArrayUnshift() {
-        //console.log('함수실행')
-      },
       channelUpdate(newChannelList) {
           let num = newChannelList.length - this.channelList.length
         for(let i=num; i>0; i-- ){
@@ -136,11 +133,11 @@
           this.msgCountObj[newChannelList[idx].id] = 0
             this.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id,(e)=>{
               let data = JSON.parse(e.body);
-              if(data.message.channel_id == this.modalObj.currentChannel.id){
-                data.message.content = this.replacemsg(data.message.content)
+              if(data.channel_id == this.modalObj.currentChannel.id){
+                data.content = this.replacemsg(data.content)
                 this.msgArray.push(data)
               }else{
-                this.msgCountObj[data.message.channel_id] += 1
+                this.msgCountObj[data.channel_id] += 1
               }
             })
         }
@@ -149,7 +146,11 @@
             this.modalObj.currentChannel = this.channelList[0]
             this.channelTitle = this.modalObj.currentChannel.name
         }
+      },
+      msgArrayUpdate(newmsgArray) {
+        this.msgArray = newmsgArray
       }
     }
+    
   }
 </script>
