@@ -1,3 +1,7 @@
+.icon-round{
+    border-radius: 50%;
+}
+
 .info-wrapper tr {
     margin-bottom: 15px;
     display: flex;
