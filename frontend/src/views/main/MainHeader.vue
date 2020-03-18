@@ -32,7 +32,7 @@
             <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
               <!-- Using 'button-content' slot -->
               <template v-slot:button-content style="padding:0px;" v-if="$store.state.currentUser.picture">
-                <img :src="$store.state.currentUser.picture" style="height: 40px; width: 40px;">
+                <img class="icon-round" :src="$store.state.currentUser.picture" width="40" height="40">
               </template>
               <template v-slot:button-content style="padding:0px;" v-else>
                 <svg
@@ -74,7 +74,6 @@ export default {
       this.$store.state.isRActive = true
     },
     SignOut() {
-      localStorage.removeItem('user');
       window.location.href="/logout"
     }
   },
