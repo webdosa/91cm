@@ -42,7 +42,7 @@
           <span>Users</span>
         </div>
           <ul class="list-unstyled">
-            <li v-for="(user, index ) in channelUsers" :key="user.email">
+            <li v-for="(user, index ) in getUserList" :key="user.email">
               <a href="#">{{ user.name }}</a>
             </li>
           </ul>
@@ -67,26 +67,44 @@
 
   export default {
     props: ['modalObj', 'channelList'],
+    watch: {
+      channelList: function (newVal, oldVal) {
+        this.channelList = newVal
+      }
+    },
+    computed: {
+      getUserList: function () {
+        this.$http.get('/api/user/channel/'+this.channelList[0].id)
+          .then(res => {
+            return res.data
+          })
+      }
+    },
     name: 'LSidebar',
     data() {
       return {
         nameState: null,
         channelmode: '',
         channelTitle: '',
-        channelUsers: []
+        // channelUsers: []
       }
     },
     created() {
     },
     mounted() {
+      // this.$http.get('/api/user/channel/'+this.channelList().id)
+      //   .then(res => {
+      //     this.channelUsers = res.data
+      //     console.log(this.channelUsers)
+      //   })
     },
     updated() {
       // 계속 불러옴 문제 해결후에 지울것
-      this.$http.get('/api/user/channel/'+this.channelList[0].id)
-        .then(res => {
-          this.channelUsers = res.data
-          console.log(this.channelUsers)
-        })
+      // this.$http.get('/api/user/channel/'+this.channelList[0].id)
+      //   .then(res => {
+      //     this.channelUsers = res.data
+      //     console.log(this.channelUsers)
+      //   })
     },
     methods: {
       sendSelectChannel: function (channelIndex) {
