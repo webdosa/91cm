@@ -5,7 +5,7 @@
 
     <mapper namespace="com.nineone.nocm.mapper.user">
 
-    <select id="thisChannelUserList" parameterType="java.lang.String" resultType="com.nineone.nocm.domain.User">
+    <select id="thisChannelUserList" parameterType="java.lang.Integer" resultType="com.nineone.nocm.domain.User">
         select member.* from member join joininfo on member.email = joininfo.member_email where joininfo.channel_id = #{channel_id}
     </select>
 

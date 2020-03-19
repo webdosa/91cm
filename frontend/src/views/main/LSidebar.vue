@@ -42,8 +42,8 @@
           <span>Users</span>
         </div>
           <ul class="list-unstyled">
-            <li v-for="(channel, index ) in channelList" :key="channel.id">
-              <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
+            <li v-for="(user, index ) in channelUsers" :key="user.email">
+              <a href="#">{{ user.name }}</a>
             </li>
           </ul>
       </ul>
@@ -79,10 +79,13 @@
     created() {
     },
     mounted() {
-      console.log(this.modalObj.currentChannel.id)
-      this.$http.get('/api/user/channel'+this.modalObj.currentChannel.id)
+    },
+    updated() {
+      // 계속 불러옴 문제 해결후에 지울것
+      this.$http.get('/api/user/channel/'+this.channelList[0].id)
         .then(res => {
-          console.log(res)
+          this.channelUsers = res.data
+          console.log(this.channelUsers)
         })
     },
     methods: {
