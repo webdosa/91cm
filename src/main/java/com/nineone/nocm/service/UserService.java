@@ -15,5 +15,6 @@ public interface UserService extends UserDetailsService {
 	boolean emailCheck(String userEmail);
 	//UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException;
 	List<User> getAllUserList();
+	List<User> getCurrentChannelUserList(int channel_id);
 
 }

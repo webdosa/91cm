@@ -18,6 +18,12 @@ public class JoinInfoRepositoryImpl implements JoinInfoRepository {
     private SqlSessionTemplate sqlSession;
 
     private String namespace="com.nineone.nocm.mapper.joininfo";
+
+    @Override
+    public boolean isExistUser(Invite invite) {
+        return sqlSession.selectOne(namespace + ".isExistUser",invite);
+    }
+
     @Override
     public List<JoinInfo> getAllList() {
         return sqlSession.selectList(namespace + ".getAllList");

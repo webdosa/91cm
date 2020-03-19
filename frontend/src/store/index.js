@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     currentUser: {},
     userList : [],
+    currentChannelUser: [],
     isLActive: false,
     isRActive: false
   },
@@ -30,8 +31,8 @@ export default new Vuex.Store({
           console.log(error);
       })
     },
-    initCurrentUser: function (context) {
-      axios.get('http://localhost:9191/api/user/info')
+    initCurrentUser: async function (context) {
+      await axios.get('http://localhost:9191/api/user/info')
         .then(res => {
           console.log(res.data)
           context.commit('setCurrentUser',res.data)

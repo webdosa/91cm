@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface JoinInfoRepository {
+    boolean isExistUser(Invite invite);
     List<JoinInfo> getAllList();
     boolean channelAuthorityCheck(Invite invite);
     int insertJoinInfo(JoinInfo joinInfo);

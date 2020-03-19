@@ -77,16 +77,7 @@
         </svg>
       </a>
       <!-- 메뉴하나끝 -->
-      <b-collapse id="user-info">
-        <div class="s-coll-style">
-          <div>
-            <li class="list-unstyled" v-for="user in $store.state.userList" :key="user.email">{{ user.name }}</li>
-          </div>
-          <div style="display:flex; justify-content:flex-start;">
-            <b-button variant="primary">초대하기</b-button>
-          </div>
-        </div>
-      </b-collapse>
+      
       <!-- 메뉴하나시작 -->
       <a class="r-style">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

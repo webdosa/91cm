@@ -13,6 +13,11 @@ public class JoinInfoServiceImpl implements JoinInfoService {
     private JoinInfoRepository joinInfoRepository;
 
     @Override
+    public boolean isExistUser(Invite invite) {
+        return joinInfoRepository.isExistUser(invite);
+    }
+
+    @Override
     public boolean AuthorityCheck(Invite invite) {
        return joinInfoRepository.channelAuthorityCheck(invite);
     }

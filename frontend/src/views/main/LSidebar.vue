@@ -2,7 +2,7 @@
   <nav id="sidebar" class="myflex-column" v-bind:class="{active: $store.state.isLActive}">
     <div class="sidebar-header">
       <a href="/main">
-      <img style="width: 100%;" src="../../assets/images/nineone.png">
+        <img style="width: 100%;" src="../../assets/images/nineone.png">
       </a>
       <h3>91CM</h3>
     </div>
@@ -33,7 +33,7 @@
         <b-collapse id="collapse-1">
           <ul class="list-unstyled">
             <li v-for="(channel, index ) in channelList" :key="channel.id">
-              <a @click="sendSelectChannel(index)">{{ channel.name }}</a>            
+              <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
             </li>
           </ul>
         </b-collapse>
@@ -41,9 +41,11 @@
         <div class="menulist-header">
           <span>Users</span>
         </div>
-        <li>
-          <a>Users</a>
-        </li>
+          <ul class="list-unstyled">
+            <li v-for="(channel, index ) in channelList" :key="channel.id">
+              <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
+            </li>
+          </ul>
       </ul>
     </div>
     <b-modal id="channelCU" centered ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
@@ -52,7 +54,7 @@
       </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
-          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required>
+          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required autofocus>
           </b-form-input>
         </b-form-group>
       </form>
@@ -61,16 +63,27 @@
 </template>
 
 <script>
-import AboutChannel from '../../service/aboutchannel'
-export default {
-  props: ['modalObj','channelList'],
-  name: 'LSidebar',
+  import AboutChannel from '../../service/aboutchannel'
+
+  export default {
+    props: ['modalObj', 'channelList'],
+    name: 'LSidebar',
     data() {
       return {
         nameState: null,
         channelmode: '',
-        channelTitle: ''
+        channelTitle: '',
+        channelUsers: []
       }
+    },
+    created() {
+    },
+    mounted() {
+      console.log(this.modalObj.currentChannel.id)
+      this.$http.get('/api/user/channel'+this.modalObj.currentChannel.id)
+        .then(res => {
+          console.log(res)
+        })
     },
     methods: {
       sendSelectChannel: function (channelIndex) {
@@ -125,11 +138,11 @@ export default {
           {
             headers: {'Content-Type': 'application/json'}
           })
-            .then(res => {
-              console.log(res)
-            }).catch(error => {
-            console.log(error)
-          })
+          .then(res => {
+            console.log(res)
+          }).catch(error => {
+          console.log(error)
+        })
       },
       createChannel: function () {
         this.$http.get('http://localhost:9191/api/user/info')
@@ -147,7 +160,7 @@ export default {
                 console.log(res)
                 // 채널 생성 후 리스트를 업데이트 하는 부분
                 this.$http.get('http://localhost:9191/api/channel/list').then(res => {
-                   this.$emit('channelUpdate',res.data)
+                  this.$emit('channelUpdate', res.data)
                 })
                 //this.$router.go('/main')
               })
@@ -159,9 +172,6 @@ export default {
             console.warn(error)
           })
       }
-    },
-  mounted() {
-    
+    }
   }
-}
 </script>

@@ -54,39 +54,41 @@
         modalObj: {modalTitle: '', currentChannel: null}
       }
     },
-    created () {
-      // 적용은 mounted 이후에 가능한 것으로 보임...
-      this.$store.dispatch('userListUpdate')
-      this.$store.dispatch('initCurrentUser')
+    async created() {
+      await this.$store.dispatch('userListUpdate')
+      await this.$store.dispatch('initCurrentUser')
+      console.log("created...")
+
+      console.log(this.$store.state.currentUser.name)
       // 상의 후 수정해야할 듯
       // main이 created 될 때마다 비동기통신을 해야하기 때문에 생각해봐야할 문제일듯
-      axios.get('http://localhost:9191/api/user/getsession').then(res=>{
-        if(res.data.phone == null || res.data.phone == ''){
-            this.$router.replace('/signup')
-        }else{
+      axios.get('http://localhost:9191/api/user/getsession').then(res => {
+        if (res.data.phone == null || res.data.phone == '') {
+          this.$router.replace('/signup')
+        } else {
           AboutChannel.getChannelList().then(
-          res => {
-            this.channelList = res.data
-            for(let i in this.channelList){
-              this.msgCountObj[this.channelList[i].id] = 0
-            }
-            console.log(this.channelList)
-            console.log(this.msgCountObj)
-            //사용자가 채널을 선택하지 않았다면.
-            if (this.modalObj.currentChannel == null && this.channelList[0]!=null) {
-              this.modalObj.currentChannel = this.channelList[0]
-              this.channelTitle = this.modalObj.currentChannel.name
-              console.log(this.currentChannel)
-            }
-            // 현재 채널에 저장되어있는 메시지 3가져오기
-            // AboutChannel.getMsgList(this.currentChannel).then(
-            //   res=> {
+            res => {
+              this.channelList = res.data
+              for (let i in this.channelList) {
+                this.msgCountObj[this.channelList[i].id] = 0
+              }
+              console.log(this.channelList)
+              console.log(this.msgCountObj)
+              //사용자가 채널을 선택하지 않았다면.
+              if (this.modalObj.currentChannel == null && this.channelList[0] != null) {
+                this.modalObj.currentChannel = this.channelList[0]
+                this.channelTitle = this.modalObj.currentChannel.name
+                console.log(this.currentChannel)
+              }
+              // 현재 채널에 저장되어있는 메시지 3가져오기
+              // AboutChannel.getMsgList(this.currentChannel).then(
+              //   res=> {
 
-            // })
+              // })
 
-            this.connect()
-          }
-        )
+              this.connect()
+            }
+          )
         }
       })
     },
@@ -152,6 +154,6 @@
         this.msgArray = newmsgArray
       }
     }
-    
+
   }
 </script>
