@@ -35,6 +35,7 @@
   import MainHeader from '../views/main/MainHeader'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
+  import CommonClass from '../service/common'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
   import axios from 'axios'
@@ -94,6 +95,7 @@
       sendTitle(channel) {
         this.channelTitle = channel.name
         this.modalObj.currentChannel = channel
+        this.msgArray = []
       },
       passData(modalObj) {
         this.modalObj.modalTitle = modalObj.modalTitle
@@ -105,22 +107,23 @@
             this.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
               let data = JSON.parse(e.body)
               if (data.channel_id == this.modalObj.currentChannel.id) {
-                data.content = this.replacemsg(data.content)
+                data.content = CommonClass.replacemsg(data.content)
                 this.msgArray.push(data)
               } else {
                 this.msgCountObj[data.channel_id] += 1
               }
             })
           }
+          this.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
+              let data = JSON.parse(e.body)
+              if (data.channel_id == this.modalObj.currentChannel.id) {
+                data.content = CommonClass.replacemsg(data.content)
+                data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
+                this.msgArray.push(data)
+              }
+            })
+
         })
-      },
-      replacemsg(originContent) {
-        let array = originContent.split("\n")
-        let content = ''
-        for (let i in array) {
-          content += '<p>' + array[i] + '</p>'
-        }
-        return content.replace(/ /gi, '&nbsp;')
       },
       channelUpdate(newChannelList) {
           let num = newChannelList.length - this.channelList.length
