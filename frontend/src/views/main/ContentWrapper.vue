@@ -59,6 +59,7 @@
 <script>
   import MsgBox from './MsgBox'
   import InviteService from '../../service/inviteService'
+  import CommonClass from '../../service/common'
 
   export default {
     props: ['currentChannel', 'stompClient', 'msgArray'],
@@ -133,6 +134,15 @@
         if (this.stompClient && this.stompClient.connected) {
           this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
           this.message.content = ''
+        }
+        else{
+          this.message.content = CommonClass.replacemsg(this.message.content)
+          this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
+          let errormsg =  JSON.parse(JSON.stringify(this.message))
+          console.log(errormsg.content)
+          this.msgArray.push(errormsg)
+          this.message.content = ''
+          console.log(errormsg.content)
         }
       },
       scrollEvt(e) {
