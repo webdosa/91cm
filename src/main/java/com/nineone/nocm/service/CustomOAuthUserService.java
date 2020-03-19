@@ -49,7 +49,14 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
     private User saveOrUpdate(OAuthAttributes attributes) {
         // 임시 setter로 저장 해준 값은 소셜 로그인을 통해서 가져올 수 없는 값
         // 사용자에게 값을 받거나 해서 지정 해줘야 함으로 지금은 임시로 지정
-    	User user = userRepository.getUserfindById(attributes.getId());
+    	User user;
+        if(attributes.getEmail()==null) {
+        	user = userRepository.getUserfindById(attributes.getId());
+        }else {
+        	System.out.println(attributes.getEmail());
+        	user = userRepository.getUserfindByEmail(attributes.getEmail());
+        	System.out.println(user.getPhone());
+        }    	
         if (user == null){
             user = attributes.toEntity();
             //userRepository.insertUser(user);

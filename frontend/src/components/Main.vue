@@ -59,6 +59,7 @@
       this.$store.dispatch('userListUpdate')
       this.$store.dispatch('initCurrentUser')
       // 상의 후 수정해야할 듯
+      // main이 created 될 때마다 비동기통신을 해야하기 때문에 생각해봐야할 문제일듯
       axios.get('http://localhost:9191/api/user/getsession').then(res=>{
         if(res.data.phone == null || res.data.phone == ''){
             this.$router.replace('/signup')
@@ -77,7 +78,7 @@
               this.channelTitle = this.modalObj.currentChannel.name
               console.log(this.currentChannel)
             }
-            // 현재 채널에 저장되어있는 메시지 가져오기
+            // 현재 채널에 저장되어있는 메시지 3가져오기
             // AboutChannel.getMsgList(this.currentChannel).then(
             //   res=> {
 
@@ -103,14 +104,9 @@
           for (let i in this.channelList) {
             this.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
               let data = JSON.parse(e.body)
-              console.log(data)
               if (data.channel_id == this.modalObj.currentChannel.id) {
                 data.content = this.replacemsg(data.content)
                 this.msgArray.push(data)
-                // let wrapper = this.$el.querySelector(".c-c-wrapper")
-                // console.log('main')
-                // console.log(wrapper)
-                // wrapper.scrollTop = wrapper.scrollHeight;
               } else {
                 this.msgCountObj[data.channel_id] += 1
               }
