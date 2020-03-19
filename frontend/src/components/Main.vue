@@ -104,14 +104,9 @@
           for (let i in this.channelList) {
             this.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
               let data = JSON.parse(e.body)
-              console.log(data)
               if (data.channel_id == this.modalObj.currentChannel.id) {
                 data.content = this.replacemsg(data.content)
                 this.msgArray.push(data)
-                // let wrapper = this.$el.querySelector(".c-c-wrapper")
-                // console.log('main')
-                // console.log(wrapper)
-                // wrapper.scrollTop = wrapper.scrollHeight;
               } else {
                 this.msgCountObj[data.channel_id] += 1
               }
