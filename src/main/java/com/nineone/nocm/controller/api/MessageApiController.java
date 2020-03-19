@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineone.nocm.domain.Message;
@@ -19,7 +20,7 @@ public class MessageApiController {
 	@Autowired
 	MessageService messageServie;
 	
-	@RequestMapping("/getmsg")
+	@RequestMapping(value ="/getmsg",method=RequestMethod.POST)
 	public List<Message> getMsg(@RequestBody Map<String,Object> map) throws ParseException{
 		return messageServie.getMessageList(map); 
 	}

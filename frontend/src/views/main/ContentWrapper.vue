@@ -21,7 +21,7 @@
         <!-- 더 뭔가 추가할 거 같아서 div로 감싸놓음 -->
         <div style="flex-grow:1;">
           <b-form-textarea
-            inlist=""
+            autofocus
             v-if="!show"
             id="textarea-no-resize"
             placeholder="Enter chat message"
@@ -36,9 +36,10 @@
               <span class="input-group-text">@</span>
             </div>
             <b-form-input
-              @keydown.enter.exact="invite(user)"
+              @keydown.enter.exact="send"
+              @keydown.esc.exact="test"
               list="user-info-list"
-              style="height: 60px;"
+              style="height: 80px;"
               v-model="message.content"
               ref="testinput"
               autofocus
@@ -57,6 +58,7 @@
 </template>
 <script>
   import MsgBox from './MsgBox'
+  import InviteService from '../../service/inviteService'
 
   export default {
     props: ['currentChannel', 'stompClient', 'msgArray'],
@@ -67,7 +69,6 @@
     data() {
       return {
         show: false,
-        sizes: ['Small', 'Medium', 'Large', 'Extra Large'],
         message: {
           channel_id: this.currentChannel.channel_id,
           content: '',
@@ -94,18 +95,37 @@
       this.scrollToEnd()
     },
     methods: {
-
-      invite : function(user){
-        const userName = this.message.content.split(" ")[0]
-        this.message.content = userName+"님을 초대했습니다."
-        this.send()
-        this.show = !this.show
+      invite: async function () {
+        const userName = this.message.content.split(' ')[0]
+        const userEmail = this.message.content.split(' ')[1]
+        console.log(this.currentChannel.id)
+       await InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)
+          .then(res => {
+            if (res.data){
+              this.message.content = userName + '님을 초대했습니다.'
+            }else{
+              this.message.content = '초대에 실패하였습니다.'
+            }
+          }).catch(error => {
+            this.message.content = '초대에 실패하였습니다.'
+            console.log(error)
+        })
+        // if (InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)) {
+        //   this.message.content = userName + '님을 초대했습니다.'
+        // }else {
+        //  this.message.content = '초대에 실패하였습니다.'
+        // }
       },
       test: function (e) {
+        this.message.content = ''
         this.show = !this.show
         this.$refs.testinput.focus()
       },
-      send() {
+      send : async function () {
+        if (this.show) {
+          await this.invite()
+          this.show = !this.show
+        }
         console.log(this.currentChannel)
         console.log(this.stompClient)
         this.message.channel_id = this.currentChannel.id
@@ -120,13 +140,13 @@
         if (element.scrollTop <= 0) {
           if(this.cursorPoint.empty == false){
             let wrapperEl = document.querySelector('.c-c-wrapper')
-            let height = wrapperEl.scrollHeight 
+            let height = wrapperEl.scrollHeight
             this.getMessage(wrapperEl,height)
           }
         }
       },
       getMessage(wrapperEl,height){
-        this.cursorPoint.channel_id = this.currentChannel.id 
+        this.cursorPoint.channel_id = this.currentChannel.id
         this.$http.post('http://localhost:9191/api/message/getmsg',JSON.stringify(this.cursorPoint),{
           headers: {
             'Content-Type': 'application/json'
@@ -143,7 +163,7 @@
           if(wrapperEl!=null){
             this.$nextTick(()=> {
               wrapperEl.scrollTop = wrapperEl.scrollHeight - height
-              this.scrollHeight = wrapperEl.scrollHeight  
+              this.scrollHeight = wrapperEl.scrollHeight
             })
           }
           this.$emit('msgArrayUpdate',this.msgArray)

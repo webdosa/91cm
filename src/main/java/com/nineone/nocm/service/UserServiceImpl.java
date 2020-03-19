@@ -61,13 +61,30 @@ public class UserServiceImpl implements UserService{
 		Map<String,Object> map = new HashMap<>();
 		map.put("identifier", oauth2user.getName());
 		map.put("email", user.getEmail());
-		if (userRepository.insertUser(user) > 0 && userRepository.insertSNSInfo(map) > 0) {
-			User settingUser = (User)httpsession.getAttribute("user");
-			settingUser.setName(user.getName());
-			settingUser.setPhone(user.getPhone());
-			httpsession.setAttribute("user", settingUser);
-			return true;
+		int userResult = 0;
+		User dbUser = userRepository.getUserfindByEmail(user.getEmail());
+		if(dbUser!=null) {
+			userResult = 1;
 		}else {
+			userResult = userRepository.insertUser(user); 
+		}
+		
+		int snsResult = userRepository.insertSNSInfo(map);
+		
+		if (userResult > 0 && snsResult > 0) {
+			
+			if(dbUser==null) {
+				User settingUser = (User)httpsession.getAttribute("user");
+				settingUser.setName(user.getEmail());
+				settingUser.setName(user.getName());
+				settingUser.setPhone(user.getPhone());
+				httpsession.setAttribute("user", settingUser);
+			}else {
+				httpsession.setAttribute("user", dbUser);
+			}
+			
+			return true;
+		}else { 
 			return false;
 		}  
 	}
