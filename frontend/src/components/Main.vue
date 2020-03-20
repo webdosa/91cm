@@ -13,6 +13,7 @@
       <div v-if="channelList[0]!=null">
         <router-view name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
         <router-view
+          name="ContentWrapper"
           :currentChannel="modalObj.currentChannel"
           :stompClient="stompClient"
           :msgArray="msgArray"
