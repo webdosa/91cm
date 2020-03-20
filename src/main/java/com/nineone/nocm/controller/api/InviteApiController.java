@@ -36,7 +36,8 @@ public class InviteApiController {
         try {
             if (joinInfoService.isExistUser(invite)){
                 return new ResponseEntity<>(ApiResponse.builder().error("405")
-                        .message("해당 유저는 이미 채널에 가입되어 있습니다.").build(),HttpStatus.METHOD_NOT_ALLOWED);
+                        .message("해당 유저는 이미 채널에 가입되어 있습니다.")
+                        .build(),HttpStatus.METHOD_NOT_ALLOWED);
             }
             if (joinInfoService.AuthorityCheck(invite)) {
                 log.info("권한 있음");

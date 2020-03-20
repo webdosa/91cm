@@ -158,6 +158,7 @@
         })
       },
       createChannel: function () {
+        // vuex에서 currentUser 객체 사용
         this.$http.get('http://localhost:9191/api/user/info')
           .then(res => {
             console.log(res)

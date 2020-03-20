@@ -114,15 +114,17 @@
       return {}
     },
     mounted(){
-      console.log('잉?')
     },
     methods: {
       leaveChannle : function () {
         this.$http.post('/api/channel/leave',{
+          // 생성자가 나가면 채널 폭파
+          // 모두가 나가면 채널 삭제
           email: this.$store.state.currentUser.email,
           channel_id: this.modalObj.currentChannel.id
         }).then(res => {
           alert(this.modalObj.currentChannel.name+" 채널에서 나갔습니다.")
+          //
           this.$router.go('/main')
         }).catch(error => {
           alert("나가기에 실패했습니다.")
@@ -141,6 +143,7 @@
         }
       },
       deleteChannel: function () {
+        //current vuex 사용
         this.$http.get('http://localhost:9191/api/user/info')
           .then(res => {
             const user = res.data

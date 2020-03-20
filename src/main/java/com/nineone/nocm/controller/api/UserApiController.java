@@ -34,8 +34,8 @@ public class UserApiController {
 		if(user!= null) {
 			return user.getPhone() != null? true : false;
 		}else {
-			return false;
-		}
+			return false; 
+		} 
     }
 	
 	@RequestMapping(value="/getsession")

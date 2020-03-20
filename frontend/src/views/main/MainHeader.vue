@@ -66,6 +66,7 @@ export default {
     }
   },
   created() {
+    // 리팩토링 해
     this.userInfo = this.$http.get('http://localhost:9191/api/user/info')
       .then(res => {
         this.userInfo = res.data
