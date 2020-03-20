@@ -53,7 +53,7 @@
             <li class="list-unstyled">{{ modalObj.currentChannel.name }}</li>
           </div>
           <div style="display:flex; justify-content:flex-start;">
-            <b-button variant="primary">나가기</b-button>
+            <b-button variant="primary" @click="leaveChannle">나가기</b-button>
           </div>
         </div>
       </b-collapse>
@@ -77,7 +77,7 @@
         </svg>
       </a>
       <!-- 메뉴하나끝 -->
-      
+
       <!-- 메뉴하나시작 -->
       <a class="r-style">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -117,6 +117,17 @@
       console.log('잉?')
     },
     methods: {
+      leaveChannle : function () {
+        this.$http.post('/api/channel/leave',{
+          email: this.$store.state.currentUser.email,
+          channel_id: this.modalObj.currentChannel.id
+        }).then(res => {
+          alert(this.modalObj.currentChannel.name+" 채널에서 나갔습니다.")
+          this.$router.go('/main')
+        }).catch(error => {
+          alert("나가기에 실패했습니다.")
+        })
+      },
       RSidebarClose: function () {
         this.$store.state.isRActive = false
       },

@@ -6,11 +6,18 @@ import com.nineone.nocm.repository.JoinInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class JoinInfoServiceImpl implements JoinInfoService {
 
     @Autowired
     private JoinInfoRepository joinInfoRepository;
+
+    @Override
+    public boolean leaveUser(Map<String, Object> info) {
+        return joinInfoRepository.leaveUser(info);
+    }
 
     @Override
     public boolean isExistUser(Invite invite) {
