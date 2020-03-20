@@ -95,7 +95,6 @@
       sendTitle(channel) {
         this.channelTitle = channel.name
         this.modalObj.currentChannel = channel
-        this.msgArray = []
       },
       passData(modalObj) {
         this.modalObj.modalTitle = modalObj.modalTitle
