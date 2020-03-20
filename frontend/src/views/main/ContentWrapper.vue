@@ -139,15 +139,13 @@
           this.message.content = CommonClass.replacemsg(this.message.content)
           this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
           let errormsg =  JSON.parse(JSON.stringify(this.message))
-          console.log(errormsg.content)
           this.msgArray.push(errormsg)
           this.message.content = ''
-          console.log(errormsg.content)
         }
       },
       scrollEvt(e) {
         let element = e.target;
-        if (element.scrollTop <= 0) {
+        if (element.scrollTop <= 0 && element.scrollHeight != 723) {
           if(this.cursorPoint.empty == false){
             let wrapperEl = document.querySelector('.c-c-wrapper')
             let height = wrapperEl.scrollHeight
@@ -191,8 +189,25 @@
             this.scrollHeight = wrapperEl.scrollHeight
           }
         })
+      },
+      initData(){
+        this.cursorPoint.channel_id = this.currentChannel.id
+        this.cursorPoint.first = true
+        this.cursorPoint.cursorId = 0
+        this.cursorPoint.empty = false
+        this.msgArray = []
+        this.firstLoad = true,
+        this.scrollHeight = 0,
+        this.$emit('msgArrayUpdate',this.msgArray)
       }
 
+    },
+    watch:{
+      currentChannel: function(newv,oldv){
+        this.initData()
+        this.getMessage()
+        this.scrollToEnd()
+      }
     }
 
   }
