@@ -62,6 +62,7 @@
 <script>
   import MsgBox from './MsgBox'
   import InviteService from '../../service/inviteService'
+  import LSidebar from "./LSidebar";
 
   export default {
     props: ['currentChannel', 'stompClient', 'msgArray'],
@@ -107,6 +108,7 @@
             console.log(res)
             this.message.content = userName + '님을 초대했습니다.'
             this.send()
+
           }).catch(error => {
             alert(error.response.data.message)
             console.error(error.response)

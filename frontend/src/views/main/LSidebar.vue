@@ -41,11 +41,11 @@
         <div class="menulist-header">
           <span>Users</span>
         </div>
-          <ul class="list-unstyled">
-            <li v-for="(user, index ) in getUserList" :key="user.email">
-              <a href="#">{{ user.name }}</a>
-            </li>
-          </ul>
+        <ul class="list-unstyled">
+          <li v-for="(user) in channelUsers" :key="user.email">
+            <a href="#">{{ user.name }}</a>
+          </li>
+        </ul>
       </ul>
     </div>
     <b-modal id="channelCU" centered ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
@@ -68,47 +68,39 @@
   export default {
     props: ['modalObj', 'channelList'],
     watch: {
-      channelList: function (newVal, oldVal) {
+      channelList: function (newVal) {
         this.channelList = newVal
-      }
+        this.getUserList()
+      },
     },
-    computed: {
-      getUserList: function () {
-        this.$http.get('/api/user/channel/'+this.channelList[0].id)
-          .then(res => {
-            return res.data
-          })
-      }
-    },
+    computed: {},
     name: 'LSidebar',
     data() {
       return {
+        channelIndex: 0,
         nameState: null,
         channelmode: '',
         channelTitle: '',
-        // channelUsers: []
+        channelUsers: []
       }
     },
     created() {
     },
     mounted() {
-      // this.$http.get('/api/user/channel/'+this.channelList().id)
-      //   .then(res => {
-      //     this.channelUsers = res.data
-      //     console.log(this.channelUsers)
-      //   })
     },
     updated() {
-      // 계속 불러옴 문제 해결후에 지울것
-      // this.$http.get('/api/user/channel/'+this.channelList[0].id)
-      //   .then(res => {
-      //     this.channelUsers = res.data
-      //     console.log(this.channelUsers)
-      //   })
     },
     methods: {
-      sendSelectChannel: function (channelIndex) {
-        this.$emit('sendTitle', this.channelList[channelIndex])
+      getUserList: function () {
+        this.$http.get('/api/user/channel/' + this.channelList[this.channelIndex].id)
+          .then(res => {
+            this.channelUsers = res.data
+          })
+      },
+      sendSelectChannel: function (index) {
+        this.channelIndex = index
+        this.$emit('sendTitle', this.channelList[this.channelIndex])
+        this.getUserList()
       },
       prepareModal: function (e) {
         if (e.target.parentNode.dataset.mode == 'create') {
