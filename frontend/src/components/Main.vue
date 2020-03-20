@@ -58,13 +58,6 @@
     created () {
       // 적용은 mounted 이후에 가능한 것으로 보임...
       this.$store.dispatch('userListUpdate')
-      this.$store.dispatch('initCurrentUser')
-      // 상의 후 수정해야할 듯
-      // main이 created 될 때마다 비동기통신을 해야하기 때문에 생각해봐야할 문제일듯
-      axios.get('http://localhost:9191/api/user/getsession').then(res=>{
-        if(res.data.phone == null || res.data.phone == ''){
-            this.$router.replace('/signup')
-        }else{
           AboutChannel.getChannelList().then(
           res => {
             this.channelList = res.data
@@ -73,23 +66,15 @@
             }
             console.log(this.channelList)
             console.log(this.msgCountObj)
-            //사용자가 채널을 선택하지 않았다면.
+            // 처음 로그인하자마자 제일 처음에 만든 채널로 현재 채널객체를 초기화한다.
             if (this.modalObj.currentChannel == null && this.channelList[0]!=null) {
               this.modalObj.currentChannel = this.channelList[0]
               this.channelTitle = this.modalObj.currentChannel.name
               console.log(this.currentChannel)
             }
-            // 현재 채널에 저장되어있는 메시지 3가져오기
-            // AboutChannel.getMsgList(this.currentChannel).then(
-            //   res=> {
-
-            // })
-
             this.connect()
           }
         )
-        }
-      })
     },
     methods: {
       sendTitle(channel) {

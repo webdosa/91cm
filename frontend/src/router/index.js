@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '../store'
 import VueRouter from 'vue-router'
 import Home from '../components/Home.vue'
 import NotFound from '../views/NotFound.vue'
@@ -9,7 +10,6 @@ import ChannelHeader from '../views/main/ChannelHeader'
 import test from '../views/user/test'
 import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
-import Axios from 'axios'
 Vue.use(VueRouter)
 
 const routes = [
@@ -40,7 +40,15 @@ const routes = [
     component: Main,
     children:[
       { path:'', components: {default:ContentWrapper,ChannelHeader:ChannelHeader }},
-    ]
+    ],
+    beforeEnter: async function(to,from,next){
+      await store.dispatch('initCurrentUser')
+        if(store.state.currentUser.phone != null){
+          next()
+        }else{
+          next('/signup')
+        }
+      }
   },
   {
     path: '/user',
