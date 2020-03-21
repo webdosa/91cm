@@ -12,8 +12,8 @@
       <!-- 채널 리스트가 있는지 없는지 확인  -->
       <div v-if="channelList[0]!=null">
         <router-view name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
+        <!-- ContentWrapper -->
         <router-view
-          name="ContentWrapper"
           :currentChannel="modalObj.currentChannel"
           :stompClient="stompClient"
           :msgArray="msgArray"

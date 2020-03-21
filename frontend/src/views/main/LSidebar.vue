@@ -95,6 +95,7 @@
         this.$http.get('/api/user/channel/' + this.channelList[this.channelIndex].id)
           .then(res => {
             this.channelUsers = res.data
+            this.$eventBus.$emit('channelUserSize',this.channelUsers.length)
           })
       },
       sendSelectChannel: function (index) {

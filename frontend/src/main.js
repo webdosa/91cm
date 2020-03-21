@@ -11,6 +11,7 @@ import VueSession from 'vue-session'
 import './assets/css/main.css'
 
 Vue.use(VueSession, { persist: true})
+Vue.prototype.$eventBus = new Vue();
 Vue.prototype.$http = axios
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false

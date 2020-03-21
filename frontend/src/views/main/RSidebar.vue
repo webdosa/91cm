@@ -111,9 +111,14 @@
     props: ['modalObj'],
     name: 'RSidebar',
     data() {
-      return {}
+      return {
+        channelUserSize: 0
+      }
     },
     mounted(){
+      // this.$eventBus.$on('channelUserSize',data => {
+      //   this.channelUserSize = data
+      // })
     },
     methods: {
       leaveChannle : function () {
