@@ -111,8 +111,8 @@
         channelUserSize: 0
       }
     },
-    mounted() {
-      this.$eventBus.$on('channelUserSize', data => {
+    mounted(){
+      this.$eventBus.$on('channelUserSize',data => {
         this.channelUserSize = data
       })
     },

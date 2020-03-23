@@ -9,7 +9,7 @@
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <!-- 채널 리스트가 있는지 없는지 확인  -->
+      <!-- CjannelHeader -->
       <div v-if="channelList[0]!=null">
         <router-view name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
         <!-- ContentWrapper -->
@@ -118,7 +118,7 @@
           this.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
             let data = JSON.parse(e.body);
             if (data.channel_id == this.modalObj.currentChannel.id) {
-              data.content = this.replacemsg(data.content)
+              data.content = CommonClass.replacemsg(data.content)
               this.msgArray.push(data)
             } else {
               this.msgCountObj[data.channel_id] += 1

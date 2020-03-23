@@ -46,7 +46,7 @@
               autofocus
             ></b-form-input>
             <datalist id="user-info-list">
-              <option v-for="user in $store.state.userList">{{ user.name }} {{ user.email }}</option>
+              <option v-for="user in $store.state.userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
             </datalist>
           </div>
         </div>
@@ -86,7 +86,7 @@
           empty: false
         },
         firstLoad: true,
-        scrollHeight: 0,
+        oldScrollHeight: 0,
       }
     },
     created() {
@@ -106,17 +106,13 @@
           .then(res => {
             console.log(res)
             this.message.content = userName + '님을 초대했습니다.'
+            this.$eventBus.$emit('getUserList',true)
             this.send()
           }).catch(error => {
             alert(error.response.data.message)
             console.error(error.response)
             this.message.content = ''
           })
-        // if (InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)) {
-        //   this.message.content = userName + '님을 초대했습니다.'
-        // }else {
-        //  this.message.content = '초대에 실패하였습니다.'
-        // }
       },
       inviteToggle: function (e) {
         this.message.content = ''
@@ -131,7 +127,9 @@
           this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
           console.log("메시지 전송")
           this.message.content = ''
-        } else {
+          this.scrollToEnd(true)
+        }
+        else{
           this.message.content = CommonClass.replacemsg(this.message.content)
           this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
           let errormsg = JSON.parse(JSON.stringify(this.message))
@@ -141,8 +139,8 @@
       },
       scrollEvt(e) {
         let element = e.target;
-        if (element.scrollTop <= 0 && element.scrollHeight != 723) {
-          if (this.cursorPoint.empty == false) {
+        if (element.scrollTop <= 0 && element.scrollHeight != element.clientHeight) {
+          if(this.cursorPoint.empty == false){
             let wrapperEl = document.querySelector('.c-c-wrapper')
             let height = wrapperEl.scrollHeight
             this.getMessage(wrapperEl, height)
@@ -168,22 +166,23 @@
           if (wrapperEl != null) {
             this.$nextTick(() => {
               wrapperEl.scrollTop = wrapperEl.scrollHeight - height
-              this.scrollHeight = wrapperEl.scrollHeight
+              this.oldScrollHeight = wrapperEl.scrollHeight
             })
           }
           this.$emit('msgArrayUpdate', this.msgArray)
         })
       },
-      scrollToEnd() {
+      scrollToEnd(sendBool) {
         this.$nextTick(() => {
           let wrapperEl = document.querySelector('.c-c-wrapper')
           if (this.firstLoad) {
-            this.scrollHeight = wrapperEl.scrollHeight
+            this.oldScrollHeight = wrapperEl.scrollHeight
           }
-          if ((wrapperEl.scrollTop + wrapperEl.clientHeight) == this.scrollHeight || this.firstLoad) {
+          if ((wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight|| this.firstLoad || sendBool ||
+              ((this.oldScrollHeight == wrapperEl.clientHeight)&& (wrapperEl.scrollHeight > wrapperEl.clientHeight))) {
             wrapperEl.scrollTop = wrapperEl.scrollHeight
             this.firstLoad = false
-            this.scrollHeight = wrapperEl.scrollHeight
+            this.oldScrollHeight = wrapperEl.scrollHeight
           }
         })
       },
