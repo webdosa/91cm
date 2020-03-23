@@ -97,6 +97,18 @@ foreign key (register) references member(email) on delete cascade on update casc
 );
 
 
+delimiter $$
+drop procedure if exists testUser $$
+create procedure testUser()
+begin
+    declare i int;
+    set i = 1;
+    while i <= 10 do
+            insert into member (email, name, phone) value (concat('유저',cast(i as char )),concat('테스터',i),'qw');
+            set i = i+1;
+        end while;
+end $$
+
 delete from member;
 delete from channel;
 delete from invite;

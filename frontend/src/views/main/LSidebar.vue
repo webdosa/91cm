@@ -59,6 +59,7 @@
         </b-form-group>
       </form>
     </b-modal>
+    <b-button @click="testModal">test</b-button>
   </nav>
 </template>
 
@@ -99,6 +100,9 @@
       })
     },
     methods: {
+      testModal: function () {
+        this.$alertModal('alertModal','alert',' 채널에서 나갔습니다.')
+      },
       getUserList: function () {
         this.$http.get('/api/user/channel/' + this.channelList[this.channelIndex].id)
           .then(res => {

@@ -66,15 +66,6 @@
           ></path>
         </svg>
         <span style="margin-left:20px;">{{channelUserSize}} Users</span>
-        <svg
-          class="ml-auto"
-          xmlns="http://www.w3.org/2000/svg"
-          width="10"
-          height="10"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 21l-12-18h24z"></path>
-        </svg>
       </a>
       <!-- 메뉴하나끝 -->
 
@@ -99,15 +90,25 @@
       </a>
       <!-- 메뉴하나끝 -->
     </div>
+    <div>
+      <b-modal id="alertModal" size="sm" :title="alertMessage.title" @show="tst">
+        <p>{{alertMessage.content}}</p>
+      </b-modal>
+    </div>
   </nav>
-
 </template>
 <script>
+  import AlertModal from "../AlertCard";
   export default {
+    components: {AlertModal},
     props: ['modalObj'],
     name: 'RSidebar',
     data() {
       return {
+        alertMessage: {
+          title: '',
+          content: ''
+        },
         channelUserSize: 0
       }
     },
@@ -117,6 +118,23 @@
       })
     },
     methods: {
+      tst : function(){
+        console.log("test tst : "+this.alertModalTitle)
+
+        this.alertMessage.title = this.alertModalTitle
+        this.alertMessage.content = this.alertModalContent
+      },
+      // useModalCard: function (id, type, message){
+      //   if(type == 'error'){
+      //     this.alertMessage.title = '에러'
+      //     this.alertMessage.content = message
+      //   }
+      //   else{
+      //     this.alertMessage.title = '알림'
+      //     this.alertMessage.content = message
+      //   }
+      //   this.$bvModal.show(id)
+      // },
       leaveChannle: function () {
         this.$http.post('/api/channel/leave', {
           // 생성자가 나가면 채널 폭파
@@ -124,11 +142,10 @@
           email: this.$store.state.currentUser.email,
           channel_id: this.modalObj.currentChannel.id
         }).then(res => {
-          alert(this.modalObj.currentChannel.name + " 채널에서 나갔습니다.")
-          //
-          this.$router.go('/main')
+          this.$alertModal('alertModal','alert',this.modalObj.currentChannel.name + ' 채널에서 나갔습니다.')
+          //this.$router.go('/main')
         }).catch(error => {
-          alert("나가기에 실패했습니다.")
+          // this.useModalCard('alertModal','error','나가기에 실패했습니다.')
         })
       },
       RSidebarClose: function () {
