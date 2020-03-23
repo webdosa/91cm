@@ -3,6 +3,8 @@ package com.nineone.nocm.controller.api;
 import java.util.List;
 import java.util.Map;
 
+import com.nineone.nocm.domain.JoinInfo;
+import com.nineone.nocm.service.JoinInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +27,19 @@ public class ChannelApiController {
     @Autowired
     private ChannelService channelService;
 
+    @Autowired
+    private JoinInfoService joinInfoService;
+
+    @PostMapping("/leave")
+    public boolean leaveChannel(@RequestBody Map<String, Object> info){
+        // info에는 해당 유저의 email 값과 채널 id값이 들어 있음 -> key : (email , channel_id)
+        return joinInfoService.leaveUser(info);
+    }
+
     // 사용자의 채널 리스트를 반환
     @GetMapping("/list")
     public List<Channel> channelList(@Socialuser User user) {
+        log.info(user.getName());
         return channelService.channelList(user.getEmail());
     }
 

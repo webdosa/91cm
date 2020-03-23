@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -93,6 +92,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<User> getAllUserList() {
 		return userRepository.getAllUserList();
+	}
+
+	@Override
+	public List<User> getCurrentChannelUserList(int channel_id) {
+		return userRepository.thisChannelUserList(channel_id);
 	}
 
 }
