@@ -57,7 +57,6 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         }    	
         if (user == null){
             user = attributes.toEntity();
-            //userRepository.insertUser(user);
         }
         return user;
     }

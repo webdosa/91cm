@@ -118,7 +118,7 @@
           this.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
             let data = JSON.parse(e.body);
             if (data.channel_id == this.modalObj.currentChannel.id) {
-              data.content = this.replacemsg(data.content)
+              data.content = CommonClass.replacemsg(data.content)
               this.msgArray.push(data)
             } else {
               this.msgCountObj[data.channel_id] += 1
