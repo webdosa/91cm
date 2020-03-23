@@ -107,18 +107,13 @@
           .then(res => {
             console.log(res)
             this.message.content = userName + '님을 초대했습니다.'
+            this.$eventBus.$emit('getUserList',true)
             this.send()
-
           }).catch(error => {
             alert(error.response.data.message)
             console.error(error.response)
-            this.message.content =''
+            this.message.content = ''
           })
-        // if (InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)) {
-        //   this.message.content = userName + '님을 초대했습니다.'
-        // }else {
-        //  this.message.content = '초대에 실패하였습니다.'
-        // }
       },
       inviteToggle: function (e) {
         this.message.content = ''
@@ -133,11 +128,10 @@
           this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
           console.log("메시지 전송")
           this.message.content = ''
-        }
-        else{
+        } else {
           this.message.content = CommonClass.replacemsg(this.message.content)
           this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
-          let errormsg =  JSON.parse(JSON.stringify(this.message))
+          let errormsg = JSON.parse(JSON.stringify(this.message))
           this.msgArray.push(errormsg)
           this.message.content = ''
         }
@@ -145,7 +139,7 @@
       scrollEvt(e) {
         let element = e.target;
         if (element.scrollTop <= 0 && element.scrollHeight != 723) {
-          if(this.cursorPoint.empty == false){
+          if (this.cursorPoint.empty == false) {
             let wrapperEl = document.querySelector('.c-c-wrapper')
             let height = wrapperEl.scrollHeight
             this.getMessage(wrapperEl, height)
@@ -190,20 +184,20 @@
           }
         })
       },
-      initData(){
+      initData() {
         this.cursorPoint.channel_id = this.currentChannel.id
         this.cursorPoint.first = true
         this.cursorPoint.cursorId = 0
         this.cursorPoint.empty = false
         this.msgArray = []
         this.firstLoad = true,
-        this.scrollHeight = 0,
-        this.$emit('msgArrayUpdate',this.msgArray)
+          this.scrollHeight = 0,
+          this.$emit('msgArrayUpdate', this.msgArray)
       }
 
     },
-    watch:{
-      currentChannel: function(newv,oldv){
+    watch: {
+      currentChannel: function (newv, oldv) {
         this.initData()
         this.getMessage()
         this.scrollToEnd()

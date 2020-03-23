@@ -116,9 +116,9 @@
       }
     },
     mounted(){
-      // this.$eventBus.$on('channelUserSize',data => {
-      //   this.channelUserSize = data
-      // })
+      this.$eventBus.$on('channelUserSize',data => {
+        this.channelUserSize = data
+      })
     },
     methods: {
       leaveChannle : function () {
