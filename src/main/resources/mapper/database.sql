@@ -103,3 +103,4 @@ delete from invite;
 delete from message;
 delete from sns_info;
 delete from joininfo;
+delete from message;

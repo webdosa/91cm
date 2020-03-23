@@ -53,7 +53,7 @@
             <li class="list-unstyled">{{ modalObj.currentChannel.name }}</li>
           </div>
           <div style="display:flex; justify-content:flex-start;">
-            <b-button variant="primary">나가기</b-button>
+            <b-button variant="primary" @click="leaveChannle">나가기</b-button>
           </div>
         </div>
       </b-collapse>
@@ -77,16 +77,7 @@
         </svg>
       </a>
       <!-- 메뉴하나끝 -->
-      <b-collapse id="user-info">
-        <div class="s-coll-style">
-          <div>
-            <li class="list-unstyled" v-for="user in $store.state.userList" :key="user.email">{{ user.name }}</li>
-          </div>
-          <div style="display:flex; justify-content:flex-start;">
-            <b-button variant="primary">초대하기</b-button>
-          </div>
-        </div>
-      </b-collapse>
+
       <!-- 메뉴하나시작 -->
       <a class="r-style">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -120,12 +111,30 @@
     props: ['modalObj'],
     name: 'RSidebar',
     data() {
-      return {}
+      return {
+        channelUserSize: 0
+      }
     },
     mounted(){
-      console.log('잉?')
+      // this.$eventBus.$on('channelUserSize',data => {
+      //   this.channelUserSize = data
+      // })
     },
     methods: {
+      leaveChannle : function () {
+        this.$http.post('/api/channel/leave',{
+          // 생성자가 나가면 채널 폭파
+          // 모두가 나가면 채널 삭제
+          email: this.$store.state.currentUser.email,
+          channel_id: this.modalObj.currentChannel.id
+        }).then(res => {
+          alert(this.modalObj.currentChannel.name+" 채널에서 나갔습니다.")
+          //
+          this.$router.go('/main')
+        }).catch(error => {
+          alert("나가기에 실패했습니다.")
+        })
+      },
       RSidebarClose: function () {
         this.$store.state.isRActive = false
       },
@@ -139,6 +148,7 @@
         }
       },
       deleteChannel: function () {
+        //current vuex 사용
         this.$http.get('http://localhost:9191/api/user/info')
           .then(res => {
             const user = res.data

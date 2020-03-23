@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     currentUser: {},
     userList : [],
+    currentChannelUser: [],
     isLActive: false,
     isRActive: false
   },

@@ -4,6 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nineone.nocm.mapper.joininfo">
+    <delete id="leaveUser">
+        delete from joininfo where channel_id = #{channel_id} and member_email = #{email}
+    </delete>
+    <select id="isExistUser" resultType="java.lang.Boolean" parameterType="com.nineone.nocm.domain.Invite">
+        select exists (select * from joininfo where channel_id = #{channel_id}
+        and member_email = #{recipient})
+    </select>
     <select id="getAllList" resultType="com.nineone.nocm.domain.JoinInfo">
         select * from joininfo
     </select>

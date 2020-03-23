@@ -8,10 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.nineone.nocm.annotation.Socialuser;
 import com.nineone.nocm.domain.User;
@@ -56,6 +53,10 @@ public class UserApiController {
     	DefaultOAuth2User oauth2user = (DefaultOAuth2User)authentication.getPrincipal();
     	return userService.insertUser(user,oauth2user,httpsession);
     }
+    @RequestMapping(value = "/channel/{channel_id}")
+	public List<User> getChannelUserList(@PathVariable int channel_id){
+		return userService.getCurrentChannelUserList(channel_id);
+	}
     
 
 }

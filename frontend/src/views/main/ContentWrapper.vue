@@ -1,10 +1,11 @@
 <template>
   <main class="mainwrapper">
     <div class="h-inherit">
-      <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt" >
+      <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt">
         <MsgBox v-for="msg in msgArray" :key="msg.id">
           <template #m-icon>
-            <img class="icon-round" :src="msg.user.picture" width="40" height="40"/>
+            <img v-if="msg.user.picture" class="icon-round" :src="msg.user.picture" width="40" height="40"/>
+            <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
           </template>
           <template #m-info>
             <!-- #으로 단축해서 사용 -->
@@ -29,15 +30,15 @@
             no-resize
             v-model="message.content"
             @keyup.enter.exact="send"
-            @keydown.shift.50='test'
+            @keydown.shift.50='inviteToggle'
           ></b-form-textarea>
           <div class="input-group" v-if="show">
             <div class="input-group-prepend">
               <span class="input-group-text">@</span>
             </div>
             <b-form-input
-              @keydown.enter.exact="send"
-              @keydown.esc.exact="test"
+              @keydown.enter.exact="invite"
+              @keydown.esc.exact="inviteToggle"
               list="user-info-list"
               style="height: 80px;"
               v-model="message.content"
@@ -45,13 +46,15 @@
               autofocus
             ></b-form-input>
             <datalist id="user-info-list">
-              <option>userInfo</option>
               <option v-for="user in $store.state.userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
             </datalist>
           </div>
 
         </div>
-        <b-button @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송</b-button>
+        <b-button v-if="!show" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
+        </b-button>
+        <b-button v-else @click="invite" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
+        </b-button>
       </div>
     </div>
   </main>
@@ -74,23 +77,23 @@
           channel_id: this.currentChannel.channel_id,
           content: '',
           sender: this.$store.state.currentUser.email,
-          user:{}
+          user: {}
         },
         // 채널 옮길 때마다 초기화 되어야한다.
-        cursorPoint:{
+        cursorPoint: {
           channel_id: 0,
-          first:true,
-          cursorId:0,
-          empty:false
+          first: true,
+          cursorId: 0,
+          empty: false
         },
         firstLoad: true,
-        scrollHeight: 0,
+        oldScrollHeight: 0,
       }
     },
-    created () {
+    created() {
       this.getMessage()
     },
-    mounted (){
+    mounted() {
     },
     updated() {
       this.scrollToEnd()
@@ -100,40 +103,37 @@
         const userName = this.message.content.split(' ')[0]
         const userEmail = this.message.content.split(' ')[1]
         console.log(this.currentChannel.id)
-       await InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)
+        await InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)
           .then(res => {
-            if (res.data){
-              this.message.content = userName + '님을 초대했습니다.'
-            }else{
-              this.message.content = '초대에 실패하였습니다.'
-            }
+            console.log(res)
+            this.message.content = userName + '님을 초대했습니다.'
+            this.send()
+
           }).catch(error => {
-            this.message.content = '초대에 실패하였습니다.'
-            console.log(error)
-        })
+            alert(error.response.data.message)
+            console.error(error.response)
+            this.message.content =''
+          })
         // if (InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)) {
         //   this.message.content = userName + '님을 초대했습니다.'
         // }else {
         //  this.message.content = '초대에 실패하였습니다.'
         // }
       },
-      test: function (e) {
+      inviteToggle: function (e) {
         this.message.content = ''
         this.show = !this.show
-        this.$refs.testinput.focus()
       },
-      send : async function () {
-        if (this.show) {
-          await this.invite()
-          this.show = !this.show
-        }
+      send: async function () {
         console.log(this.currentChannel)
         console.log(this.stompClient)
         this.message.channel_id = this.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if (this.stompClient && this.stompClient.connected) {
           this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
+          console.log("메시지 전송")
           this.message.content = ''
+          this.scrollToEnd(true)
         }
         else{
           this.message.content = CommonClass.replacemsg(this.message.content)
@@ -145,48 +145,50 @@
       },
       scrollEvt(e) {
         let element = e.target;
-        if (element.scrollTop <= 0 && element.scrollHeight != 723) {
+        if (element.scrollTop <= 0 && element.scrollHeight != element.clientHeight) {
           if(this.cursorPoint.empty == false){
             let wrapperEl = document.querySelector('.c-c-wrapper')
             let height = wrapperEl.scrollHeight
-            this.getMessage(wrapperEl,height)
+            this.getMessage(wrapperEl, height)
           }
         }
       },
-      getMessage(wrapperEl,height){
+
+      getMessage(wrapperEl, height) {
         this.cursorPoint.channel_id = this.currentChannel.id
-        this.$http.post('http://localhost:9191/api/message/getmsg',JSON.stringify(this.cursorPoint),{
+        this.$http.post('http://localhost:9191/api/message/getmsg', JSON.stringify(this.cursorPoint), {
           headers: {
             'Content-Type': 'application/json'
           }
-        }).then(res=>{
+        }).then(res => {
           console.log(res.data);
-          if(res.data.length == 0 ){
+          if (res.data.length == 0) {
             this.cursorPoint.empty = true
-          }else{
+          } else {
             this.cursorPoint.first = false
-            this.cursorPoint.cursorId = res.data[res.data.length-1].id
+            this.cursorPoint.cursorId = res.data[res.data.length - 1].id
           }
           this.msgArray = res.data.reverse().concat(this.msgArray)
-          if(wrapperEl!=null){
-            this.$nextTick(()=> {
+          if (wrapperEl != null) {
+            this.$nextTick(() => {
               wrapperEl.scrollTop = wrapperEl.scrollHeight - height
-              this.scrollHeight = wrapperEl.scrollHeight
+              this.oldScrollHeight = wrapperEl.scrollHeight
             })
           }
-          this.$emit('msgArrayUpdate',this.msgArray)
+          this.$emit('msgArrayUpdate', this.msgArray)
         })
       },
-      scrollToEnd(){
-        this.$nextTick(()=> {
+      scrollToEnd(sendBool) {
+        this.$nextTick(() => {
           let wrapperEl = document.querySelector('.c-c-wrapper')
-          if(this.firstLoad){
-            this.scrollHeight = wrapperEl.scrollHeight
+          if (this.firstLoad) {
+            this.oldScrollHeight = wrapperEl.scrollHeight
           }
-          if((wrapperEl.scrollTop+wrapperEl.clientHeight) == this.scrollHeight || this.firstLoad){
+          if ((wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight|| this.firstLoad || sendBool ||
+              ((this.oldScrollHeight == wrapperEl.clientHeight)&& (wrapperEl.scrollHeight > wrapperEl.clientHeight))) {
             wrapperEl.scrollTop = wrapperEl.scrollHeight
             this.firstLoad = false
-            this.scrollHeight = wrapperEl.scrollHeight
+            this.oldScrollHeight = wrapperEl.scrollHeight
           }
         })
       },
