@@ -18,6 +18,14 @@
           </template>
         </MsgBox>
       </ul>
+      <a v-if="msgPreviewBool" @click="clickMsgPreview">
+      <div id="c-c-preview" v-bind:class="{active: $store.state.isLActive}">
+            <div class="p-wrapper">
+              <div>{{ previewObj.username }} : &nbsp;</div>
+              <div class="p-nowrap" v-html="previewObj.content"></div>
+            </div>
+          </div>
+      </a>
       <div class="c-i-wrapper">
         <!-- 더 뭔가 추가할 거 같아서 div로 감싸놓음 -->
         <div style="flex-grow:1;">
@@ -71,6 +79,10 @@
     },
     data() {
       return {
+        previewObj:{
+          content:'',
+          username: ''
+        },
         show: false,
         message: {
           channel_id: this.currentChannel.channel_id,
@@ -87,12 +99,18 @@
         },
         firstLoad: true,
         oldScrollHeight: 0,
+        wrapperEl: null,
+        msgPreviewBool: false,
+        getmsgBool:false
       }
     },
     created() {
       this.getMessage()
     },
     mounted() {
+      this.$nextTick(() => {
+          this.wrapperEl = document.querySelector('.c-c-wrapper')
+      })
     },
     updated() {
       this.scrollToEnd()
@@ -125,7 +143,6 @@
         this.message.user = this.$store.state.currentUser
         if (this.stompClient && this.stompClient.connected) {
           this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
-          console.log("메시지 전송")
           this.message.content = ''
           this.scrollToEnd(true)
         }
@@ -139,16 +156,15 @@
       },
       scrollEvt(e) {
         let element = e.target;
+        //스크롤이 없을때에도 스크롤 위치가 최상단이기 때문에 스크롤이 있는지 없는지 판단해야한다.
         if (element.scrollTop <= 0 && element.scrollHeight != element.clientHeight) {
           if(this.cursorPoint.empty == false){
-            let wrapperEl = document.querySelector('.c-c-wrapper')
-            let height = wrapperEl.scrollHeight
-            this.getMessage(wrapperEl, height)
+            this.getMessage(element)
           }
         }
       },
 
-      getMessage(wrapperEl, height) {
+      getMessage(wrapperEl) {
         this.cursorPoint.channel_id = this.currentChannel.id
         this.$http.post('http://localhost:9191/api/message/getmsg', JSON.stringify(this.cursorPoint), {
           headers: {
@@ -165,28 +181,43 @@
           this.msgArray = res.data.reverse().concat(this.msgArray)
           if (wrapperEl != null) {
             this.$nextTick(() => {
-              wrapperEl.scrollTop = wrapperEl.scrollHeight - height
+              wrapperEl.scrollTop = wrapperEl.scrollHeight - this.oldScrollHeight
               this.oldScrollHeight = wrapperEl.scrollHeight
             })
           }
+          this.getmsgBool = true
           this.$emit('msgArrayUpdate', this.msgArray)
         })
       },
-      scrollToEnd(sendBool) {
+      scrollToEnd(bool) {
         this.$nextTick(() => {
-          let wrapperEl = document.querySelector('.c-c-wrapper')
           if (this.firstLoad) {
-            this.oldScrollHeight = wrapperEl.scrollHeight
+            this.oldScrollHeight = this.wrapperEl.scrollHeight
           }
-          if ((wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight|| this.firstLoad || sendBool ||
-              ((this.oldScrollHeight == wrapperEl.clientHeight)&& (wrapperEl.scrollHeight > wrapperEl.clientHeight))) {
-            wrapperEl.scrollTop = wrapperEl.scrollHeight
+          console.log("oldScrollHeight : "+this.oldScrollHeight)
+          console.log("this.wrapperEl.clientHeight : "+this.wrapperEl.clientHeight)
+          console.log("this.wrapperEl.scrollHeight : "+this.wrapperEl.scrollHeight)
+          if (this.isScrollAtEnd(this.wrapperEl)|| this.firstLoad || bool ||
+              ((this.oldScrollHeight == this.wrapperEl.clientHeight)&& (this.wrapperEl.scrollHeight > this.wrapperEl.clientHeight))) {
+
+            this.wrapperEl.scrollTop = this.wrapperEl.scrollHeight
             this.firstLoad = false
-            this.oldScrollHeight = wrapperEl.scrollHeight
+            this.oldScrollHeight = this.wrapperEl.scrollHeight
           }
         })
       },
-      initData() {
+      isScrollAtEnd(wrapperEl){
+         if(Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight){
+           return true
+         } else{
+           return false
+         }
+      },
+      clickMsgPreview(){
+        this.scrollToEnd(true)
+        this.msgPreviewBool = false
+      },
+      initData(){
         this.cursorPoint.channel_id = this.currentChannel.id
         this.cursorPoint.first = true
         this.cursorPoint.cursorId = 0
@@ -203,6 +234,22 @@
         this.initData()
         this.getMessage()
         this.scrollToEnd()
+      },
+      msgArray:function(){
+        // 스크롤을 최상단으로 올려 메시지를 가져올 때 실행되는 것을 막기 위한 if문
+        if(this.getmsgBool){
+          this.getmsgBool = false
+        }else{
+          if(!this.isScrollAtEnd(this.wrapperEl)){
+            let copymsg = JSON.parse(JSON.stringify(this.msgArray[this.msgArray.length-1]))
+            this.previewObj.content = CommonClass.replacemsgForPreview(copymsg.content)
+            this.previewObj.username = this.msgArray[this.msgArray.length-1].user.name
+            this.msgPreviewBool = true
+            // setTimeout(() => {
+            //   this.msgPreviewBool = false
+            // }, 2000)
+          }
+        }
       }
     }
 

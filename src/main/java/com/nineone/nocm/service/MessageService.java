@@ -11,4 +11,5 @@ public interface MessageService {
 	Date makeDate();
 	List<Message> getMessageList(Map<String, Object> map);
 	String makeStrDate(Date date);
+	String replacemsg(String originContent);
 }
