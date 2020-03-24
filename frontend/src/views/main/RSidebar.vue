@@ -101,8 +101,8 @@
         channelUserSize: 0
       }
     },
-    mounted(){
-      this.$eventBus.$on('channelUserSize',data => {
+    mounted() {
+      this.$eventBus.$on('channelUserSize', data => {
         this.channelUserSize = data
       })
     },
@@ -114,9 +114,9 @@
           email: this.$store.state.currentUser.email,
           channel_id: this.modalObj.currentChannel.id
         }).then(res => {
-          this.$alertModal('alert redirect',this.modalObj.currentChannel.name + ' 채널에서 나갔습니다.')
+          this.$alertModal('alert redirect', this.modalObj.currentChannel.name + ' 채널에서 나갔습니다.')
         }).catch(error => {
-          this.$alertModal('error','나가기에 실패했습니다.')
+          this.$alertModal('error', '나가기에 실패했습니다.')
         })
       },
       RSidebarClose: function () {
@@ -131,32 +131,30 @@
           this.$bvModal.show('channelCU')
         }
       },
-      deleteChannel: function () {
+      deleteChannel: async function () {
         //current vuex 사용
-        this.$http.get('http://localhost:9191/api/user/info')
-          .then(res => {
-            const user = res.data
-            console.log(user)
-            console.log(this.modalObj.currentChannel)
-            if (this.modalObj.currentChannel.member_email == user.email) {
-              this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
-                , {
-                  headers: {
-                    'Content-Type': 'application/json'
-                  }
-                }).then(res => {
-                console.log(res)
-                this.modalObj.currentChannel = null
-                this.modalObj.modalTitle = null
-                this.$router.go('/main')
-              }).catch(error => {
-                console.log(error)
-              })
-            }
-          })
-          .catch(error => {
+        const userSelect = await this.$alertModal('select redirect', '정말로 삭제하시겠습니까?')
+        const user = this.$store.state.currentUser
+        console.log(user)
+        console.log(userSelect)
+        if (userSelect) {
+          console.log("select")
+        }
+        if (this.modalObj.currentChannel.member_email == user.email) {
+          this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
+            , {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => {
+            console.log(res)
+            this.modalObj.currentChannel = null
+            this.modalObj.modalTitle = null
+            // this.$router.go('/main')
+          }).catch(error => {
             console.log(error)
           })
+        }
       }
     }
   }

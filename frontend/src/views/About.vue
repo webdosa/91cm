@@ -15,6 +15,8 @@ export default {
   },
   methods: {
     test: function () {
+      let booleans = this.$alertModal('select','정말로 삭제하시겠습니까?')
+      console.log(booleans)
     }
   },
   computed: {
