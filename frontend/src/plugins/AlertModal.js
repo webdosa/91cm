@@ -1,22 +1,30 @@
-import AlertCard from "../views/AlertCard";
-
 export default {
   install(Vue, options) {
-    Vue.alertModalContent = ''
-    Vue.alertModalTitle = ''
-    Vue.use(AlertCard)
-
-    Vue.prototype.$alertModal = function (id, type, content) {
+    Vue.prototype.$alertModal = function (type, content) {
+      let title = type.split(' ')[0]
+      const option = type.split(' ')[1]
       if (type == 'error') {
-        Vue.alertModalTitle = '에러'
-        Vue.alertModalContent = content
+        title = '에러'
       } else {
-        Vue.alertModalTitle = '알림'
-        Vue.alertModalContent = content
+        title = '알림'
       }
-      console.log(this.alertModalTitle)
-      this.$bvModal.show(id)
-    }
+      this.$bvModal.msgBoxOk(content, {
+        okTitle: '확인',
+        buttonSize: 'sm',
+        title: title,
+        headerBgVariant: 'info',
+        headerTextVariant: 'light',
+      })
+        .then(value => {
+          switch (option) {
+            case 'redirect':
+              this.$router.go('/main')
+              return value
+            default:
+              return value
 
+          }
+        })
+    }
   }
 }

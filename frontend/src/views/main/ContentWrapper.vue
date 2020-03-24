@@ -109,7 +109,7 @@
             this.$eventBus.$emit('getUserList',true)
             this.send()
           }).catch(error => {
-            alert(error.response.data.message)
+            this.$alertModal('error',error.response.data.message)
             console.error(error.response)
             this.message.content = ''
           })

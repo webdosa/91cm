@@ -15,7 +15,6 @@ export default {
   },
   methods: {
     test: function () {
-      this.$bvModal.show('alertModalCard')
     }
   },
   computed: {

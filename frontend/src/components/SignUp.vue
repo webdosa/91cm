@@ -73,7 +73,7 @@
           if (res.data) {
             this.$router.replace('main')
           } else {
-            alert('회원가입 실패')
+            this.$alertModal('error','회원가입 실패')
           }
         })
       }
