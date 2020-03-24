@@ -1,3 +1,31 @@
+
+#c-c-preview p{
+    margin-bottom: 0;
+}
+#c-c-preview .p-nowrap {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#c-c-preview .p-wrapper {
+    display: flex;
+    white-space: nowrap;
+    padding: 10px 25px;
+}
+#c-c-preview {
+    z-index: 998;
+    position: fixed;
+    bottom: 141px;
+    width: calc(100% - 250px);
+    background-color: rgba(80, 188, 223, 0.75);
+    font-weight: bold;
+    transition: all ease 0.3s 0s;
+  }
+
+#c-c-preview.active {
+    width: 100%
+}
+
 .icon-round{
     border-radius: 50%;
 }

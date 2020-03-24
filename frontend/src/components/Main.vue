@@ -90,22 +90,13 @@
         this.stompClient.connect({}, () => {
           for (let i in this.channelList) {
             this.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
-              let data = JSON.parse(e.body)
-              if (data.channel_id == this.modalObj.currentChannel.id) {
-                data.content = CommonClass.replacemsg(data.content)
-                this.msgArray.push(data)
-              } else {
-                this.msgCountObj[data.channel_id] += 1
-              }
+              this.channelSubscribeCallBack(e)
             })
           }
           this.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
             let data = JSON.parse(e.body)
-            if (data.channel_id == this.modalObj.currentChannel.id) {
-              data.content = CommonClass.replacemsg(data.content)
-              data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
-              this.msgArray.push(data)
-            }
+            //메시지 전송 실패시
+            this.channelSubscribeCallBack(e,true)
           })
 
         })
@@ -116,13 +107,7 @@
           let idx = newChannelList.length - i
           this.msgCountObj[newChannelList[idx].id] = 0
           this.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
-            let data = JSON.parse(e.body);
-            if (data.channel_id == this.modalObj.currentChannel.id) {
-              data.content = CommonClass.replacemsg(data.content)
-              this.msgArray.push(data)
-            } else {
-              this.msgCountObj[data.channel_id] += 1
-            }
+            this.channelSubscribeCallBack(e)      
           })
         }
         this.channelList = newChannelList
@@ -133,9 +118,19 @@
           this.channelTitle = this.modalObj.currentChannel.name
         }
       },
-      // 코드 확인 필요 끝
       msgArrayUpdate(newmsgArray) {
         this.msgArray = newmsgArray
+      },
+      channelSubscribeCallBack(e,fail){
+        let data = JSON.parse(e.body)
+        if (data.channel_id == this.modalObj.currentChannel.id) {
+          if(fail){
+            data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
+          }
+          this.msgArray.push(data)
+        }else {
+          this.msgCountObj[data.channel_id] += 1
+        }
       }
     }
 

@@ -49,4 +49,15 @@ public class MessageServiceImpl implements MessageService {
 		return format.format(date);
 	}
 
+
+	@Override
+	public String replacemsg(String originContent) {
+		String[] arr = originContent.split("\n");
+		String newMsg = "";
+		for (String origin : arr) {
+			newMsg += "<p>" + origin + "</p>";
+		}
+		return newMsg;
+	}
+
 }

@@ -37,9 +37,11 @@ public class MessageController {
 	@MessageMapping("/chat/message")
 	@Transactional
 	public void message(Message message) throws ParseException {
-		// 메세지 전송하기 전에 DB에 메세지 저장하는 로직이 있어야함. and 유저정보 가져오는 로직..?
+
 		message.setSend_date(messageService.makeDate());
 		message.setStr_send_date(messageService.makeStrDate(message.getSend_date()));
+		message.setContent(messageService.replacemsg(message.getContent()));
+		System.out.println(message.getContent());
 		if(messageService.insertMessage(message) > 0) {
 			messagingTemplate.convertAndSend("/sub/chat/room/"+message.getChannel_id(), message);
 		}else {
