@@ -30,7 +30,7 @@
           <a v-b-toggle.collapse-1 class="dropdown-toggle">
         <li>Channels</li>
         </a>
-        <b-collapse id="collapse-1">
+        <b-collapse id="collapse-1" visible>
           <ul class="list-unstyled">
             <li v-for="(channel, index ) in channelList" :key="channel.id">
               <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
@@ -64,6 +64,7 @@
 
 <script>
   import AboutChannel from '../../service/aboutchannel'
+import aboutchannel from '../../service/aboutchannel'
 
   export default {
     props: ['modalObj', 'channelList'],
@@ -160,32 +161,15 @@
       },
       createChannel: function () {
         // vuex에서 currentUser 객체 사용
-        this.$http.get('http://localhost:9191/api/user/info')
-          .then(res => {
-            console.log(res)
-            this.$http.post('http://localhost:9191/api/channel/create', {
-              name: this.channelTitle,
-              member_email: res.data.email
-            }, {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            })
+            AboutChannel.createChannel(this.channelTitle,this.$store.state.currentUser.email)
               .then(res => {
-                console.log(res)
                 // 채널 생성 후 리스트를 업데이트 하는 부분
-                this.$http.get('http://localhost:9191/api/channel/list').then(res => {
+                AboutChannel.getChannelList().then(res => {
                   this.$emit('channelUpdate', res.data)
                 })
-                //this.$router.go('/main')
-              })
-              .catch(error => {
+              }).catch(error => {
                 console.warn(error)
               })
-          })
-          .catch(error => {
-            console.warn(error)
-          })
       }
     }
   }
