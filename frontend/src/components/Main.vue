@@ -94,7 +94,6 @@
             })
           }
           this.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
-            let data = JSON.parse(e.body)
             //메시지 전송 실패시
             this.channelSubscribeCallBack(e,true)
           })
