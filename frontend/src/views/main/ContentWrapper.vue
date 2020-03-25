@@ -126,6 +126,7 @@
             this.message.content = userName + '님을 초대했습니다.'
             this.$eventBus.$emit('getUserList',true)
             this.send()
+            this.inviteToggle()
           }).catch(error => {
             this.$alertModal('error',error.response.data.message)
             console.error(error.response)

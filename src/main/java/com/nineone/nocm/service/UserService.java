@@ -12,6 +12,7 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
 	
 	boolean insertUser(User user,DefaultOAuth2User oauth2user,HttpSession httpsession);
+	boolean userinfoUpdate(User user);
 	boolean emailCheck(String userEmail);
 	//UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException;
 	List<User> getAllUserList();

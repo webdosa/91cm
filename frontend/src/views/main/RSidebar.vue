@@ -98,25 +98,25 @@
     name: 'RSidebar',
     data() {
       return {
-        channelUserSize: 0
+        channelUserSize: 0,
+        userSelect: null
       }
     },
-    mounted(){
-      this.$eventBus.$on('channelUserSize',data => {
+    mounted() {
+      this.$eventBus.$on('channelUserSize', data => {
         this.channelUserSize = data
       })
     },
     methods: {
       leaveChannle: function () {
         this.$http.post('/api/channel/leave', {
-          // 생성자가 나가면 채널 폭파
           // 모두가 나가면 채널 삭제
           email: this.$store.state.currentUser.email,
           channel_id: this.modalObj.currentChannel.id
         }).then(res => {
-          this.$alertModal('alert redirect',this.modalObj.currentChannel.name + ' 채널에서 나갔습니다.')
+          this.$alertModal('alert redirect', this.modalObj.currentChannel.name + ' 채널에서 나갔습니다.')
         }).catch(error => {
-          this.$alertModal('error','나가기에 실패했습니다.')
+          this.$alertModal('error', '나가기에 실패했습니다.')
         })
       },
       RSidebarClose: function () {
@@ -131,32 +131,39 @@
           this.$bvModal.show('channelCU')
         }
       },
-      deleteChannel: function () {
-        //current vuex 사용
-        this.$http.get('http://localhost:9191/api/user/info')
-          .then(res => {
-            const user = res.data
-            console.log(user)
-            console.log(this.modalObj.currentChannel)
-            if (this.modalObj.currentChannel.member_email == user.email) {
-              this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
-                , {
-                  headers: {
-                    'Content-Type': 'application/json'
-                  }
-                }).then(res => {
-                console.log(res)
-                this.modalObj.currentChannel = null
-                this.modalObj.modalTitle = null
-                this.$router.go('/main')
-              }).catch(error => {
-                console.log(error)
-              })
-            }
+      msgBox: async function (content) {
+        await this.$bvModal.msgBoxConfirm(content, {
+          title: '확인',
+          okTitle: '확인',
+          okVariant: 'danger',
+          buttonSize: 'sm',
+          cancelTitle: '취소'
+        })
+          .then(value => {
+            this.userSelect = value
+            return value
           })
-          .catch(error => {
+      },
+      deleteChannel: async function () {
+        //current vuex 사용
+        await this.msgBox("정말로 채널을 삭제하시겠습니까?")
+        console.log(this.userSelect)
+        const user = this.$store.state.currentUser
+        console.log(user)
+        if (!this.userSelect) {
+          return
+        }
+        if (this.modalObj.currentChannel.member_email == user.email) {
+          await this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
+          ).then(res => {
+            console.log(res)
+            this.modalObj.currentChannel = null
+            this.modalObj.modalTitle = null
+            this.$router.go('/main')
+          }).catch(error => {
             console.log(error)
           })
+        }
       }
     }
   }
