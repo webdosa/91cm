@@ -98,7 +98,8 @@
     name: 'RSidebar',
     data() {
       return {
-        channelUserSize: 0
+        channelUserSize: 0,
+        userSelect: null
       }
     },
     mounted() {
@@ -109,7 +110,6 @@
     methods: {
       leaveChannle: function () {
         this.$http.post('/api/channel/leave', {
-          // 생성자가 나가면 채널 폭파
           // 모두가 나가면 채널 삭제
           email: this.$store.state.currentUser.email,
           channel_id: this.modalObj.currentChannel.id
@@ -131,26 +131,35 @@
           this.$bvModal.show('channelCU')
         }
       },
+      msgBox: async function (content) {
+        await this.$bvModal.msgBoxConfirm(content, {
+          title: '확인',
+          okTitle: '확인',
+          okVariant: 'danger',
+          buttonSize: 'sm',
+          cancelTitle: '취소'
+        })
+          .then(value => {
+            this.userSelect = value
+            return value
+          })
+      },
       deleteChannel: async function () {
         //current vuex 사용
-        const userSelect = await this.$alertModal('select redirect', '정말로 삭제하시겠습니까?')
+        await this.msgBox("정말로 채널을 삭제하시겠습니까?")
+        console.log(this.userSelect)
         const user = this.$store.state.currentUser
         console.log(user)
-        console.log(userSelect)
-        if (userSelect) {
-          console.log("select")
+        if (!this.userSelect) {
+          return
         }
         if (this.modalObj.currentChannel.member_email == user.email) {
-          this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
-            , {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }).then(res => {
+          await this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
+          ).then(res => {
             console.log(res)
             this.modalObj.currentChannel = null
             this.modalObj.modalTitle = null
-            // this.$router.go('/main')
+            this.$router.go('/main')
           }).catch(error => {
             console.log(error)
           })
