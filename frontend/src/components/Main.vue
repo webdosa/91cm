@@ -65,13 +65,10 @@
           for (let i in this.channelList) {
             this.msgCountObj[this.channelList[i].id] = 0
           }
-          console.log(this.channelList)
-          console.log(this.msgCountObj)
           // 처음 로그인하자마자 제일 처음에 만든 채널로 현재 채널객체를 초기화한다.
           if (this.modalObj.currentChannel == null && this.channelList[0] != null) {
             this.modalObj.currentChannel = this.channelList[0]
             this.channelTitle = this.modalObj.currentChannel.name
-            console.log(this.currentChannel)
           }
           this.connect()
         }
