@@ -32,7 +32,7 @@
             <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
               <!-- Using 'button-content' slot -->
               <template v-slot:button-content style="padding:0px;">
-                //이미지 가지고 오는 것 느림
+<!--                이미지 가지고 오는 것 느림-->
                 <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture" width="40" height="40">
                 <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
               </template>
@@ -45,9 +45,6 @@
 </template>
 
 <script>
-
-import { AxiosInstance as axios } from 'axios'
-
 export default {
   name: 'MainHeader',
   data() {
