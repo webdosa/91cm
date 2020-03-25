@@ -41,7 +41,6 @@ public class MessageController {
 		message.setSend_date(messageService.makeDate());
 		message.setStr_send_date(messageService.makeStrDate(message.getSend_date()));
 		message.setContent(messageService.replacemsg(message.getContent()));
-		System.out.println(message.getContent());
 		if(messageService.insertMessage(message) > 0) {
 			messagingTemplate.convertAndSend("/sub/chat/room/"+message.getChannel_id(), message);
 		}else {
