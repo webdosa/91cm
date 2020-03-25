@@ -428,6 +428,12 @@ ul.CTAs a {
 ----------------------------------------------------- */
 
 @media (max-width: 768px) {
+    #c-c-preview{
+        width:100%
+    }
+    #c-c-preview.active{
+        width: calc(100% - 250px);
+    }
     .info-wrapper {
         width: 350px;
         padding: 40px 0;

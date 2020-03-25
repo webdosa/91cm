@@ -5,9 +5,17 @@ class AboutChannel{
     getChannelList () {
         return axios.get('http://localhost:9191/api/channel/list')
     }
-    getMsgList (){
-        return axios.get('')
+   
+    createChannel (channelTitle,email) {
+        return axios.post('http://localhost:9191/api/channel/create', {
+            name: channelTitle,
+            member_email: email
+          }, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
     }
-
+    
 }
 export default new AboutChannel()

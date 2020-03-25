@@ -39,6 +39,7 @@
             v-model="message.content"
             @keyup.enter.exact="send"
             @keydown.shift.50='inviteToggle'
+            @keyup="byteCheck"
           ></b-form-textarea>
           <div class="input-group" v-if="show">
             <div class="input-group-prepend">
@@ -57,7 +58,11 @@
               <option v-for="user in $store.state.userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
             </datalist>
           </div>
+          <div style="display: flex;">
+            <span class="ml-auto" > {{ stringByteLength }} / 30000Byte</span>
+          </div>
         </div>
+        
         <b-button v-if="!show" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
         </b-button>
         <b-button v-else @click="invite" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
@@ -79,6 +84,7 @@
     },
     data() {
       return {
+        stringByteLength:0,
         previewObj:{
           content:'',
           username: ''
@@ -110,6 +116,7 @@
     mounted() {
       this.$nextTick(() => {
           this.wrapperEl = document.querySelector('.c-c-wrapper')
+        
       })
     },
     updated() {
@@ -138,21 +145,21 @@
         this.show = !this.show
       },
       send: async function () {
-        console.log(this.currentChannel)
-        console.log(this.stompClient)
         this.message.channel_id = this.currentChannel.id
         this.message.user = this.$store.state.currentUser
-        if (this.stompClient && this.stompClient.connected) {
-          this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
-          this.message.content = ''
-          this.scrollToEnd(true)
+        if(CommonClass.byteLimit(this.stringByteLength)){
+          if (this.stompClient && this.stompClient.connected) {
+            this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
+            this.message.content = ''
+            this.scrollToEnd(true)
         }
-        else{
-          this.message.content = CommonClass.replacemsg(this.message.content)
-          this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
-          let errormsg = JSON.parse(JSON.stringify(this.message))
-          this.msgArray.push(errormsg)
-          this.message.content = ''
+          else{
+            this.message.content = CommonClass.replacemsg(this.message.content)
+            this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
+            let errormsg =  JSON.parse(JSON.stringify(this.message))
+            this.msgArray.push(errormsg)
+            this.message.content = ''
+          }
         }
       },
       scrollEvt(e) {
@@ -162,6 +169,8 @@
           if(this.cursorPoint.empty == false){
             this.getMessage(element)
           }
+        }else if(this.isScrollAtEnd(element)){
+            this.msgPreviewBool = false
         }
       },
 
@@ -225,8 +234,12 @@
         this.cursorPoint.empty = false
         this.msgArray = []
         this.firstLoad = true,
-          this.scrollHeight = 0,
-          this.$emit('msgArrayUpdate', this.msgArray)
+        this.scrollHeight = 0,
+        this.$emit('msgArrayUpdate',this.msgArray)
+      },
+      byteCheck(){
+        this.stringByteLength = CommonClass.byteCount(this.message.content)
+        CommonClass.byteLimit(this.stringByteLength)
       }
 
     },
@@ -246,9 +259,6 @@
             this.previewObj.content = CommonClass.replacemsgForPreview(copymsg.content)
             this.previewObj.username = this.msgArray[this.msgArray.length-1].user.name
             this.msgPreviewBool = true
-            // setTimeout(() => {
-            //   this.msgPreviewBool = false
-            // }, 2000)
           }
         }
       }
