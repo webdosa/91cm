@@ -11,14 +11,23 @@
       <MainHeader></MainHeader>
       <!-- CjannelHeader -->
       <div v-if="channelList[0]!=null">
-        <router-view name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
-        <!-- ContentWrapper -->
+        <router-view v-if="$store.state.selectComponent=='main'" name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
+
+        <keep-alive>
+          <component :is="whichComponent" :currentChannel="modalObj.currentChannel"
+                     :stompClient="stompClient"
+                     :msgArray="msgArray"
+                     @msgArrayUpdate="msgArrayUpdate"
+          ></component>
+        </keep-alive>
+        <!-- ContentWrapper
         <router-view
           :currentChannel="modalObj.currentChannel"
           :stompClient="stompClient"
           :msgArray="msgArray"
           @msgArrayUpdate="msgArrayUpdate"
         ></router-view>
+        -->
       </div>
       <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
       <div v-else>
@@ -40,11 +49,20 @@
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
   import axios from 'axios'
+  import UserInfo from "../views/user/UserInfo";
+  import EditProfile from "../views/user/EditProfile";
 
 
   export default {
     name: 'Main',
-    components: {MainHeader, LSidebar, RSidebar, ContentWrapper},
+    components: {
+      'MainHeader': MainHeader,
+      'LSidebar': LSidebar,
+      'RSidebar': RSidebar,
+      'ContentWrapper': ContentWrapper,
+      'UserInfo': UserInfo,
+      'EditProfile':EditProfile
+    },
     data() {
       return {
         channelTitle: '',
@@ -54,6 +72,20 @@
         msgArray: [],
         msgCountObj: {},
         modalObj: {modalTitle: '', currentChannel: null}
+      }
+    },
+    computed: {
+      whichComponent() {
+        switch (this.$store.state.selectComponent) {
+          case 'main':
+            return 'ContentWrapper'
+          case 'user':
+            return 'UserInfo'
+          case 'edit':
+            return 'EditProfile'
+          default:
+            return 'ContentWrapper'
+        }
       }
     },
     created() {
@@ -96,7 +128,7 @@
           this.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
             let data = JSON.parse(e.body)
             //메시지 전송 실패시
-            this.channelSubscribeCallBack(e,true)
+            this.channelSubscribeCallBack(e, true)
           })
 
         })
@@ -107,7 +139,7 @@
           let idx = newChannelList.length - i
           this.msgCountObj[newChannelList[idx].id] = 0
           this.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
-            this.channelSubscribeCallBack(e)      
+            this.channelSubscribeCallBack(e)
           })
         }
         this.channelList = newChannelList
@@ -121,14 +153,14 @@
       msgArrayUpdate(newmsgArray) {
         this.msgArray = newmsgArray
       },
-      channelSubscribeCallBack(e,fail){
+      channelSubscribeCallBack(e, fail) {
         let data = JSON.parse(e.body)
         if (data.channel_id == this.modalObj.currentChannel.id) {
-          if(fail){
+          if (fail) {
             data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
           }
           this.msgArray.push(data)
-        }else {
+        } else {
           this.msgCountObj[data.channel_id] += 1
         }
       }
