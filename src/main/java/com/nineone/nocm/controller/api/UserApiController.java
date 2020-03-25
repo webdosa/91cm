@@ -37,6 +37,11 @@ public class UserApiController {
 			return false; 
 		} 
     }
+    @PostMapping("/update")
+	public boolean userInfoUpdate(@RequestBody User user){
+		log.info(user.getName());
+		return userService.userinfoUpdate(user);
+	}
 	
 	@RequestMapping(value="/getsession")
 	public User test(@Socialuser User user) { 

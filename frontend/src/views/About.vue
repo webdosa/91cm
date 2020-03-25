@@ -11,12 +11,15 @@ export default {
   data () {
     return {
       message: '안녕하세요',
+      testvalue: null
     }
   },
+  updated() {
+  },
   methods: {
-    test: function () {
-      let booleans = this.$alertModal('select','정말로 삭제하시겠습니까?')
-      console.log(booleans)
+    test: async function () {
+      this.testvalue = await this.$alertModalCon('select redirect', '정말로 삭제하시겠습니까?')
+      console.log(this.testvalue)
     }
   },
   computed: {

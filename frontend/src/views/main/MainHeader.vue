@@ -35,7 +35,7 @@
                 <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture" width="40" height="40">
                 <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
               </template>
-              <b-dropdown-item href="#">Profile</b-dropdown-item>
+              <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
               <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
@@ -51,10 +51,12 @@ export default {
   name: 'MainHeader',
   data() {
     return {
-      userInfo: null
     }
   },
   methods: {
+    callComponent: function(){
+      this.$store.commit('getSelectComponent','user')
+    },
     LSidebarToggle: function () {
       this.$store.state.isLActive = !this.$store.state.isLActive
     },
@@ -65,15 +67,5 @@ export default {
       window.location.href="/logout"
     }
   },
-  created() {
-    // 리팩토링 해
-    this.userInfo = this.$http.get('http://localhost:9191/api/user/info')
-      .then(res => {
-        this.userInfo = res.data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
 }
 </script>

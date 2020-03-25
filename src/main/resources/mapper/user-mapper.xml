@@ -5,6 +5,9 @@
 
     <mapper namespace="com.nineone.nocm.mapper.user">
 
+    <update id="updateUser">
+        update member set name = #{name}, phone = #{phone}, picture = #{picture} where email = #{email}
+    </update>
     <select id="thisChannelUserList" parameterType="java.lang.Integer" resultType="com.nineone.nocm.domain.User">
         select member.* from member join joininfo on member.email = joininfo.member_email where joininfo.channel_id = #{channel_id}
     </select>

@@ -21,7 +21,6 @@
       RSidebarOpen: function () {
         this.$store.state.isRActive = true
       }
-
     }
   }
 </script>
