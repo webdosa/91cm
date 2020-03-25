@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    selectComponent: 'main',
     currentUser: {},
     userList : [],
     currentChannelUser: [],
@@ -12,6 +13,9 @@ export default new Vuex.Store({
     isRActive: false
   },
   mutations: {
+    getSelectComponent: function(state, payload){
+      state.selectComponent = payload
+    },
     getUserList: function(state,payload) {
       state.userList = payload
     },

@@ -30,7 +30,7 @@
           <a v-b-toggle.collapse-1 class="dropdown-toggle">
         <li>Channels</li>
         </a>
-        <b-collapse id="collapse-1">
+        <b-collapse id="collapse-1" visible>
           <ul class="list-unstyled">
             <li v-for="(channel, index ) in channelList" :key="channel.id">
               <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+  import AboutChannel from '../../service/aboutchannel'
   export default {
     props: ['modalObj', 'channelList'],
     watch: {
@@ -83,11 +84,14 @@
       }
     },
     created() {
+      console.log("LSidebar created")
     },
     mounted() {
-
+      console.log("LSidebar mounted")
     },
     updated() {
+
+      console.log("LSidebar updated")
       //once는 이벤트 버스를 한번만 연결해서 데이터를 가져오는 메소드
       // 해당 로직은 사용자를 초대해서 현재 채널의 유저 정보를 다시 가져오는 로직
       this.$eventBus.$once('getUserList', data => {
@@ -106,6 +110,7 @@
           })
       },
       sendSelectChannel: function (index) {
+        this.$store.commit('getSelectComponent','main')
         this.channelIndex = index
         this.$emit('sendTitle', this.channelList[this.channelIndex])
         this.getUserList()
@@ -167,32 +172,15 @@
       },
       createChannel: function () {
         // vuex에서 currentUser 객체 사용
-        this.$http.get('http://localhost:9191/api/user/info')
-          .then(res => {
-            console.log(res)
-            this.$http.post('http://localhost:9191/api/channel/create', {
-              name: this.channelTitle,
-              member_email: res.data.email
-            }, {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            })
+            AboutChannel.createChannel(this.channelTitle,this.$store.state.currentUser.email)
               .then(res => {
-                console.log(res)
                 // 채널 생성 후 리스트를 업데이트 하는 부분
-                this.$http.get('http://localhost:9191/api/channel/list').then(res => {
+                AboutChannel.getChannelList().then(res => {
                   this.$emit('channelUpdate', res.data)
                 })
-                //this.$router.go('/main')
-              })
-              .catch(error => {
+              }).catch(error => {
                 console.warn(error)
               })
-          })
-          .catch(error => {
-            console.warn(error)
-          })
       }
     }
   }
