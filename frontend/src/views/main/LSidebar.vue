@@ -149,14 +149,11 @@ import aboutchannel from '../../service/aboutchannel'
         }
       },
       updateChannel: function () {
-        this.$http.post('http://localhost:9191/api/channel/update', this.modalObj.currentChannel,
-          {
-            headers: {'Content-Type': 'application/json'}
-          })
+        AboutChannel.updateChannelAPI(this.modalObj.currentChannel)
           .then(res => {
             console.log(res)
           }).catch(error => {
-          console.log(error)
+            console.log(error)
         })
       },
       createChannel: function () {
