@@ -204,9 +204,6 @@
           if (this.firstLoad) {
             this.oldScrollHeight = this.wrapperEl.scrollHeight
           }
-          console.log("oldScrollHeight : "+this.oldScrollHeight)
-          console.log("this.wrapperEl.clientHeight : "+this.wrapperEl.clientHeight)
-          console.log("this.wrapperEl.scrollHeight : "+this.wrapperEl.scrollHeight)
           if (this.isScrollAtEnd(this.wrapperEl)|| this.firstLoad || bool ||
               ((this.oldScrollHeight == this.wrapperEl.clientHeight)&& (this.wrapperEl.scrollHeight > this.wrapperEl.clientHeight))) {
 
