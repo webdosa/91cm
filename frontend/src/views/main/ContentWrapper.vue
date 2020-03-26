@@ -232,9 +232,11 @@
         this.scrollHeight = 0,
         this.$emit('msgArrayUpdate',this.msgArray)
       },
-      byteCheck(){
+      byteCheck(e){
         this.stringByteLength = CommonClass.byteCount(this.message.content)
-        CommonClass.byteLimit(this.stringByteLength)
+        if((47< e.keyCode && e.keyCode < 112) || e.keyCode == 13 || e.keyCode == 32){
+          CommonClass.byteLimit(this.stringByteLength)
+        }
       }
 
     },
