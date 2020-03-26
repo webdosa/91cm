@@ -62,7 +62,7 @@
             <span class="ml-auto" > {{ stringByteLength }} / 30000Byte</span>
           </div>
         </div>
-        
+
         <b-button v-if="!show" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
         </b-button>
         <b-button v-else @click="invite" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
@@ -116,7 +116,7 @@
     mounted() {
       this.$nextTick(() => {
           this.wrapperEl = document.querySelector('.c-c-wrapper')
-        
+
       })
     },
     updated() {
@@ -234,9 +234,11 @@
         this.scrollHeight = 0,
         this.$emit('msgArrayUpdate',this.msgArray)
       },
-      byteCheck(){
+      byteCheck(e){
         this.stringByteLength = CommonClass.byteCount(this.message.content)
-        CommonClass.byteLimit(this.stringByteLength)
+        if((47< e.keyCode && e.keyCode < 112) || e.keyCode == 13 || e.keyCode == 32){
+          CommonClass.byteLimit(this.stringByteLength)
+        }
       }
 
     },

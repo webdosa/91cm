@@ -16,6 +16,13 @@ class AboutChannel{
             }
           })
     }
+    updateChannelAPI (currentChannel) {
+      return axios.post('http://localhost:9191/api/channel/update', currentChannel,
+      {
+        headers: {'Content-Type': 'application/json'}
+      })
+    }
     
 }
+
 export default new AboutChannel()

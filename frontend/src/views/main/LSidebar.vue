@@ -11,25 +11,14 @@
         <div class="menulist-header">
           <span>Channels</span>
           <div class="menulist-header-icon">
-            <a data-mode="create" @click="prepareModal">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                style="fill: white;/* height: 100%; */"
-              >
-                <path
-                  d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z"
-                ></path>
-              </svg>
+            <a data-mode="create" @click="prepareModal" style="margin-right: 5px;">
+              <i class="im im-plus-circle"></i>
             </a>
           </div>
         </div>
         <li>
-          <a v-b-toggle.collapse-1 class="dropdown-toggle">
-        <li>Channels</li>
-        </a>
+
+          <a v-b-toggle.collapse-1 class="dropdown-toggle">Channels</a>
         <b-collapse id="collapse-1" visible>
           <ul class="list-unstyled">
             <li v-for="(channel, index ) in channelList" :key="channel.id">
@@ -160,14 +149,11 @@
         }
       },
       updateChannel: function () {
-        this.$http.post('http://localhost:9191/api/channel/update', this.modalObj.currentChannel,
-          {
-            headers: {'Content-Type': 'application/json'}
-          })
+        AboutChannel.updateChannelAPI(this.modalObj.currentChannel)
           .then(res => {
             console.log(res)
           }).catch(error => {
-          console.log(error)
+            console.log(error)
         })
       },
       createChannel: function () {
@@ -185,3 +171,6 @@
     }
   }
 </script>
+<style lang="scss">
+  @import '../../assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
+</style>
