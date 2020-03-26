@@ -11,9 +11,8 @@
       <MainHeader></MainHeader>
       <!-- CjannelHeader -->
       <div v-if="channelList[0]!=null">
-        <router-view v-if="$store.state.selectComponent=='main'" name="ChannelHeader"
-                     :channelTitle="modalObj.currentChannel.name"></router-view>
-
+        <ChannelHeader v-if="$store.state.selectComponent=='main'"
+                     :channelTitle="modalObj.currentChannel.name"></ChannelHeader>
         <keep-alive>
           <component :is="whichComponent" :currentChannel="modalObj.currentChannel"
                      :stompClient="stompClient"
@@ -50,6 +49,7 @@
   import Stomp from 'webstomp-client'
   import UserInfo from "../views/user/UserInfo";
   import EditProfile from "../views/user/EditProfile";
+  import ChannelHeader from "../views/main/ChannelHeader";
 
   export default {
     name: 'Main',
@@ -57,6 +57,7 @@
       'MainHeader': MainHeader,
       'LSidebar': LSidebar,
       'RSidebar': RSidebar,
+      'ChannelHeader' : ChannelHeader,
       'ContentWrapper': ContentWrapper,
       'UserInfo': UserInfo,
       'EditProfile': EditProfile

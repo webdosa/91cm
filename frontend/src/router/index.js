@@ -39,9 +39,6 @@ const routes = [
     path: '/main',
     name: 'main',
     component: Main,
-    children: [
-      {path: '', components: {default: ContentWrapper, ChannelHeader: ChannelHeader}},
-    ],
     beforeEnter: async function (to, from, next) {
       await store.dispatch('initCurrentUser')
       if (store.state.currentUser.phone != null) {
