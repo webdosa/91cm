@@ -11,7 +11,8 @@
       <MainHeader></MainHeader>
       <!-- CjannelHeader -->
       <div v-if="channelList[0]!=null">
-        <router-view v-if="$store.state.selectComponent=='main'" name="ChannelHeader" :channelTitle="modalObj.currentChannel.name"></router-view>
+        <router-view v-if="$store.state.selectComponent=='main'" name="ChannelHeader"
+                     :channelTitle="modalObj.currentChannel.name"></router-view>
 
         <keep-alive>
           <component :is="whichComponent" :currentChannel="modalObj.currentChannel"
@@ -45,13 +46,10 @@
   import MainHeader from '../views/main/MainHeader'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
-  import CommonClass from '../service/common'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
-  import axios from 'axios'
   import UserInfo from "../views/user/UserInfo";
   import EditProfile from "../views/user/EditProfile";
-
 
   export default {
     name: 'Main',
@@ -61,7 +59,7 @@
       'RSidebar': RSidebar,
       'ContentWrapper': ContentWrapper,
       'UserInfo': UserInfo,
-      'EditProfile':EditProfile
+      'EditProfile': EditProfile
     },
     data() {
       return {

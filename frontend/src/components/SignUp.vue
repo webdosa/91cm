@@ -29,8 +29,6 @@
   </div>
 </template>
 <script>
-  import axios from 'axios'
-
   export default {
     name: 'SignUp',
     data() {
@@ -48,11 +46,11 @@
     },
     methods: {
       phoneFormatter: function () {
-        this.user.phone=this.user.phone.replace(/[^0-9]/g, "") // 숫자만 추출 되도록하는 정규식
-        this.user.phone=this.user.phone.replace(/(^02.{0}|^01.{1}|[0-9]{4})([0-9]+)([0-9]{4})/, "$1-$2-$3");// 휴대폰번호 자동 하이픈 넣어주는 정규식
+        this.user.phone = this.user.phone.replace(/[^0-9]/g, "") // 숫자만 추출 되도록하는 정규식
+        this.user.phone = this.user.phone.replace(/(^02.{0}|^01.{1}|[0-9]{4})([0-9]+)([0-9]{4})/, "$1-$2-$3");// 휴대폰번호 자동 하이픈 넣어주는 정규식
       },
       getUser() {
-        axios.get('http://localhost:9191/api/user/getsession').then(res => {
+        this.$http.get('http://localhost:9191/api/user/getsession').then(res => {
           this.user.name = res.data.name
           this.user.phone = res.data.phone
           this.user.email = res.data.email
@@ -64,7 +62,7 @@
         this.user.email = this.email
         console.log(this.user)
         let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
-        axios.post('http://localhost:9191/api/user/signup', JSON.stringify(this.user), {
+        this.$http.post('http://localhost:9191/api/user/signup', JSON.stringify(this.user), {
           headers: {
             'X-CSRF-TOKEN': csrfToken[2],
             'Content-Type': 'application/json'
@@ -73,11 +71,10 @@
           if (res.data) {
             this.$router.replace('main')
           } else {
-            this.$alertModal('error','회원가입 실패')
+            this.$alertModal('error', '회원가입 실패')
           }
         })
       }
-
     }
   }
 </script>
