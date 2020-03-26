@@ -11,4 +11,5 @@ class InviteService {
     })
   }
 }
+
 export default new InviteService()
