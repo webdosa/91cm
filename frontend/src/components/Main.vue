@@ -12,10 +12,10 @@
       <!-- CjannelHeader -->
       <div v-if="channelList[0]!=null">
         <ChannelHeader v-if="$store.state.selectComponent=='main'"
-                     :channelTitle="modalObj.currentChannel.name"></ChannelHeader>
+                       :channelTitle="modalObj.currentChannel.name"></ChannelHeader>
         <keep-alive>
           <component :is="whichComponent" :currentChannel="modalObj.currentChannel"
-                     :stompClient="stompClient"
+                     :stompClient="$store.state.stompClient"
                      :msgArray="msgArray"
                      @msgArrayUpdate="msgArrayUpdate"
           ></component>
@@ -57,7 +57,7 @@
       'MainHeader': MainHeader,
       'LSidebar': LSidebar,
       'RSidebar': RSidebar,
-      'ChannelHeader' : ChannelHeader,
+      'ChannelHeader': ChannelHeader,
       'ContentWrapper': ContentWrapper,
       'UserInfo': UserInfo,
       'EditProfile': EditProfile
@@ -65,7 +65,6 @@
     data() {
       return {
         channelTitle: '',
-        stompClient: null,
         channelList: [],
         isRActive: false,
         msgArray: [],
@@ -85,7 +84,7 @@
           default:
             return 'ContentWrapper'
         }
-      }
+      },
     },
     created() {
       // 적용은 mounted 이후에 가능한 것으로 보임...
@@ -105,7 +104,13 @@
         }
       )
     },
+    updated() {
+    },
     methods: {
+      storeUpdate: function () {
+        this.$store.dispatch('userListUpdate')
+        this.$store.dispatch('initCurrentUser')
+      },
       sendTitle(channel) {
         this.channelTitle = channel.name
         this.modalObj.currentChannel = channel
@@ -114,18 +119,21 @@
         this.modalObj.modalTitle = modalObj.modalTitle
       },
       connect() {
-        this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
-        this.stompClient.connect({}, () => {
+        this.$store.state.stompClient.connect({}, () => {
           for (let i in this.channelList) {
-            this.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
+            this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
               this.channelSubscribeCallBack(e)
             })
           }
-          this.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
+          this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
+            if (res.body == 'true') {
+              this.storeUpdate()
+            }
+          })
+          this.$store.state.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
             //메시지 전송 실패시
             this.channelSubscribeCallBack(e, true)
           })
-
         })
       },
       channelUpdate(newChannelList) {
@@ -133,7 +141,7 @@
         for (let i = num; i > 0; i--) {
           let idx = newChannelList.length - i
           this.msgCountObj[newChannelList[idx].id] = 0
-          this.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
+          this.$store.state.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
             this.channelSubscribeCallBack(e)
           })
         }

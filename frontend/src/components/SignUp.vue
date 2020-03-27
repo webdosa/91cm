@@ -11,7 +11,7 @@
                   <h5>91cm를 사용하기 위해 추가적으로 필요한 정보를 입력해주세요</h5>
                 </div>
                 <div class="card-body">
-                  <label>가입할 이메일을 입력해주세요</label>
+                  <label v-if="!user.email">가입할 이메일을 입력해주세요</label>
                   <b-input v-if="!user.email" type="text" name="email" v-model="email" placeholder="이메일"></b-input>
                   <label>91cm에서 사용할 이름을 입력해주세요</label>
                   <b-input type="text" name="name" v-model="user.name" placeholder="이름"></b-input>

@@ -148,8 +148,8 @@
         this.message.channel_id = this.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if(CommonClass.byteLimit(this.stringByteLength)){
-          if (this.stompClient && this.stompClient.connected) {
-            this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
+          if (this.$store.state.stompClient && this.$store.state.stompClient.connected) {
+            this.$store.state.stompClient.send("/pub/chat/message", JSON.stringify(this.message),{})
             this.message.content = ''
             this.scrollToEnd(true)
         }

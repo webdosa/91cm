@@ -81,6 +81,9 @@
         user: Object.assign({}, this.$store.state.currentUser)
       }
     },
+    mounted() {
+      this.$eventBus.$on('stomp',)
+    },
     methods: {
       handleOk: function (bvModalEvt) {
         bvModalEvt.preventDefault()
@@ -110,6 +113,7 @@
             console.log(this.user)
             if (res.data) {
               console.log(res.data)
+              this.$store.state.stompClient.send('/pub/sync/info',null,{})
               this.$store.dispatch('initCurrentUser')
               this.$store.commit('getSelectComponent', 'user')
             }

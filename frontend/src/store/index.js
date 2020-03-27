@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    stompClient: Stomp.over(new SockJS('http://localhost:9191/endpoint/')),
     selectComponent: 'main',
     currentUser: {},
     userList : [],

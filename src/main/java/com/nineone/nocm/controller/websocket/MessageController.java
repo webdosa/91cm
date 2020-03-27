@@ -8,7 +8,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +38,7 @@ public class MessageController {
 
 	@MessageMapping("/chat/message")
 	@Transactional
-	public void message(Message message) throws ParseException {
-
+	public void message(Message message)throws ParseException {
 		message.setSend_date(messageService.makeDate());
 		message.setStr_send_date(messageService.makeStrDate(message.getSend_date()));
 		message.setContent(messageService.replacemsg(message.getContent()));
@@ -47,6 +48,10 @@ public class MessageController {
 			messagingTemplate.convertAndSend("/sub/"+message.getSender(), message);
 		}
 		 
+	}
+	@MessageMapping("/sync/info")
+	public void storeUpdateMessage(){
+		messagingTemplate.convertAndSend("/sub/sync/info","true");
 	}
 	
 
