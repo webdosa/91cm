@@ -237,18 +237,15 @@
         this.$emit('msgArrayUpdate',this.msgArray)
       },
       byteCheck(e){
+        // v-model을 썼음에도 e.target.value를 사용하는 이유는 한글은 바로 바인딩이 안되기때문에 수동적으로 값들을 message.content에 넣기 위함이다.
+        this.message.content = e.target.value
         this.stringByteLength = CommonClass.byteCount(this.message.content)
         if((47< e.keyCode && e.keyCode < 112 && e.ctrlKey == false) || (e.keyCode == 13 && e.shiftKey == true) || e.keyCode == 32 
         || e.keyCode == 229 ){
-          CommonClass.byteLimit(this.stringByteLength, 'bytecheck')
+          CommonClass.byteLimit(this.stringByteLength)
         }
       },
-      // inputEvt(e){
-      //   console.log(e)
-      //   this.message.content = e
-      //   console.log('input: ' + this.message.content)
-      // },
-  
+    
     },
     watch: {
       currentChannel: function (newv, oldv) {

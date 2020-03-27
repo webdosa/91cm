@@ -22,8 +22,7 @@ class CommonClass {
     return b
   }
 
-  byteLimit(length,type) {
-    console.log('type: '+type)
+  byteLimit(length) {
     if (length > 30000) {
       alert('최대 30000byte까지 입력이 가능합니다.')
       return false
