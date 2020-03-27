@@ -37,9 +37,9 @@
             rows="3"
             no-resize
             v-model="message.content"
-            @keyup.enter.exact="send"
-            @keydown.shift.50='inviteToggle'
+            @keydown.enter.exact="send"
             @keyup="byteCheck"
+            @keydown.shift.50='inviteToggle'
           ></b-form-textarea>
           <div class="input-group" v-if="show">
             <div class="input-group-prepend">
@@ -144,7 +144,9 @@
         this.message.content = ''
         this.show = !this.show
       },
-      send: async function () {
+      send: async function (e) {
+        console.log(e)
+        e.preventDefault()
         this.message.channel_id = this.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if(CommonClass.byteLimit(this.stringByteLength)){
@@ -236,11 +238,17 @@
       },
       byteCheck(e){
         this.stringByteLength = CommonClass.byteCount(this.message.content)
-        if((47< e.keyCode && e.keyCode < 112) || e.keyCode == 13 || e.keyCode == 32){
-          CommonClass.byteLimit(this.stringByteLength)
+        if((47< e.keyCode && e.keyCode < 112 && e.ctrlKey == false) || (e.keyCode == 13 && e.shiftKey == true) || e.keyCode == 32 
+        || e.keyCode == 229 ){
+          CommonClass.byteLimit(this.stringByteLength, 'bytecheck')
         }
-      }
-
+      },
+      // inputEvt(e){
+      //   console.log(e)
+      //   this.message.content = e
+      //   console.log('input: ' + this.message.content)
+      // },
+  
     },
     watch: {
       currentChannel: function (newv, oldv) {
