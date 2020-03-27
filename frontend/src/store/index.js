@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    userChannelList: [],
     stompClient: Stomp.over(new SockJS('http://localhost:9191/endpoint/')),
     selectComponent: 'main',
     currentUser: {},
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     isRActive: false
   },
   mutations: {
+    setChannelList: function(state,payload){
+      state.userChannelList = payload
+    },
     getSelectComponent: function(state, payload){
       state.selectComponent = payload
     },
@@ -31,15 +35,22 @@ export default new Vuex.Store({
   },
   actions: {
     userListUpdate: function (context) {
-      axios.get('http://localhost:9191/api/user/list')
+      axios.get('/api/user/list')
         .then(res => {
           context.commit('getUserList',res.data);
         }).catch(error => {
           console.log(error);
       })
     },
+    channelList: function(context){
+      axios.get('/api/channel/list')
+        .then(res => {
+          context.commit('setChannelList',res.data)
+        }).catch(error =>{
+      })
+    },
     initCurrentUser: async function (context) {
-      await axios.get('http://localhost:9191/api/user/info')
+      await axios.get('/api/user/info')
         .then(res => {
           console.log(res.data)
           context.commit('setCurrentUser',res.data)
