@@ -11,25 +11,14 @@
         <div class="menulist-header">
           <span>Channels</span>
           <div class="menulist-header-icon">
-            <a data-mode="create" @click="prepareModal">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                style="fill: white;/* height: 100%; */"
-              >
-                <path
-                  d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z"
-                ></path>
-              </svg>
+            <a data-mode="create" @click="prepareModal" style="margin-right: 5px;">
+              <i class="im im-plus-circle"></i>
             </a>
           </div>
         </div>
         <li>
-          <a v-b-toggle.collapse-1 class="dropdown-toggle">
-        <li>Channels</li>
-        </a>
+
+          <a v-b-toggle.collapse-1 class="dropdown-toggle">Channels</a>
         <b-collapse id="collapse-1" visible>
           <ul class="list-unstyled">
             <li v-for="(channel, index ) in channelList" :key="channel.id">
@@ -64,8 +53,6 @@
 
 <script>
   import AboutChannel from '../../service/aboutchannel'
-import aboutchannel from '../../service/aboutchannel'
-
   export default {
     props: ['modalObj', 'channelList'],
     watch: {
@@ -86,20 +73,33 @@ import aboutchannel from '../../service/aboutchannel'
       }
     },
     created() {
+      console.log("LSidebar created")
     },
     mounted() {
+      console.log("LSidebar mounted")
     },
     updated() {
+
+      console.log("LSidebar updated")
+      //once는 이벤트 버스를 한번만 연결해서 데이터를 가져오는 메소드
+      // 해당 로직은 사용자를 초대해서 현재 채널의 유저 정보를 다시 가져오는 로직
+      this.$eventBus.$once('getUserList', data => {
+        if (data) {
+          this.getUserList()
+        }
+      })
     },
     methods: {
       getUserList: function () {
         this.$http.get('/api/user/channel/' + this.channelList[this.channelIndex].id)
           .then(res => {
             this.channelUsers = res.data
-            this.$eventBus.$emit('channelUserSize',this.channelUsers.length)
+            this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
+            this.$eventBus.$off('channelUserSize') // 이벤트 버스 연결 해제 코드
           })
       },
       sendSelectChannel: function (index) {
+        this.$store.commit('getSelectComponent','main')
         this.channelIndex = index
         this.$emit('sendTitle', this.channelList[this.channelIndex])
         this.getUserList()
@@ -171,3 +171,6 @@ import aboutchannel from '../../service/aboutchannel'
     }
   }
 </script>
+<style lang="scss">
+  @import '../../assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
+</style>

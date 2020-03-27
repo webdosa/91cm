@@ -24,4 +24,5 @@ class AboutChannel{
     }
     
 }
+
 export default new AboutChannel()

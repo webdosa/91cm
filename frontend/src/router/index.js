@@ -7,9 +7,10 @@ import Clock from '../views/Clock'
 import Main from '../components/Main'
 import ContentWrapper from '../views/main/ContentWrapper'
 import ChannelHeader from '../views/main/ChannelHeader'
-import test from '../views/user/test'
+import test from '../views/user/UserInfo'
 import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -38,25 +39,19 @@ const routes = [
     path: '/main',
     name: 'main',
     component: Main,
-    children:[
-      { path:'', components: {default:ContentWrapper,ChannelHeader:ChannelHeader }},
-    ],
-    beforeEnter: async function(to,from,next){
+    beforeEnter: async function (to, from, next) {
       await store.dispatch('initCurrentUser')
-        if(store.state.currentUser.phone != null){
-          next()
-        }else{
-          next('/signup')
-        }
+      if (store.state.currentUser.phone != null) {
+        next()
+      } else {
+        next('/signup')
       }
+    }
   },
   {
     path: '/user',
     component: Main,
-    children:[
-      { path:'', component: test},
-      { path:'edit', component: EditProfile},
-    ]
+    children: []
   },
   {
     path: '/signup',

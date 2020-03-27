@@ -4,7 +4,7 @@
       <img src="../assets/images/laptop.jpg" class="img-fluid float-left list-inline" alt="Responsive image">
     </div>
     <div class="d-inline-block" id="login-box">
-      <img src="../assets/images/nineonesoft_logo.png" class="d-inline-block img-thumbnail">
+      <h1>Log in</h1>
       <form id="login-form">
         <input v-model="userid" id="userId" name="userId" type="text" class="form-control" placeholder="아이디를 입력해주세요">
         <input v-model="password" id="pwd" name="pwd" type="password" class="form-control" placeholder="비밀번호를 입력해주세요">
