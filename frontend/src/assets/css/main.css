@@ -2,6 +2,7 @@
 #c-c-preview p{
     margin-bottom: 0;
 }
+.channel-nowrap,
 #c-c-preview .p-nowrap {
     white-space: nowrap;
     text-overflow: ellipsis;

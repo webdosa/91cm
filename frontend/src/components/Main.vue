@@ -4,6 +4,7 @@
     <LSidebar
       :modalObj="modalObj"
       :channelList="channelList"
+      :msgCountObj="msgCountObj"
       @channelUpdate="channelUpdate"
       @sendTitle="sendTitle"></LSidebar>
     <!-- Page Content  -->
