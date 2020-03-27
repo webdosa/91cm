@@ -39,6 +39,7 @@ public class ChannelApiController {
     // 사용자의 채널 리스트를 반환
     @GetMapping("/list")
     public List<Channel> channelList(@Socialuser User user) {
+        log.info(user.getName());
         return channelService.channelList(user.getEmail());
     }
 

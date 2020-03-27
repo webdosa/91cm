@@ -19,13 +19,13 @@
         <li>
 
           <a v-b-toggle.collapse-1 class="dropdown-toggle">Channels</a>
-          <b-collapse id="collapse-1" visible>
-            <ul class="list-unstyled">
-              <li v-for="(channel, index ) in channelList" :key="channel.id">
-                <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
-              </li>
-            </ul>
-          </b-collapse>
+        <b-collapse id="collapse-1" visible>
+          <ul class="list-unstyled">
+            <li v-for="(channel, index ) in channelList" :key="channel.id">
+              <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
+            </li>
+          </ul>
+        </b-collapse>
         </li>
         <div class="menulist-header">
           <span>Users</span>
@@ -53,7 +53,6 @@
 
 <script>
   import AboutChannel from '../../service/aboutchannel'
-
   export default {
     props: ['modalObj', 'channelList'],
     watch: {
@@ -78,26 +77,29 @@
     },
     mounted() {
       console.log("LSidebar mounted")
-      this.getUserList()
     },
     updated() {
+
       console.log("LSidebar updated")
       //once는 이벤트 버스를 한번만 연결해서 데이터를 가져오는 메소드
       // 해당 로직은 사용자를 초대해서 현재 채널의 유저 정보를 다시 가져오는 로직
+      this.$eventBus.$once('getUserList', data => {
+        if (data) {
+          this.getUserList()
+        }
+      })
     },
     methods: {
       getUserList: function () {
-        console.log(this.channelList[this.channelIndex].id)
         this.$http.get('/api/user/channel/' + this.channelList[this.channelIndex].id)
           .then(res => {
             this.channelUsers = res.data
-            console.log(this.channelUsers.length)
             this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
-            // this.$eventBus.$off('channelUserSize') // 이벤트 버스 연결 해제 코드
+            this.$eventBus.$off('channelUserSize') // 이벤트 버스 연결 해제 코드
           })
       },
       sendSelectChannel: function (index) {
-        this.$store.commit('getSelectComponent', 'main')
+        this.$store.commit('getSelectComponent','main')
         this.channelIndex = index
         this.$emit('sendTitle', this.channelList[this.channelIndex])
         this.getUserList()
@@ -151,20 +153,20 @@
           .then(res => {
             console.log(res)
           }).catch(error => {
-          console.log(error)
+            console.log(error)
         })
       },
       createChannel: function () {
         // vuex에서 currentUser 객체 사용
-        AboutChannel.createChannel(this.channelTitle, this.$store.state.currentUser.email)
-          .then(res => {
-            // 채널 생성 후 리스트를 업데이트 하는 부분
-            AboutChannel.getChannelList().then(res => {
-              this.$emit('channelUpdate', res.data)
-            })
-          }).catch(error => {
-          console.warn(error)
-        })
+            AboutChannel.createChannel(this.channelTitle,this.$store.state.currentUser.email)
+              .then(res => {
+                // 채널 생성 후 리스트를 업데이트 하는 부분
+                AboutChannel.getChannelList().then(res => {
+                  this.$emit('channelUpdate', res.data)
+                })
+              }).catch(error => {
+                console.warn(error)
+              })
       }
     }
   }
