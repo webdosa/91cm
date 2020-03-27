@@ -41,7 +41,7 @@
       <!-- Users 메뉴 시작 -->
       <a class="r-style" v-b-toggle.user-info>
         <i class="im im-users"></i>
-        <span style="margin-left:20px;">{{channelUserSize}} Users</span>
+        <span style="margin-left:20px;">{{getUserSize}} Users</span>
       </a>
       <!-- Users 메뉴 끝 -->
 
@@ -68,6 +68,11 @@
       return {
         channelUserSize: 0,
         userSelect: null
+      }
+    },
+    computed:{
+      getUserSize: function () {
+        return this.channelUserSize;
       }
     },
     mounted() {

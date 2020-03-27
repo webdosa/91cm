@@ -37,7 +37,7 @@
             rows="3"
             no-resize
             v-model="message.content"
-            @keyup.enter.exact="send"
+            @keydown.enter.exact="send"
             @keydown.shift.50='inviteToggle'
             @keyup="byteCheck"
           ></b-form-textarea>
@@ -81,6 +81,8 @@
     name: 'ContentWrapper',
     components: {
       MsgBox
+    },
+    watch:{
     },
     data() {
       return {
@@ -133,7 +135,7 @@
             this.message.content = userName + '님을 초대했습니다.'
             this.$eventBus.$emit('getUserList',true)
             this.send()
-            this.inviteToggle()
+  //          this.inviteToggle() // 공백 메시지가 한번 더 보내짐 문제 해결해야함
           }).catch(error => {
             this.$alertModal('error',error.response.data.message)
             console.error(error.response)
@@ -239,7 +241,8 @@
       },
       byteCheck(e){
         this.stringByteLength = CommonClass.byteCount(this.message.content)
-        if((47< e.keyCode && e.keyCode < 112) || e.keyCode == 13 || e.keyCode == 32){
+        console.log(e.keyCode)
+        if((47< e.keyCode && e.keyCode < 112) ||e.keyCode == 229 || e.keyCode == 13 || e.keyCode == 32){
           CommonClass.byteLimit(this.stringByteLength)
         }
       }

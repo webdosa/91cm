@@ -10,7 +10,7 @@
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
       <!-- CjannelHeader -->
-      <div v-if="channelList[0]!=null">
+      <div v-if="channelList[0]!=null || $store.state.selectComponent=='user' || $store.state.selectComponent == 'edit'">
         <ChannelHeader v-if="$store.state.selectComponent=='main'"
                      :channelTitle="modalObj.currentChannel.name"></ChannelHeader>
         <keep-alive>
