@@ -1,6 +1,6 @@
 <template>
   <main class="mainwrapper">
-    <div class="h-inherit">
+    <div class="h-inherit" v-cloak @drop.prevent="addFile" @dragover.prevent>
       <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt">
         <MsgBox v-for="msg in msgArray" :key="msg.id">
           <template #m-icon>
@@ -11,6 +11,7 @@
             <!-- #으로 단축해서 사용 -->
             <strong>{{ msg.user.name }}</strong>
             <span style="font-size: 11px; margin-left:3px; ">{{ msg.str_send_date }}</span>
+            <img class="img-thumbnail" :src="msg.img">
           </template>
           <template #m-content>
             <!-- #으로 단축해서 사용 -->
@@ -19,12 +20,12 @@
         </MsgBox>
       </ul>
       <a v-if="msgPreviewBool" @click="clickMsgPreview">
-      <div id="c-c-preview" v-bind:class="{active: $store.state.isLActive}">
-            <div class="p-wrapper">
-              <div>{{ previewObj.username }} : &nbsp;</div>
-              <div class="p-nowrap" v-html="previewObj.content"></div>
-            </div>
+        <div id="c-c-preview" v-bind:class="{active: $store.state.isLActive}">
+          <div class="p-wrapper">
+            <div>{{ previewObj.username }} : &nbsp;</div>
+            <div class="p-nowrap" v-html="previewObj.content"></div>
           </div>
+        </div>
       </a>
       <div class="c-i-wrapper">
         <!-- 더 뭔가 추가할 거 같아서 div로 감싸놓음 -->
@@ -37,6 +38,7 @@
             rows="3"
             no-resize
             v-model="message.content"
+            @keydown.enter.prevent
             @keydown.enter.exact="send"
             @keydown.shift.50='inviteToggle'
             @keyup="byteCheck"
@@ -59,7 +61,7 @@
             </datalist>
           </div>
           <div style="display: flex;">
-            <span class="ml-auto" > {{ stringByteLength }} / 30000Byte</span>
+            <span class="ml-auto"> {{ stringByteLength }} / 30000Byte</span>
           </div>
         </div>
 
@@ -84,9 +86,10 @@
     },
     data() {
       return {
-        stringByteLength:0,
-        previewObj:{
-          content:'',
+        tempImg: '',
+        stringByteLength: 0,
+        previewObj: {
+          content: '',
           username: ''
         },
         show: false,
@@ -94,7 +97,8 @@
           channel_id: this.currentChannel.channel_id,
           content: '',
           sender: this.$store.state.currentUser.email,
-          user: {}
+          user: {},
+          img: null
         },
         // 채널 옮길 때마다 초기화 되어야한다.
         cursorPoint: {
@@ -107,7 +111,7 @@
         oldScrollHeight: 0,
         wrapperEl: null,
         msgPreviewBool: false,
-        getmsgBool:false
+        getmsgBool: false
       }
     },
     created() {
@@ -115,14 +119,29 @@
     },
     mounted() {
       this.$nextTick(() => {
-          this.wrapperEl = document.querySelector('.c-c-wrapper')
-
+        this.wrapperEl = document.querySelector('.c-c-wrapper')
       })
     },
     updated() {
       this.scrollToEnd()
     },
     methods: {
+      addFile: function (e) {
+        let droppedFiles = e.dataTransfer.files;
+        if (!droppedFiles) return;
+        let imgUrl = URL.createObjectURL(droppedFiles.item(0))
+        let formData = new FormData()
+        formData.append('file',droppedFiles.item(0))
+        this.$http.post('/api/file/upload',formData,{
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
+      },
       invite: async function () {
         const userName = this.message.content.split(' ')[0]
         const userEmail = this.message.content.split(' ')[1]
@@ -131,11 +150,11 @@
           .then(res => {
             console.log(res)
             this.message.content = userName + '님을 초대했습니다.'
-            this.$eventBus.$emit('getUserList',true)
+            this.$eventBus.$emit('getUserList', true)
             this.send()
             this.inviteToggle()
           }).catch(error => {
-            this.$alertModal('error',error.response.data.message)
+            this.$alertModal('error', error.response.data.message)
             console.error(error.response)
             this.message.content = ''
           })
@@ -147,16 +166,15 @@
       send: async function () {
         this.message.channel_id = this.currentChannel.id
         this.message.user = this.$store.state.currentUser
-        if(CommonClass.byteLimit(this.stringByteLength)){
+        if (CommonClass.byteLimit(this.stringByteLength)) {
           if (this.$store.state.stompClient && this.$store.state.stompClient.connected) {
-            this.$store.state.stompClient.send("/pub/chat/message", JSON.stringify(this.message),{})
+            this.$store.state.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
             this.message.content = ''
             this.scrollToEnd(true)
-        }
-          else{
+          } else {
             this.message.content = CommonClass.replacemsg(this.message.content)
             this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
-            let errormsg =  JSON.parse(JSON.stringify(this.message))
+            let errormsg = JSON.parse(JSON.stringify(this.message))
             this.msgArray.push(errormsg)
             this.message.content = ''
           }
@@ -166,11 +184,11 @@
         let element = e.target;
         //스크롤이 없을때에도 스크롤 위치가 최상단이기 때문에 스크롤이 있는지 없는지 판단해야한다.
         if (element.scrollTop <= 0 && element.scrollHeight != element.clientHeight) {
-          if(this.cursorPoint.empty == false){
+          if (this.cursorPoint.empty == false) {
             this.getMessage(element)
           }
-        }else if(this.isScrollAtEnd(element)){
-            this.msgPreviewBool = false
+        } else if (this.isScrollAtEnd(element)) {
+          this.msgPreviewBool = false
         }
       },
 
@@ -204,11 +222,11 @@
           if (this.firstLoad) {
             this.oldScrollHeight = this.wrapperEl.scrollHeight
           }
-          console.log("oldScrollHeight : "+this.oldScrollHeight)
-          console.log("this.wrapperEl.clientHeight : "+this.wrapperEl.clientHeight)
-          console.log("this.wrapperEl.scrollHeight : "+this.wrapperEl.scrollHeight)
-          if (this.isScrollAtEnd(this.wrapperEl)|| this.firstLoad || bool ||
-              ((this.oldScrollHeight == this.wrapperEl.clientHeight)&& (this.wrapperEl.scrollHeight > this.wrapperEl.clientHeight))) {
+          console.log("oldScrollHeight : " + this.oldScrollHeight)
+          console.log("this.wrapperEl.clientHeight : " + this.wrapperEl.clientHeight)
+          console.log("this.wrapperEl.scrollHeight : " + this.wrapperEl.scrollHeight)
+          if (this.isScrollAtEnd(this.wrapperEl) || this.firstLoad || bool ||
+            ((this.oldScrollHeight == this.wrapperEl.clientHeight) && (this.wrapperEl.scrollHeight > this.wrapperEl.clientHeight))) {
 
             this.wrapperEl.scrollTop = this.wrapperEl.scrollHeight
             this.firstLoad = false
@@ -216,30 +234,30 @@
           }
         })
       },
-      isScrollAtEnd(wrapperEl){
-         if(Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight){
-           return true
-         } else{
-           return false
-         }
+      isScrollAtEnd(wrapperEl) {
+        if (Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight) {
+          return true
+        } else {
+          return false
+        }
       },
-      clickMsgPreview(){
+      clickMsgPreview() {
         this.scrollToEnd(true)
         this.msgPreviewBool = false
       },
-      initData(){
+      initData() {
         this.cursorPoint.channel_id = this.currentChannel.id
         this.cursorPoint.first = true
         this.cursorPoint.cursorId = 0
         this.cursorPoint.empty = false
         this.msgArray = []
         this.firstLoad = true,
-        this.scrollHeight = 0,
-        this.$emit('msgArrayUpdate',this.msgArray)
+          this.scrollHeight = 0,
+          this.$emit('msgArrayUpdate', this.msgArray)
       },
-      byteCheck(e){
+      byteCheck(e) {
         this.stringByteLength = CommonClass.byteCount(this.message.content)
-        if((47< e.keyCode && e.keyCode < 112) || e.keyCode == 13 || e.keyCode == 32){
+        if ((47 < e.keyCode && e.keyCode < 112) || e.keyCode == 13 || e.keyCode == 32) {
           CommonClass.byteLimit(this.stringByteLength)
         }
       }
@@ -251,15 +269,15 @@
         this.getMessage()
         this.scrollToEnd()
       },
-      msgArray:function(){
+      msgArray: function () {
         // 스크롤을 최상단으로 올려 메시지를 가져올 때 실행되는 것을 막기 위한 if문
-        if(this.getmsgBool){
+        if (this.getmsgBool) {
           this.getmsgBool = false
-        }else{
-          if(!this.isScrollAtEnd(this.wrapperEl)){
-            let copymsg = JSON.parse(JSON.stringify(this.msgArray[this.msgArray.length-1]))
+        } else {
+          if (!this.isScrollAtEnd(this.wrapperEl)) {
+            let copymsg = JSON.parse(JSON.stringify(this.msgArray[this.msgArray.length - 1]))
             this.previewObj.content = CommonClass.replacemsgForPreview(copymsg.content)
-            this.previewObj.username = this.msgArray[this.msgArray.length-1].user.name
+            this.previewObj.username = this.msgArray[this.msgArray.length - 1].user.name
             this.msgPreviewBool = true
           }
         }

@@ -40,7 +40,7 @@ channel_id int unsigned not null,
 content text,
 sender varchar(100) not null,
 send_date datetime not null default CURRENT_TIMESTAMP,
-foreign key (sender) references member(email) on delete cascade on update cascade
+foreign key (sender) references member(email) on update cascade
 );
 
 create table file(
@@ -53,8 +53,8 @@ message_id int unsigned not null,
 byte int unsigned not null,
 sender varchar(100) not null,
 send_date datetime not null default CURRENT_TIMESTAMP,
-foreign key (sender) references member(email) on delete cascade on update cascade,
-foreign key (message_id) references message(id) on delete cascade on update cascade
+foreign key (sender) references member(email) on update cascade,
+foreign key (message_id) references message(id) on update cascade
 );
 
 
