@@ -12,5 +12,5 @@ public interface JoinInfoRepository {
     List<JoinInfo> getAllList();
     boolean channelAuthorityCheck(Invite invite);
     int insertJoinInfo(JoinInfo joinInfo);
-
+    int updateLastAccessDate(JoinInfo joinInfo);
 }

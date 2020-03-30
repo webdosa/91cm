@@ -1,21 +1,27 @@
 package com.nineone.nocm.controller.api;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.nineone.nocm.domain.JoinInfo;
-import com.nineone.nocm.service.JoinInfoService;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineone.nocm.annotation.Socialuser;
 import com.nineone.nocm.domain.Channel;
+import com.nineone.nocm.domain.JoinInfo;
+import com.nineone.nocm.domain.LastAccess;
 import com.nineone.nocm.domain.User;
 import com.nineone.nocm.service.ChannelService;
+import com.nineone.nocm.service.JoinInfoService;
+import com.nineone.nocm.service.MessageService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +35,9 @@ public class ChannelApiController {
 
     @Autowired
     private JoinInfoService joinInfoService;
+    
+	@Autowired
+	private MessageService messageService; 
 
     @PostMapping("/leave")
     public boolean leaveChannel(@RequestBody Map<String, Object> info){
@@ -66,4 +75,40 @@ public class ChannelApiController {
     public boolean deleteChannel(@RequestBody Channel channel) {
         return channelService.deleteChannel(channel.getId());
     }
+    
+    @RequestMapping(value ="/update/lastaccessdate", method=RequestMethod.PUT)
+    public void updateLastAccessDate(@RequestBody Map<String,Object> map, @Socialuser User user,HttpSession session) {
+    	
+    	LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
+    	System.out.println("뭐지 : "+lastAccess.isContentWrapper());
+    	lastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
+    	session.setAttribute("lastAccess", lastAccess);
+    	
+    	if(map.get("oldChannelId")!=null) {
+    		System.out.println(map.get("oldChannelId"));
+    		Date last_access_date = messageService.makeDate();
+        	JoinInfo joinInfo = JoinInfo.builder()
+        			.channel_id((int)map.get("oldChannelId"))
+        			.member_email(user.getEmail())
+        			.last_access_date(last_access_date)
+        			.build();
+        	joinInfoService.updateLastAccessDate(joinInfo);
+    	}
+    }
+    
+    @RequestMapping(value ="/update/sessioniscw", method=RequestMethod.PUT)
+    public void updateSessionIsCW(@RequestBody Map<String,Object> map, HttpSession session) {
+    	// LastAccess 말고 map으로 받은 이유는 boolean값을 이상하게 가져와서 임시방편으로 썼다.
+    	LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
+    	System.out.println(originLastAccess.isContentWrapper());
+    	originLastAccess.setContentWrapper((boolean)map.get("isContentWrapper"));
+    	System.out.println(originLastAccess.isContentWrapper());
+    	System.out.println(originLastAccess.getCurrentChannelId());
+    	session.setAttribute("lastAccess", originLastAccess);
+    }
+    
+//    @RequestMapping(value ="/insert/sessionLA", method=RequestMethod.POST)
+//    public void insertSessionLA(@RequestBody LastAccess lastAccess,HttpSession session) {
+//    	session.setAttribute("lastAccess", lastAccess);
+//    }
 }

@@ -1,12 +1,16 @@
 package com.nineone.nocm.service;
 
-import com.nineone.nocm.domain.Invite;
-import com.nineone.nocm.domain.JoinInfo;
-import com.nineone.nocm.repository.JoinInfoRepository;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import com.nineone.nocm.domain.Invite;
+import com.nineone.nocm.domain.JoinInfo;
+import com.nineone.nocm.domain.LastAccess;
+import com.nineone.nocm.repository.JoinInfoRepository;
 
 @Service
 public class JoinInfoServiceImpl implements JoinInfoService {
@@ -33,4 +37,12 @@ public class JoinInfoServiceImpl implements JoinInfoService {
     public boolean insertJoinInfo(JoinInfo joinInfo) {
         return (joinInfoRepository.insertJoinInfo(joinInfo) > 0);
     }
+
+	@Override
+	public int updateLastAccessDate(JoinInfo joinInfo) {
+		
+		return joinInfoRepository.updateLastAccessDate(joinInfo);
+	}
+
+
 }

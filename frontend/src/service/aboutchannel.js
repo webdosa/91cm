@@ -22,6 +22,34 @@ class AboutChannel{
         headers: {'Content-Type': 'application/json'}
       })
     }
+
+    updateLastAccessDate (currentId,oldId) {
+      console.log(oldId)
+      return axios.put('http://localhost:9191/api/channel/update/lastaccessdate',
+      {
+        oldChannelId: oldId,
+        currentChannelId: currentId
+      }
+      )
+    }
+
+    updateSessionIsCW (bool) {
+      console.log(bool)
+      return axios.put("http://localhost:9191/api/channel/update/sessioniscw",
+      {
+        isContentWrapper: bool
+      }
+      )
+    }
+
+    // insertSessionLA(channel_id){
+    //   return axios.post("http://localhost:9191/api/channel/insert/sessionLA",
+    //   {
+    //     isFocus: true,
+    //     currentChannelId: channel_id,
+    //     isContentWrapper: true
+    //   })
+    // }
     
 }
 

@@ -46,6 +46,7 @@
   import MainHeader from '../views/main/MainHeader'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
+  // import MessageService from '../service/messageservice'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
   import UserInfo from "../views/user/UserInfo";
@@ -71,15 +72,17 @@
         isRActive: false,
         msgArray: [],
         msgCountObj: {},
-        modalObj: {modalTitle: '', currentChannel: null}
+        modalObj: {modalTitle: '', currentChannel: null},
       }
     },
     computed: {
       whichComponent() {
         switch (this.$store.state.selectComponent) {
           case 'main':
+            AboutChannel.updateSessionIsCW(true)
             return 'ContentWrapper'
-          case 'user':
+          case 'user':            
+            AboutChannel.updateSessionIsCW(false)
             return 'UserInfo'
           case 'edit':
             return 'EditProfile'
@@ -88,17 +91,23 @@
         }
       }
     },
+    deactivated(){
+      console.log('deactiveed')
+    },
     created() {
       // 적용은 mounted 이후에 가능한 것으로 보임...
       this.$store.dispatch('userListUpdate')
       AboutChannel.getChannelList().then(
         res => {
           this.channelList = res.data
-          for (let i in this.channelList) {
-            this.msgCountObj[this.channelList[i].id] = 0
-          }
+          console.log(this.channelList)
+          // for (let i in this.channelList) {
+          //   this.msgCountObj[this.channelList[i].id] = 0
+          // }
+          
           // 처음 로그인하자마자 제일 처음에 만든 채널로 현재 채널객체를 초기화한다.
           if (this.modalObj.currentChannel == null && this.channelList[0] != null) {
+            this.channelList[0].count = 0
             this.modalObj.currentChannel = this.channelList[0]
             this.channelTitle = this.modalObj.currentChannel.name
           }
@@ -108,8 +117,15 @@
     },
     methods: {
       sendTitle(channel) {
+        if(this.$store.state.oldComponent='main'){
+          let oldCurrentChannel = this.modalObj.currentChannel
+          AboutChannel.updateLastAccessDate(channel.id,oldCurrentChannel.id)
+          console.log(oldCurrentChannel.id)
+        }
         this.channelTitle = channel.name
         this.modalObj.currentChannel = channel
+
+        //아래는 바뀐 채널의 count 0으로 바꾸기
       },
       passData(modalObj) {
         this.modalObj.modalTitle = modalObj.modalTitle
@@ -157,7 +173,13 @@
           }
           this.msgArray.push(data)
         } else {
-          this.msgCountObj[data.channel_id] += 1
+          for(let i=0; i < this.channelList.length; i++){
+            if(data.channel_id == this.channelList[i].id){
+              this.channelList[i].count += 1 
+              break
+            }
+          }
+          // this.msgCountObj[data.channel_id] += 1
         }
       }
     }

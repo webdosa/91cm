@@ -122,6 +122,9 @@
     updated() {
       this.scrollToEnd()
     },
+    deactivated(){
+      console.log('deactiveed contentwrapper')
+    },
     methods: {
       invite: async function () {
         const userName = this.message.content.split(' ')[0]

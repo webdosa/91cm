@@ -1,10 +1,9 @@
 package com.nineone.nocm.service;
 
-import com.nineone.nocm.domain.User;
-import com.nineone.nocm.oauth.OAuthAttributes;
-import com.nineone.nocm.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -14,8 +13,13 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
-import java.util.Collections;
+import com.nineone.nocm.domain.LastAccess;
+import com.nineone.nocm.domain.User;
+import com.nineone.nocm.oauth.OAuthAttributes;
+import com.nineone.nocm.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -38,6 +42,8 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
                 oAuth2User.getAttributes());
         User user = saveOrUpdate(attributes);
+        LastAccess lastAccess = setLastAccess();
+        httpSession.setAttribute("lastAccess", lastAccess);
         httpSession.setAttribute("user", user);
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("USER")),
@@ -59,5 +65,11 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
             user = attributes.toEntity();
         }
         return user;
+    }
+    
+    private LastAccess setLastAccess() {
+    	LastAccess lastAccess = LastAccess.builder()
+    			.currentChannelId(0).isContentWrapper(true).isFocus(true).build();
+    	return lastAccess;
     }
 }

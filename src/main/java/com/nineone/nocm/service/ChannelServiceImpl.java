@@ -9,12 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nineone.nocm.domain.Channel;
 import com.nineone.nocm.domain.JoinInfo;
 import com.nineone.nocm.repository.ChannelRepository;
+import com.nineone.nocm.repository.MessageRepository;
 
 @Service
 public class ChannelServiceImpl implements ChannelService{
 
     @Autowired
     private ChannelRepository channelRepository;
+    
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Override
     @Transactional
@@ -35,7 +39,12 @@ public class ChannelServiceImpl implements ChannelService{
 
     @Override
     public List<Channel> channelList(String userEmail) {
-        return channelRepository.channelList(userEmail);
+    	List<Channel> channelList = channelRepository.channelList(userEmail);
+    	List<Integer> countList = messageRepository.getMsgCntList(channelList);
+    	for(int i=0;i<channelList.size();i++) {
+    		channelList.get(i).setCount(countList.get(i));
+    	}
+        return channelList;
     }
 
     @Override
