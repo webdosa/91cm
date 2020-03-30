@@ -77,17 +77,10 @@
     },
     mounted() {
       console.log("LSidebar mounted")
+      this.getUserList()
     },
     updated() {
-
       console.log("LSidebar updated")
-      //once는 이벤트 버스를 한번만 연결해서 데이터를 가져오는 메소드
-      // 해당 로직은 사용자를 초대해서 현재 채널의 유저 정보를 다시 가져오는 로직
-      this.$eventBus.$once('getUserList', data => {
-        if (data) {
-          this.getUserList()
-        }
-      })
     },
     methods: {
       getUserList: function () {
@@ -95,7 +88,7 @@
           .then(res => {
             this.channelUsers = res.data
             this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
-            this.$eventBus.$off('channelUserSize') // 이벤트 버스 연결 해제 코드
+
           })
       },
       sendSelectChannel: function (index) {

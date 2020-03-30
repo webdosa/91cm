@@ -37,7 +37,7 @@
             rows="3"
             no-resize
             v-model="message.content"
-            @keyup.enter.exact="send"
+            @keydown.enter.exact="send"
             @keydown.shift.50='inviteToggle'
             @keyup="byteCheck"
           ></b-form-textarea>
