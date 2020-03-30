@@ -12,8 +12,8 @@
 <!--              <path d="M24 6h-24v-4h24v4zm0 4h-24v4h24v-4zm0 8h-24v4h24v-4z"></path>-->
 <!--            </svg>-->
 <!--            <span>&nbsp;Toggle Sidebar</span>-->
-            <i v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info"@click="LSidebarToggle" ></i>
-            <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle" ></i>
+            <i v-if="$store.state.isLActive" class="im im-angle-left-circle btn btn-info"@click="LSidebarToggle" ></i>
+            <i v-else class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle" ></i>
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">

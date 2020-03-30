@@ -82,8 +82,6 @@
     components: {
       MsgBox
     },
-    watch:{
-    },
     data() {
       return {
         stringByteLength:0,
@@ -135,7 +133,7 @@
             this.message.content = userName + '님을 초대했습니다.'
             this.$eventBus.$emit('getUserList',true)
             this.send()
-  //          this.inviteToggle() // 공백 메시지가 한번 더 보내짐 문제 해결해야함
+            this.inviteToggle()
           }).catch(error => {
             this.$alertModal('error',error.response.data.message)
             console.error(error.response)
@@ -150,8 +148,8 @@
         this.message.channel_id = this.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if(CommonClass.byteLimit(this.stringByteLength)){
-          if (this.stompClient && this.stompClient.connected) {
-            this.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
+          if (this.$store.state.stompClient && this.$store.state.stompClient.connected) {
+            this.$store.state.stompClient.send("/pub/chat/message", JSON.stringify(this.message),{})
             this.message.content = ''
             this.scrollToEnd(true)
         }
@@ -241,8 +239,7 @@
       },
       byteCheck(e){
         this.stringByteLength = CommonClass.byteCount(this.message.content)
-        console.log(e.keyCode)
-        if((47< e.keyCode && e.keyCode < 112) ||e.keyCode == 229 || e.keyCode == 13 || e.keyCode == 32){
+        if((47< e.keyCode && e.keyCode < 112) || e.keyCode == 13 || e.keyCode == 32){
           CommonClass.byteLimit(this.stringByteLength)
         }
       }
