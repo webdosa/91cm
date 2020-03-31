@@ -1,5 +1,6 @@
 package com.nineone.nocm.service;
 
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -15,6 +16,9 @@ import com.nineone.nocm.repository.JoinInfoRepository;
 @Service
 public class JoinInfoServiceImpl implements JoinInfoService {
 
+	@Autowired
+	private MessageService messageService;
+	
     @Autowired
     private JoinInfoRepository joinInfoRepository;
 
@@ -39,8 +43,13 @@ public class JoinInfoServiceImpl implements JoinInfoService {
     }
 
 	@Override
-	public int updateLastAccessDate(JoinInfo joinInfo) {
-		
+	public int updateLastAccessDate(int CurrentChannelId,String email) {
+		Date last_access_date = messageService.makeDate();
+		JoinInfo joinInfo = JoinInfo.builder()
+    			.channel_id(CurrentChannelId)
+    			.member_email(email)
+    			.last_access_date(last_access_date)
+    			.build();
 		return joinInfoRepository.updateLastAccessDate(joinInfo);
 	}
 

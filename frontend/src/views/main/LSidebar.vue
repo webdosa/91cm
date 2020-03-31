@@ -25,7 +25,7 @@
               <a @click="sendSelectChannel(index)" style="display: flex;">
                 <div>{{ channel.name }}</div>
                 <div class="menulist-header-icon">
-                 <b-badge v-if="msgCountObj[channel.id]!=0" variant="danger" class="verti-align channel-nowrap">{{ channel.count }}</b-badge>
+                 <b-badge v-if="channel.count!=0" variant="danger" class="verti-align channel-nowrap">{{ channel.count }}</b-badge>
                  </div>
               </a>
             </li>

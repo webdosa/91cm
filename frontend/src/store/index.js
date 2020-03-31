@@ -6,16 +6,21 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     selectComponent: 'main',
-    oldComponent: 'main',
+    oldComponent: '',
     currentUser: {},
     userList : [],
     currentChannelUser: [],
     isLActive: false,
-    isRActive: false
+    isRActive: false,
+    isfocus: true,
+    isLogout: false
   },
   mutations: {
     getSelectComponent: function(state, payload){
+      console.log(state.selectComponent)
+      console.log('index.js')
       state.oldComponent = state.selectComponent
+      console.log(state.oldComponent)
       state.selectComponent = payload
     },
     getUserList: function(state,payload) {
@@ -26,6 +31,12 @@ export default new Vuex.Store({
     },
     resetCurrentUser: function (state) {
       state.currentUser = {}
+    },
+    setFocus: function (state, payload)  {
+      state.isfocus = payload
+    },
+    setIsLogout: function (state,payload) {
+      state.isLogout = payload
     }
   },
   actions: {

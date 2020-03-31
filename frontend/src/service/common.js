@@ -14,6 +14,9 @@ class CommonClass {
     for (let i in array) {
       content += array[i] + ' '
     }
+    content = content.replace('</p>', '')
+    content = content.replace('<p>', '')
+    console.log(content)
     return content
   }
 

@@ -13,6 +13,6 @@ public interface JoinInfoService {
     boolean isExistUser(Invite invite);
     boolean AuthorityCheck(Invite invite);
     boolean insertJoinInfo(JoinInfo joinInfo);
-    int updateLastAccessDate(JoinInfo joinInfo);
+    int updateLastAccessDate(int CurrentChannelId,String email);
 //    LastAccess changeLastAccess(LastAccess lastAccess);
 }

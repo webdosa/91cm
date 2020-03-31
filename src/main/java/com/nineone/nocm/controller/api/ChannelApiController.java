@@ -36,8 +36,6 @@ public class ChannelApiController {
     @Autowired
     private JoinInfoService joinInfoService;
     
-	@Autowired
-	private MessageService messageService; 
 
     @PostMapping("/leave")
     public boolean leaveChannel(@RequestBody Map<String, Object> info){
@@ -83,30 +81,43 @@ public class ChannelApiController {
     	System.out.println("뭐지 : "+lastAccess.isContentWrapper());
     	lastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
     	session.setAttribute("lastAccess", lastAccess);
-    	
+    	// 채널이 아무것도 없을 때는 갱신해주지 않아도 되니까 null확인으로 채널있는지 없는지 확인해줌
     	if(map.get("oldChannelId")!=null) {
     		System.out.println(map.get("oldChannelId"));
-    		Date last_access_date = messageService.makeDate();
-        	JoinInfo joinInfo = JoinInfo.builder()
-        			.channel_id((int)map.get("oldChannelId"))
-        			.member_email(user.getEmail())
-        			.last_access_date(last_access_date)
-        			.build();
-        	joinInfoService.updateLastAccessDate(joinInfo);
+        	joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
     	}
     }
     
     @RequestMapping(value ="/update/sessioniscw", method=RequestMethod.PUT)
-    public void updateSessionIsCW(@RequestBody Map<String,Object> map, HttpSession session) {
+    public void updateSessionIsCW(@RequestBody Map<String,Object> map,@Socialuser User user, HttpSession session) {
     	// LastAccess 말고 map으로 받은 이유는 boolean값을 이상하게 가져와서 임시방편으로 썼다.
-    	LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
-    	System.out.println(originLastAccess.isContentWrapper());
-    	originLastAccess.setContentWrapper((boolean)map.get("isContentWrapper"));
-    	System.out.println(originLastAccess.isContentWrapper());
-    	System.out.println(originLastAccess.getCurrentChannelId());
-    	session.setAttribute("lastAccess", originLastAccess);
+    	if(session.getAttribute("lastAccess")!=null) {
+    		LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
+        	boolean isContentWrapper = (boolean)map.get("isContentWrapper");
+        	if(!isContentWrapper) {
+        		if(originLastAccess.getCurrentChannelId()!=0) {
+                	joinInfoService.updateLastAccessDate(originLastAccess.getCurrentChannelId(),user.getEmail());
+        		} 
+        	}
+        	originLastAccess.setContentWrapper(isContentWrapper);
+        	session.setAttribute("lastAccess", originLastAccess);
+    	}
     }
     
+    @RequestMapping(value ="/update/sessioncc", method=RequestMethod.POST)
+    public void initCurrentChannel(@RequestBody Map<String,Object> map, HttpSession session) {
+    	LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
+    	originLastAccess.setContentWrapper(true);
+    	originLastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
+    	session.setAttribute("lastAccess", originLastAccess);
+    }
+    @RequestMapping(value= "/update/sessionfocus", method=RequestMethod.POST)
+    public void updateSessionIsFocus(@RequestBody Map<String,Object> map, HttpSession session) {
+    	LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
+    	originLastAccess.setFocus((boolean)map.get("isFocus"));
+    	session.setAttribute("lastAccess", originLastAccess);
+    }
+     
 //    @RequestMapping(value ="/insert/sessionLA", method=RequestMethod.POST)
 //    public void insertSessionLA(@RequestBody LastAccess lastAccess,HttpSession session) {
 //    	session.setAttribute("lastAccess", lastAccess);

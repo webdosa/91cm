@@ -1,4 +1,10 @@
 
+.searchinput {
+    margin-bottom: 0px !important;
+    margin-right: .5rem !important;
+    padding-left: 40px;
+}
+
 #c-c-preview p{
     margin-bottom: 0;
 }
@@ -194,7 +200,7 @@ MainContents
     font-weight: 600;
     margin-left: 5px;
 }
-
+.nav-item .nav-link,
 .navbar-nav .nav-link {
     padding: 0 0.5rem;
 }
