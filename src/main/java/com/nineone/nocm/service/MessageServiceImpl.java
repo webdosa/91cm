@@ -2,6 +2,8 @@ package com.nineone.nocm.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Service;
 
 import com.nineone.nocm.domain.Message;
@@ -60,4 +63,8 @@ public class MessageServiceImpl implements MessageService {
 		return newMsg;
 	}
 
+	@Override
+	public String testDate(){
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm aa MMMM dd"));
+	}
 }

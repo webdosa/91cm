@@ -28,14 +28,39 @@
     },
     methods: {
       testDown: function () {
-        this.$http.post('/api/file/download', 'test.xlsx',{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+        let text = 'test.xlsx'
+        this.$http.post('/api/file/download',
+          {
+            'fileName': '장비 현황.xlsx'
+          }, {
+            responseType: 'blob'
           }
-        }).then(res => {
-          console.log(res)
-          console.log(res.data)
-        })
+        )
+          .then(res => {
+            console.log(res)
+            const url = window.URL.createObjectURL(new Blob([res.data]))
+            const link = document.createElement('a')
+            link.href = url;
+            const contentDisposition = res.headers['content-disposition']
+            console.log(contentDisposition)
+            let fileName = 'unKnown'
+            if (contentDisposition) {
+              const fileNameMatch = contentDisposition.match(/filename\*?=['"]?(?:UTF-\d['"]*)?([^;\r\n"']*)['"]?;?/)
+              console.log(fileNameMatch)
+              console.log(fileNameMatch.length)
+              if (fileNameMatch.length === 2) {
+                fileName = fileNameMatch[1];
+                fileName = decodeURI(fileName)
+              }
+              console.log(decodeURIComponent(fileName))
+              console.log(fileName)
+            }
+            link.setAttribute('download', fileName)
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+            window.URL.revokeObjectURL(url)
+          })
       },
       addFile(e) {
         let droppedFiles = e.dataTransfer.files;

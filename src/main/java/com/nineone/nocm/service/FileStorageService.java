@@ -1,7 +1,9 @@
 package com.nineone.nocm.service;
 
+import com.nineone.nocm.domain.ContentsFile;
 import com.nineone.nocm.exception.FileStorageException;
 import com.nineone.nocm.exception.UploadFileNotFoundException;
+import com.nineone.nocm.repository.FileStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -18,11 +20,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Base64;
+import java.util.UUID;
 
 @Slf4j
 @Service
 public class FileStorageService {
     private final Path fileStorageLocation;
+
+    @Autowired
+    private FileStorage fileStorage;
 
     @Autowired
     public FileStorageService() {
@@ -33,14 +40,15 @@ public class FileStorageService {
             throw new FileStorageException("could not create the directory",ex);
         }
     }
-    public String storeFile(MultipartFile file){
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+    public String storeFile(MultipartFile file, ContentsFile contentsFile){
+        String fileName = StringUtils.cleanPath(contentsFile.getServer_name());
         try{
             if (fileName.contains("..")){
                 throw new FileStorageException("Sorry! Filename contains invalid path sequenced "+ fileName);
             }
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
             return fileName;
         }catch (IOException ex){
             throw new FileStorageException("Could not store file "+ fileName + ", please try again",ex);
@@ -59,4 +67,13 @@ public class FileStorageService {
             throw new UploadFileNotFoundException("File not found : "+fileName, ex);
         }
     }
+    public void DBStoreFile(ContentsFile file){
+        fileStorage.saveFile(file);
+    }
+
+    public String getUUID(){
+        return UUID.randomUUID().toString().replaceAll("-","");
+    }
+
+
 }

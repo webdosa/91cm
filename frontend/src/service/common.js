@@ -31,6 +31,20 @@ class CommonClass {
     }
   }
 
+  checkFileType(type){
+    type = type.toLowerCase().trim()
+    switch (type) {
+      case 'png'||'jpg'||'gif':
+        return 'img'
+      case 'zip'||'7z'||'tar':
+        return 'zip'
+      case 'pdf':
+        return 'pdf'
+      default:
+        return 'file'
+    }
+  }
+
 }
 
 export default new CommonClass()

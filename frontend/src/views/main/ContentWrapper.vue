@@ -1,4 +1,4 @@
-<template>
+`<template>
   <main class="mainwrapper">
     <div class="h-inherit" v-cloak @drop.prevent="addFile" @dragover.prevent>
       <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt">
@@ -11,11 +11,18 @@
             <!-- #으로 단축해서 사용 -->
             <strong>{{ msg.user.name }}</strong>
             <span style="font-size: 11px; margin-left:3px; ">{{ msg.str_send_date }}</span>
-            <img class="img-thumbnail" :src="msg.img">
           </template>
           <template #m-content>
             <!-- #으로 단축해서 사용 -->
-            <div v-html="msg.content" class="mychat-content"></div>
+
+            <div v-if="msg.content" v-html="msg.content" class="mychat-content">
+
+            </div>
+            <div v-else-if="msg.files[0]" v-for="file in msg.files">
+              <div v-if="">
+                <img :src="file.path">
+              </div>
+            </div>
           </template>
         </MsgBox>
       </ul>
@@ -97,8 +104,7 @@
           channel_id: this.currentChannel.channel_id,
           content: '',
           sender: this.$store.state.currentUser.email,
-          user: {},
-          img: null
+          user: {}
         },
         // 채널 옮길 때마다 초기화 되어야한다.
         cursorPoint: {
@@ -124,6 +130,7 @@
     },
     updated() {
       this.scrollToEnd()
+      console.log(this.msgArray)
     },
     methods: {
       addFile: function (e) {
@@ -131,8 +138,10 @@
         if (!droppedFiles) return;
         let imgUrl = URL.createObjectURL(droppedFiles.item(0))
         let formData = new FormData()
-        formData.append('file',droppedFiles.item(0))
-        this.$http.post('/api/file/upload',formData,{
+        formData.append('file', droppedFiles.item(0))
+        formData.append('channel_id', this.currentChannel.id)
+        formData.append('sender', this.message.sender)
+        this.$http.post('/api/file/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -286,3 +295,4 @@
 
   }
 </script>
+`
