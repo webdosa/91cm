@@ -13,7 +13,10 @@ export default new Vuex.Store({
     isLActive: false,
     isRActive: false,
     isfocus: true,
-    isLogout: false
+    isLogout: false,
+    isSearchMode: false,
+    isInviteMode: false,
+    searchText: ''
   },
   mutations: {
     getSelectComponent: function(state, payload){
@@ -37,6 +40,9 @@ export default new Vuex.Store({
     },
     setIsLogout: function (state,payload) {
       state.isLogout = payload
+    },
+    setSearchText: function (state,paylod) {
+      state.searchText = paylod
     }
   },
   actions: {

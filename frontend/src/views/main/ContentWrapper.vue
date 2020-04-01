@@ -14,7 +14,7 @@
           </template>
           <template #m-content>
             <!-- #으로 단축해서 사용 -->
-            <div v-html="msg.content" class="mychat-content"></div>
+            <div v-html="TextbyFilter(msg.content)" class="mychat-content"></div>
           </template>
         </MsgBox>
       </ul>
@@ -31,7 +31,7 @@
         <div style="flex-grow:1;">
           <b-form-textarea
             autofocus
-            v-if="!show"
+            v-if="!$store.state.isInviteMode && !$store.state.isSearchMode"
             id="textarea-no-resize"
             placeholder="Enter chat message"
             rows="3"
@@ -41,7 +41,7 @@
             @keyup="byteCheck"
             @keydown.shift.50='inviteToggle'
           ></b-form-textarea>
-          <div class="input-group" v-if="show">
+          <div class="input-group" v-if="$store.state.isInviteMode">
             <div class="input-group-prepend">
               <span class="input-group-text">@</span>
             </div>
@@ -58,14 +58,19 @@
               <option v-for="user in $store.state.userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
             </datalist>
           </div>
+          <SearchInput 
+            :msgArray="msgArray"
+            :cursorPoint="cursorPoint" 
+            :wrapperEl="wrapperEl"
+            @getMessage="getMessage"></SearchInput>
           <div style="display: flex;">
             <span class="ml-auto" > {{ stringByteLength }} / 30000Byte</span>
           </div>
         </div>
 
-        <b-button v-if="!show" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
+        <b-button v-if="!$store.state.isInviteMode && !$store.state.isSearchMode" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
         </b-button>
-        <b-button v-else @click="invite" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
+        <b-button v-if="$store.state.isInviteMode" @click="invite" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
         </b-button>
       </div>
     </div>
@@ -75,12 +80,13 @@
   import MsgBox from './MsgBox'
   import InviteService from '../../service/inviteService'
   import CommonClass from '../../service/common'
+  import SearchInput from './SearchInput'
 
   export default {
     props: ['currentChannel', 'stompClient', 'msgArray'],
     name: 'ContentWrapper',
     components: {
-      MsgBox
+      MsgBox,SearchInput
     },
     data() {
       return {
@@ -89,7 +95,6 @@
           content:'',
           username: ''
         },
-        show: false,
         message: {
           channel_id: this.currentChannel.channel_id,
           content: '',
@@ -107,7 +112,7 @@
         oldScrollHeight: 0,
         wrapperEl: null,
         msgPreviewBool: false,
-        getmsgBool:false
+        getmsgBool:false,
       }
     },
     created() {
@@ -145,7 +150,7 @@
       },
       inviteToggle: function (e) {
         this.message.content = ''
-        this.show = !this.show
+        this.$store.state.isInviteMode = !this.$store.state.isInviteMode
       },
       send: async function (e) {
         console.log(e)
@@ -179,7 +184,7 @@
         }
       },
 
-      getMessage(wrapperEl) {
+      getMessage: function (wrapperEl) {
         this.cursorPoint.channel_id = this.currentChannel.id
         this.$http.post('http://localhost:9191/api/message/getmsg', JSON.stringify(this.cursorPoint), {
           headers: {
@@ -248,7 +253,9 @@
           CommonClass.byteLimit(this.stringByteLength)
         }
       },
-    
+      TextbyFilter (content) {
+        return this.$options.filters.highlight(content, this.$store.state.searchText);
+      }
     },
     watch: {
       currentChannel: function (newv, oldv) {
@@ -268,6 +275,17 @@
             this.msgPreviewBool = true
           }
         }
+      }
+    },
+    filters: {
+    highlight: function(stringToSearch, searchTerm) {
+        if (searchTerm === "") return stringToSearch;
+        var iQuery = new RegExp(searchTerm, "ig");
+        return stringToSearch
+          .toString()
+          .replace(iQuery, function(matchedText, a, b) {
+            return "<span class='highlight'>" + matchedText + "</span>";
+          });
       }
     }
 

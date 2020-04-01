@@ -147,7 +147,7 @@
             this.channelSubscribeCallBack(e, true)
           })
 
-        }, function(message) {
+        }, function() {
             window.location.href="/"
         })
       },

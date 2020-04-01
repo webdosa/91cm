@@ -1,3 +1,6 @@
+.addhighlight{
+    background-color: #FFFF00;
+}
 
 .searchinput {
     margin-bottom: 0px !important;
@@ -171,7 +174,8 @@ MainContents
     overflow: auto;
     height: calc(100% - 141px);
     padding: 20px 25px 0px 25px !important;
-    margin-bottom: 0px;
+    margin-bottom: 0px;    
+    position: relative;
 }
 
 .c-i-wrapper {
