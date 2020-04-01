@@ -50,7 +50,7 @@ server_name varchar(130) not null,
 path varchar(130) not null,
 extension varchar(10),
 message_id int unsigned not null,
-byte int unsigned not null,
+file_size int unsigned not null,
 sender varchar(100) not null,
 send_date datetime not null default CURRENT_TIMESTAMP,
 foreign key (sender) references member(email) on update cascade,
@@ -116,3 +116,4 @@ delete from message;
 delete from sns_info;
 delete from joininfo;
 delete from message;
+delete from file;

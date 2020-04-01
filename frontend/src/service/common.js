@@ -31,17 +31,20 @@ class CommonClass {
     }
   }
 
-  checkFileType(type){
+  checkFileType(file){
+    let type = file.extension
     type = type.toLowerCase().trim()
     switch (type) {
       case 'png'||'jpg'||'gif':
-        return 'img'
+        return file.path
       case 'zip'||'7z'||'tar':
-        return 'zip'
+        return require('@/assets/images/fileIcon/zip_icon.png')
       case 'pdf':
-        return 'pdf'
+        return require('@/assets/images/fileIcon/pdf_icon.png')
+      case 'txt':
+        return require('@/assets/images/fileIcon/txt_icon.png')
       default:
-        return 'file'
+        return require('@/assets/images/fileIcon/file_icon.png')
     }
   }
 

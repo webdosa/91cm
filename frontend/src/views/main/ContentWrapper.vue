@@ -1,4 +1,5 @@
-`<template>
+`
+<template>
   <main class="mainwrapper">
     <div class="h-inherit" v-cloak @drop.prevent="addFile" @dragover.prevent>
       <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt">
@@ -15,14 +16,22 @@
           <template #m-content>
             <!-- #으로 단축해서 사용 -->
 
-            <div v-if="msg.content" v-html="msg.content" class="mychat-content">
-
-            </div>
-            <div v-else-if="msg.files[0]" v-for="file in msg.files">
-              <div v-if="">
-                <img :src="file.path">
-              </div>
-            </div>
+            <div v-if="msg.files == null || msg.content" v-html="msg.content" class="mychat-content"></div>
+            <b-container fluid v-else-if="msg.files.length > 0" class="p-4 bg-white">
+              <b-row>
+                <b-col v-for="file in msg.files">
+                  <a @click="fileDownload(file)">
+                    <b-img thumbnail rounded fluid :src="selectImage(file)" alt="이미지를 찾을 수 없습니다." style="max-width: 200px"></b-img>
+                    <p><b>{{file.original_name}}</b></p>
+                    <p>file size : {{(file.file_size / 1024).toLocaleString(undefined,{minimumFractionDigits:2})}} kb</p>
+                  </a>
+                </b-col>
+              </b-row>
+            </b-container>
+            <!--            <b-card-group v-else-if="msg.files[0]" v-for="file in msg.files">-->
+            <!--              <b-card :img-src="file.path" img-alt="card image" img-left>-->
+            <!--              </b-card>-->
+            <!--            </b-card-group>-->
           </template>
         </MsgBox>
       </ul>
@@ -133,12 +142,38 @@
       console.log(this.msgArray)
     },
     methods: {
+      selectImage: function (file) {
+        return CommonClass.checkFileType(file)
+      },
+      fileDownload: function(file){
+        this.$http.get(file.path,{
+          responseType: 'blob'
+        })
+          .then(res =>{
+            const url = window.URL.createObjectURL(new Blob([res.data]))
+            const link = document.createElement('a')
+            link.href = url;
+            link.setAttribute('download', file.original_name)
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+            window.URL.revokeObjectURL(url)
+          })
+      },
       addFile: function (e) {
         let droppedFiles = e.dataTransfer.files;
         if (!droppedFiles) return;
-        let imgUrl = URL.createObjectURL(droppedFiles.item(0))
-        let formData = new FormData()
-        formData.append('file', droppedFiles.item(0))
+        let formData = new FormData();
+        // formData에 multi로 파일을 담는 방법에 대해 추후 확인
+        let files = [];
+        ([...droppedFiles]).forEach(f => {
+          files.push(f)
+        });
+        files.forEach(file => {
+          formData.append("files", file)
+        });
+
+        /////////////////////////////////////
         formData.append('channel_id', this.currentChannel.id)
         formData.append('sender', this.message.sender)
         this.$http.post('/api/file/upload', formData, {
@@ -151,6 +186,7 @@
           console.log(error)
         })
       },
+
       invite: async function () {
         const userName = this.message.content.split(' ')[0]
         const userEmail = this.message.content.split(' ')[1]
@@ -295,4 +331,3 @@
 
   }
 </script>
-`

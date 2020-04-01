@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,36 +38,32 @@ public class FileController {
     @Autowired
     private FileStorageService fileStorageService;
 
+
+    // Exception 처리 필요
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
+    @Transactional
+    public ResponseEntity<?> uploadFile(@RequestParam("files") MultipartFile[] files,
                                         @RequestParam("channel_id") int channel_id,
                                         @RequestParam("sender") String sender, @Socialuser User user) {
-        String UUID = fileStorageService.getUUID();
-        ContentsFile contentsFile = ContentsFile.builder()
-                .original_name(file.getOriginalFilename())
-                .extension(file.getOriginalFilename().split("\\.")[1])
-                .server_name(UUID)
-                .sender(sender)
-                .path("/api/file/download/" + UUID)
-                .build();
         Message message = Message.builder().channel_id(channel_id)
                 .sender(sender)
                 .user(user)
                 .build();
         message.setSend_date(messageService.makeDate());
         message.setStr_send_date(messageService.makeStrDate(message.getSend_date()));
-        List<ContentsFile> files = new ArrayList<>();
-        files.add(contentsFile);
-        message.setFiles(files);
         messageService.insertMessage(message);
-        contentsFile.setMessage_id(message.getId());
-        fileStorageService.storeFile(file, contentsFile);
-        fileStorageService.DBStoreFile(contentsFile);
-
-
-        messagingTemplate.convertAndSend("/sub/chat/room/"+message.getChannel_id(), message);
-//        String fileName = fileStorageService.StoreFile(file);
-//        log.info(fileName);
+        List<ContentsFile> fileList = new ArrayList<>();
+        for (MultipartFile file : files) {
+            ContentsFile contentsFile = ContentsFile.getDefaultInstance(file);
+            log.info(contentsFile.getOriginal_name());
+            contentsFile.setSender(sender);
+            contentsFile.setMessage_id(message.getId());
+            fileList.add(contentsFile);
+            fileStorageService.storeFile(file, contentsFile);
+            fileStorageService.DBStoreFile(contentsFile);
+        }
+        message.setFiles(fileList);
+        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChannel_id(), message);
 //        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
 //                .path("/download/")
 //                .path(fileName)
@@ -88,7 +85,6 @@ public class FileController {
             contentType = "application/octet-stream";
         }
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment").filename(resource.getFilename(), StandardCharsets.UTF_8).build();
-        log.info(contentDisposition.toString());
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())

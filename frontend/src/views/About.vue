@@ -1,14 +1,6 @@
 <template>
-  <div v-cloak @drop.prevent="addFile" @dragover.prevent>
-    <h2>File Upload {Drag them over}</h2>
-    <ul>
-      <li v-for="file in files">
-        {{ file.name }} ({{file.size}} byte)
-        <button @click="removeFile(file)" title="Remove">X</button>
-      </li>
-    </ul>
-    <button :disabled="uploadDisabled" @click="upload">Upload</button>
-    <b-button @click="testDown">TEST DOWNLOAD</b-button>
+  <div>
+    <img src="../assets/images/fileIcon/txt_icon.png" alt="이미지를 찾을 수 없음"/>
   </div>
 </template>
 <script>
@@ -29,7 +21,7 @@
     methods: {
       testDown: function () {
         let text = 'test.xlsx'
-        this.$http.post('/api/file/download',
+        this.$http.get('/api/file/download/44dbf5cb6ff146898f8e7692df5e947e',
           {
             'fileName': '장비 현황.xlsx'
           }, {

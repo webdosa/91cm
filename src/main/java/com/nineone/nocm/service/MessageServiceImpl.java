@@ -63,6 +63,7 @@ public class MessageServiceImpl implements MessageService {
 		return newMsg;
 	}
 
+	// 추후 수정 해야함
 	@Override
 	public String testDate(){
 		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm aa MMMM dd"));
