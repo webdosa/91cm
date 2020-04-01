@@ -113,9 +113,11 @@ public class ChannelApiController {
     }
     @RequestMapping(value= "/update/sessionfocus", method=RequestMethod.POST)
     public void updateSessionIsFocus(@RequestBody Map<String,Object> map, HttpSession session) {
-    	LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
-    	originLastAccess.setFocus((boolean)map.get("isFocus"));
-    	session.setAttribute("lastAccess", originLastAccess);
+    	if(session.getAttribute("user")!=null) {
+    		LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
+        	originLastAccess.setFocus((boolean)map.get("isFocus"));
+        	session.setAttribute("lastAccess", originLastAccess);
+    	}
     }
      
 //    @RequestMapping(value ="/insert/sessionLA", method=RequestMethod.POST)

@@ -12,16 +12,20 @@ class EventListener{
     }
     focusEvt() {
         window.addEventListener('focus', function() {
+            if(!store.state.isLogout){
             store.commit('setFocus',true)
             let isfocus = store.state.isfocus
             AboutChannel.updateFocus(isfocus)
+        }
         })
     }
     blurEvt() {
         window.addEventListener('blur', function() {
+            if(!store.state.isLogout){
             store.commit('setFocus',false)
             let isfocus = store.state.isfocus
             AboutChannel.updateFocus(isfocus)
+        }
         })
       }
 }

@@ -147,6 +147,8 @@
             this.channelSubscribeCallBack(e, true)
           })
 
+        }, function(message) {
+            window.location.href="/"
         })
       },
       channelUpdate(newChannelList) {

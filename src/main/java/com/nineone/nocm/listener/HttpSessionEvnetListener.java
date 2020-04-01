@@ -21,7 +21,7 @@ public class HttpSessionEvnetListener implements HttpSessionListener{
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
 		System.out.println(se.getSession().getId());
-		// TODO Auto-generated method stub
+		se.getSession().setMaxInactiveInterval(5);
 		HttpSessionListener.super.sessionCreated(se);
 	}
 
@@ -29,12 +29,17 @@ public class HttpSessionEvnetListener implements HttpSessionListener{
 	public void sessionDestroyed(HttpSessionEvent se) {
 		HttpSession session = se.getSession();
 		System.out.println(session.getId());
-		LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
-		System.out.println(((User)session.getAttribute("user")).getEmail());
-		if(lastAccess.isContentWrapper()) {
-			if(lastAccess.isFocus()) {
-				User user = (User)session.getAttribute("user");
-				joinInfoService.updateLastAccessDate(lastAccess.getCurrentChannelId(),user.getEmail());
+		if(session.getAttribute("lastAccess")!=null) {
+			LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
+			System.out.println(((User)session.getAttribute("user")).getEmail());
+			System.out.println(lastAccess.isContentWrapper());
+			System.out.println(lastAccess.isFocus());
+			if(lastAccess.isContentWrapper()) {
+				if(lastAccess.isFocus()) {
+					System.out.println("실행");
+					User user = (User)session.getAttribute("user");
+					joinInfoService.updateLastAccessDate(lastAccess.getCurrentChannelId(),user.getEmail());
+				}
 			}
 		}
 	}
