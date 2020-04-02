@@ -82,10 +82,10 @@ public class ChannelApiController {
     	lastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
     	session.setAttribute("lastAccess", lastAccess);
     	// 채널이 아무것도 없을 때는 갱신해주지 않아도 되니까 null확인으로 채널있는지 없는지 확인해줌
-    	if(map.get("oldChannelId")!=null) {
+//    	if(map.get("oldChannelId")!=null) {
     		System.out.println(map.get("oldChannelId"));
         	joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
-    	}
+//    	}
     }
     
     @RequestMapping(value ="/update/sessioniscw", method=RequestMethod.PUT)

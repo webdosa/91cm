@@ -130,6 +130,7 @@
         this.modalObj.currentChannel = channel
 
         this.modalObj.currentChannel.count = 0
+        this.$store.state.isSearchMode = false
       },
       passData(modalObj) {
         this.modalObj.modalTitle = modalObj.modalTitle

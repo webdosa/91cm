@@ -121,7 +121,6 @@
     mounted() {
       this.$nextTick(() => {
           this.wrapperEl = document.querySelector('.c-c-wrapper')
-
       })
     },
     updated() {

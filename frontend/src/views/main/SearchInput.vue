@@ -14,7 +14,7 @@
 </template>
 <script>
 export default {
-    props: ['cursorPoint','wrapperEl','msgArray'],
+    props: ['cursorPoint','msgArray'],
     name: 'SearchInput',
     data() {
       return {
@@ -26,9 +26,9 @@ export default {
       }
     },
     mounted () {
+      //자식의 mounted가 먼저 실행되기때문에 따로 요소를 다시한번 가져옴
         this.$nextTick(() => {
           this.wrapperEl = document.querySelector('.c-c-wrapper')
-          console.log(this.wrapperEl)
       })
     },
     methods:{
@@ -43,58 +43,66 @@ export default {
       },
       toggleSearchMode (e) {
         console.log('searchmode close')
+        // searchText값이 바뀌면 contentWrapper에 있는 필터가 실행되는데 (msgarray가 바뀌어도 실행됨)
+        // 실행되면 span태그가 추가된것들이 초기화되고 다시 filter를 진행한다.
         this.$store.commit('setSearchText','')
-        if (this.searchResultList != null) {
-            console.log(this.searchResultList)
-            this.searchResultList[this.index].classList.remove("addhighlight")
-        }
         this.index=0
         this.oldlength=0
         this.$store.state.isSearchMode = !this.$store.state.isSearchMode
       },
       up: function() {
            if (0 < this.index) {
-                this.searchResultList[this.index].classList.remove("addhighlight");
                 this.index -= 1;
-                this.scrollToSearchEl()
+                this.scrollToSearchEl( this.index + 1 ,this.index)
            }else{
-               if(this.cursorPoint.empty == false){
-                    this.searchResultList[this.index].classList.remove("addhighlight");
-                    this.oldlength = this.searchResultList.length;
-                    this.isGetMsgByUp = true
-                    this.$emit('getMessage')
-                    // this.$nextTick(() => {
-                    //     this.searchStart();
-                    // });
-               }
+              this.GetMsg('up')         
            }
       },
       down() {
-          if (this.searchResultList.length - 1 > this.index) {
-        this.searchResultList[this.index].classList.remove("addhighlight");
-        this.index += 1;
-        this.scrollToSearchEl()
-      }
+        if (this.searchResultList.length - 1 > this.index) {
+          this.index += 1;
+          this.scrollToSearchEl(this.index - 1 , this.index)
+        }
+      },
+      GetMsg(by){
+        if(this.cursorPoint.empty == false){
+          this.oldlength = this.searchResultList.length;
+          this.isGetMsgByUp = true
+          this.$emit('getMessage')
+        }else{
+          if(by == null){
+            alert('검색 결과가 없습니다.')
+          }
+        }
       },
       searchStart () {
         console.log(document.querySelectorAll(".highlight"))
         this.searchResultList = document.querySelectorAll(".highlight")
-        if (this.oldlength === 0) {
-         this.index = this.searchResultList.length - 1
-         this.scrollToSearchEl()
-        }else{
-            this.index = this.searchResultList.length - this.oldlength - 1
-            console.log(this.searchResultList.length)
-            console.log(this.index)
-            this.scrollToSearchEl()
+        //첫번째 블록(처음 가져온 12개의 메시지) 중에 검색결과가 없다면
+        if(this.searchResultList.length === 0){
+          this.GetMsg()
+        }else{ // 첫번째 블록에 검색결과가 있을 때
+          //검색 결과가 있어 처음 index값을 할당해줄 때
+          if (this.oldlength === 0) {
+            this.index = this.searchResultList.length - 1
+            this.scrollToSearchEl(null,this.index)
+          }else{ // up함수에 의해 메시지가 추가돼서 다시 검색을 시작할 때
+            if(this.searchResultList.length == this.oldlength){
+              this.GetMsg('up')
+            }else{
+              this.index = this.searchResultList.length - this.oldlength - 1
+              this.scrollToSearchEl(this.index + 1,this.index)
+            }
+          }
         }
       },
-      scrollToSearchEl () {
-        this.offset = this.searchResultList[this.index].offsetTop
-        this.searchResultList[this.index].classList.add("addhighlight")
-        console.log('없을거같당..22')
-        console.log(this.wrapperEl)
-        this.wrapperEl.scrollTo(0, this.offset)
+      scrollToSearchEl (oldIdx,newIdx) {
+        if(oldIdx != null){
+          this.searchResultList[oldIdx].classList.remove("addhighlight");
+        }
+        this.offset = this.searchResultList[newIdx].offsetTop
+        this.searchResultList[newIdx].classList.add("addhighlight")
+        this.wrapperEl.scrollTo(0,this.offset - (this.wrapperEl.clientHeight/2) )
       }
     },
     watch: {
