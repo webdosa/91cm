@@ -114,11 +114,14 @@ public class ChannelApiController {
     // 포커스 중인지 아닌지 갱신
     // 포커스아닐 때 타임아웃시 마지막접속시간을 갱신해주면 안되니까..
     @RequestMapping(value= "/update/sessionfocus", method=RequestMethod.POST)
-    public void updateSessionIsFocus(@RequestBody Map<String,Object> map, HttpSession session) {
+    public void updateSessionIsFocus(@RequestBody Map<String,Object> map, HttpSession session,@Socialuser User user) {
     	if(session.getAttribute("user")!=null) {
     		LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
         	originLastAccess.setFocus((boolean)map.get("isFocus"));
         	session.setAttribute("lastAccess", originLastAccess);
+        	if(!originLastAccess.isFocus() && originLastAccess.getCurrentChannelId() != 0) {
+        		joinInfoService.updateLastAccessDate(originLastAccess.getCurrentChannelId(),user.getEmail());
+        	}
     	}
     }
      

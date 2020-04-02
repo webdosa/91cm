@@ -10,13 +10,14 @@ class EventListener{
             }
         })
     }
-    focusEvt() {
+    focusEvt(instance) {
         window.addEventListener('focus', function() {
-            if(!store.state.isLogout){
-            store.commit('setFocus',true)
-            let isfocus = store.state.isfocus
-            AboutChannel.updateFocus(isfocus)
-        }
+                if(!store.state.isLogout){
+                store.commit('setFocus',true)
+                let isfocus = store.state.isfocus
+                AboutChannel.updateFocus(isfocus)
+                instance.modalObj.currentChannel.count = 0
+            }
         })
     }
     blurEvt() {

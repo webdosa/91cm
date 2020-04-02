@@ -10,7 +10,7 @@
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <!-- CjannelHeader -->
+      <!-- ChannelHeader -->
       <div v-if="channelList[0]!=null">
         <ChannelHeader v-if="$store.state.selectComponent=='main'"
                      :channelTitle="modalObj.currentChannel.name"></ChannelHeader>
@@ -113,7 +113,7 @@
           }
           this.connect()
           EventListener.beforeunloadEvt()
-          EventListener.focusEvt()
+          EventListener.focusEvt(this)
           EventListener.blurEvt()
           NotificationClass.requestPermission()
         }
@@ -181,15 +181,21 @@
             data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
           }
           this.msgArray.push(data)
-        } else {
-          for(let i=0; i < this.channelList.length; i++){
+          if(!this.$store.state.isfocus){
+            this.msgCounting(data)  
+          }
+        }else {
+          this.msgCounting(data)
+        }
+      },
+      msgCounting(data){
+        for(let i=0; i < this.channelList.length; i++){
             if(data.channel_id == this.channelList[i].id){
               this.channelList[i].count += 1 
               break
             }
           }
-        }
-      },
+      }
    
     }
 
