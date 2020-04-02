@@ -126,6 +126,11 @@
     updated() {
       this.scrollToEnd()
     },
+    activated(){
+      if(this.$store.state.oldComponent != 'main' && this.$store.state.selectComponent == 'main' ){
+        this.scrollToEnd(true)
+      }
+    },
     deactivated(){
       console.log('deactiveed contentwrapper')
     },

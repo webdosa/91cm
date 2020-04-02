@@ -102,7 +102,8 @@ public class ChannelApiController {
         	session.setAttribute("lastAccess", originLastAccess);
     	}
     }
-    
+
+    //현재 채널 초기화
     @RequestMapping(value ="/update/sessioncc", method=RequestMethod.POST)
     public void initCurrentChannel(@RequestBody Map<String,Object> map, HttpSession session) {
     	LastAccess originLastAccess = (LastAccess)session.getAttribute("lastAccess");
@@ -110,6 +111,8 @@ public class ChannelApiController {
     	originLastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
     	session.setAttribute("lastAccess", originLastAccess);
     }
+    // 포커스 중인지 아닌지 갱신
+    // 포커스아닐 때 타임아웃시 마지막접속시간을 갱신해주면 안되니까..
     @RequestMapping(value= "/update/sessionfocus", method=RequestMethod.POST)
     public void updateSessionIsFocus(@RequestBody Map<String,Object> map, HttpSession session) {
     	if(session.getAttribute("user")!=null) {
