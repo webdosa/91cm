@@ -9,8 +9,12 @@
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
+      <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
+      <div v-if="channelList[0]==null && $store.state.selectComponent=='main'">
+        <p>채팅방을 만들거나 가입해주세요</p>
+      </div>
       <!-- CjannelHeader -->
-      <div v-if="channelList[0]!=null">
+      <div v-else>
         <ChannelHeader v-if="$store.state.selectComponent=='main'"
                        :channelTitle="modalObj.currentChannel.name"></ChannelHeader>
         <keep-alive>
@@ -20,18 +24,6 @@
                      @msgArrayUpdate="msgArrayUpdate"
           ></component>
         </keep-alive>
-        <!-- ContentWrapper
-        <router-view
-          :currentChannel="modalObj.currentChannel"
-          :stompClient="stompClient"
-          :msgArray="msgArray"
-          @msgArrayUpdate="msgArrayUpdate"
-        ></router-view>
-        -->
-      </div>
-      <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
-      <div v-else>
-        <p>채팅방을 만들거나 가입해주세요</p>
       </div>
     </div>
     <RSidebar v-if="channelList[0]!=null"
