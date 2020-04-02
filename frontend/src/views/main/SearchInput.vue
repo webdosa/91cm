@@ -36,10 +36,14 @@ export default {
         this.index=0
         this.oldlength=0
         e.preventDefault()
-        this.$store.commit('setSearchText',e.target.value)
-        this.$nextTick(() => {
+        if(e.target.value == ''){
+          alert('검색어를 입력해주세요.')
+        }else{
+          this.$store.commit('setSearchText',e.target.value)
+          this.$nextTick(() => {
             this.searchStart()
-        })
+          })
+        }
       },
       toggleSearchMode (e) {
         console.log('searchmode close')

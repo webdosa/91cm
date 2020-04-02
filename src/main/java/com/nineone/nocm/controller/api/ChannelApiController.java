@@ -76,18 +76,17 @@ public class ChannelApiController {
     
     @RequestMapping(value ="/update/lastaccessdate", method=RequestMethod.PUT)
     public void updateLastAccessDate(@RequestBody Map<String,Object> map, @Socialuser User user,HttpSession session) {
-    	
+    	// 채널에서 채널로 이동했을때 실행
     	LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
     	System.out.println("뭐지 : "+lastAccess.isContentWrapper());
     	lastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
     	session.setAttribute("lastAccess", lastAccess);
-    	// 채널이 아무것도 없을 때는 갱신해주지 않아도 되니까 null확인으로 채널있는지 없는지 확인해줌
-//    	if(map.get("oldChannelId")!=null) {
-    		System.out.println(map.get("oldChannelId"));
-        	joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
-//    	}
+    	System.out.println(map.get("oldChannelId"));
+        joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
     }
     
+    // 채팅화면에서 채팅화면이 아닌 곳으로 이동했을 때 session값 갱신해주기 위함
+    // 세션값을 갱신해주는 이유는 세션타임아웃시 마지막접속시간을 조건부 아래 갱신시켜주기 위함
     @RequestMapping(value ="/update/sessioniscw", method=RequestMethod.PUT)
     public void updateSessionIsCW(@RequestBody Map<String,Object> map,@Socialuser User user, HttpSession session) {
     	// LastAccess 말고 map으로 받은 이유는 boolean값을 이상하게 가져와서 임시방편으로 썼다.
@@ -120,8 +119,5 @@ public class ChannelApiController {
     	}
     }
      
-//    @RequestMapping(value ="/insert/sessionLA", method=RequestMethod.POST)
-//    public void insertSessionLA(@RequestBody LastAccess lastAccess,HttpSession session) {
-//    	session.setAttribute("lastAccess", lastAccess);
-//    }
+
 }
