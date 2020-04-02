@@ -272,7 +272,7 @@
         if(this.getmsgBool){
           this.getmsgBool = false
         }else{
-          if(!this.isScrollAtEnd(this.wrapperEl)){
+          if(!this.isScrollAtEnd(this.wrapperEl) && this.msgArray.length > 0){
             let copymsg = JSON.parse(JSON.stringify(this.msgArray[this.msgArray.length-1]))
             this.previewObj.content = CommonClass.replacemsgForPreview(copymsg.content)
             this.previewObj.username = this.msgArray[this.msgArray.length-1].user.name
