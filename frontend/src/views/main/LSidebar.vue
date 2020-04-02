@@ -22,7 +22,12 @@
         <b-collapse id="collapse-1" visible>
           <ul class="list-unstyled">
             <li v-for="(channel, index ) in channelList" :key="channel.id">
-              <a @click="sendSelectChannel(index)">{{ channel.name }}</a>
+              <a @click="sendSelectChannel(index)" style="display: flex;">
+                <div>{{ channel.name }}</div>
+                <div class="menulist-header-icon">
+                 <b-badge v-if="channel.count!=0" variant="danger" class="verti-align channel-nowrap">{{ channel.count }}</b-badge>
+                 </div>
+              </a>
             </li>
           </ul>
         </b-collapse>
@@ -54,7 +59,7 @@
 <script>
   import AboutChannel from '../../service/aboutchannel'
   export default {
-    props: ['modalObj', 'channelList'],
+    props: ['modalObj', 'channelList','msgCountObj'],
     watch: {
       channelList: function (newVal) {
         this.channelList = newVal

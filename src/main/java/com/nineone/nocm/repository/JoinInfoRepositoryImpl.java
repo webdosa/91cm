@@ -47,5 +47,10 @@ public class JoinInfoRepositoryImpl implements JoinInfoRepository {
         return sqlSession.insert(namespace + ".insertJoinInfo",joinInfo);
     }
 
+	@Override
+	public int updateLastAccessDate(JoinInfo joinInfo) {
+		return sqlSession.update(namespace + ".updateLastAccessDate",joinInfo);
+	}
+
 
 }

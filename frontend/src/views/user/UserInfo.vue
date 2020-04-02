@@ -47,6 +47,9 @@
     created() {
       console.log(this.$store.state.currentUser)
     },
+    deactivated(){
+      console.log('deactiveed user')
+    },
     methods: {
       callComponent: function () {
         this.$store.commit('getSelectComponent','edit')

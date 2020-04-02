@@ -4,6 +4,7 @@
     <LSidebar
       :modalObj="modalObj"
       :channelList="channelList"
+      :msgCountObj="msgCountObj"
       @channelUpdate="channelUpdate"
       @sendTitle="sendTitle"></LSidebar>
     <!-- Page Content  -->
@@ -45,11 +46,14 @@
   import MainHeader from '../views/main/MainHeader'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
+  import NotificationClass from '../service/notification'
+  import EventListener from '../service/eventlistener'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
   import UserInfo from "../views/user/UserInfo";
   import EditProfile from "../views/user/EditProfile";
   import ChannelHeader from "../views/main/ChannelHeader";
+
 
   export default {
     name: 'Main',
@@ -70,15 +74,17 @@
         isRActive: false,
         msgArray: [],
         msgCountObj: {},
-        modalObj: {modalTitle: '', currentChannel: null}
+        modalObj: {modalTitle: '', currentChannel: null},
       }
     },
     computed: {
       whichComponent() {
+        console.log(this.$store.state.oldComponent)
+        AboutChannel.updateLastAccessStatus(this.$store.state.oldComponent,this.$store.state.selectComponent)
         switch (this.$store.state.selectComponent) {
           case 'main':
             return 'ContentWrapper'
-          case 'user':
+          case 'user':            
             return 'UserInfo'
           case 'edit':
             return 'EditProfile'
@@ -87,28 +93,44 @@
         }
       }
     },
+    deactivated(){
+      console.log('deactiveed')
+    },
     created() {
       // 적용은 mounted 이후에 가능한 것으로 보임...
       this.$store.dispatch('userListUpdate')
       AboutChannel.getChannelList().then(
         res => {
           this.channelList = res.data
-          for (let i in this.channelList) {
-            this.msgCountObj[this.channelList[i].id] = 0
-          }
+          console.log(this.channelList)
+          
           // 처음 로그인하자마자 제일 처음에 만든 채널로 현재 채널객체를 초기화한다.
           if (this.modalObj.currentChannel == null && this.channelList[0] != null) {
+            this.channelList[0].count = 0
             this.modalObj.currentChannel = this.channelList[0]
             this.channelTitle = this.modalObj.currentChannel.name
+            AboutChannel.initCurrentChannel(this.modalObj.currentChannel.id)
           }
           this.connect()
+          EventListener.beforeunloadEvt()
+          EventListener.focusEvt()
+          EventListener.blurEvt()
+          NotificationClass.requestPermission()
         }
       )
     },
     methods: {
       sendTitle(channel) {
+        if(this.$store.state.oldComponent=='main'){
+          let oldChannel = this.modalObj.currentChannel
+          AboutChannel.updateLastAccessDate(channel.id,oldChannel.id)
+          console.log(oldChannel.id)
+        }
         this.channelTitle = channel.name
         this.modalObj.currentChannel = channel
+
+        this.modalObj.currentChannel.count = 0
+        this.$store.state.isSearchMode = false
       },
       passData(modalObj) {
         this.modalObj.modalTitle = modalObj.modalTitle
@@ -126,6 +148,8 @@
             this.channelSubscribeCallBack(e, true)
           })
 
+        }, function() {
+            window.location.href="/"
         })
       },
       channelUpdate(newChannelList) {
@@ -150,16 +174,25 @@
       },
       channelSubscribeCallBack(e, fail) {
         let data = JSON.parse(e.body)
-        if (data.channel_id == this.modalObj.currentChannel.id) {
+        console.log(this.$store.state.isfocus)
+        NotificationClass.sendNotification(this.$store.state.isfocus,data)
+        if (data.channel_id == this.modalObj.currentChannel.id && this.$store.state.selectComponent == 'main') {
           if (fail) {
             data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
           }
           this.msgArray.push(data)
         } else {
-          this.msgCountObj[data.channel_id] += 1
+          for(let i=0; i < this.channelList.length; i++){
+            if(data.channel_id == this.channelList[i].id){
+              this.channelList[i].count += 1 
+              break
+            }
+          }
         }
-      }
+      },
+   
     }
 
   }
+
 </script>
