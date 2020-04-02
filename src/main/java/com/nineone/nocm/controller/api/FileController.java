@@ -68,10 +68,6 @@ public class FileController {
         }
         message.setFiles(fileList);
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChannel_id(), message);
-//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/download/")
-//                .path(fileName)
-//                .toUriString();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

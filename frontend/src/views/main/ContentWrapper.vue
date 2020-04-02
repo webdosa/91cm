@@ -1,7 +1,7 @@
 `
 <template>
   <main class="mainwrapper">
-    <div class="h-inherit" v-cloak @drop.prevent="addFile" @dragover.prevent>
+    <div class="h-inherit" v-cloak @drop.prevent="dropFile" @dragover.prevent>
       <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt">
         <MsgBox v-for="msg in msgArray" :key="msg.id">
           <template #m-icon>
@@ -28,10 +28,6 @@
                 </b-col>
               </b-row>
             </b-container>
-            <!--            <b-card-group v-else-if="msg.files[0]" v-for="file in msg.files">-->
-            <!--              <b-card :img-src="file.path" img-alt="card image" img-left>-->
-            <!--              </b-card>-->
-            <!--            </b-card-group>-->
           </template>
         </MsgBox>
       </ul>
@@ -46,6 +42,8 @@
       <div class="c-i-wrapper">
         <!-- 더 뭔가 추가할 거 같아서 div로 감싸놓음 -->
         <div style="flex-grow:1;">
+          <i class="im im-cloud-upload" @click="$refs.fileInput.click()"></i>
+          <input type="file" ref="fileInput" multiple @change="attachFile" hidden>
           <b-form-textarea
             autofocus
             v-if="!show"
@@ -142,6 +140,15 @@
       console.log(this.msgArray)
     },
     methods: {
+      dropFile: function(e){
+        this.addFile(e.dataTransfer.files)
+        console.log(e)
+      },
+      attachFile: function(e){
+        console.log(e)
+        this.addFile(e.target.files)
+        this.$refs.fileInput.value = null
+      },
       selectImage: function (file) {
         return CommonClass.checkFileType(file)
       },
@@ -160,15 +167,15 @@
             window.URL.revokeObjectURL(url)
           })
       },
-      addFile: function (e) {
+      addFile: function (uploadFiles) {
         const maxUploadSize = 100 * 1024 * 1024;
-        let droppedFiles = e.dataTransfer.files;
         let fileSize = 0;
-        if (!droppedFiles) return;
+        console.log(uploadFiles)
+        if (!uploadFiles) return;
         let formData = new FormData();
         // formData에 multi로 파일을 담는 방법에 대해 추후 확인
         let files = [];
-        ([...droppedFiles]).forEach(f => {
+        ([...uploadFiles]).forEach(f => {
           files.push(f)
         });
         files.forEach(file => {
