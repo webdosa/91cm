@@ -1,18 +1,22 @@
 package com.nineone.nocm.controller.api;
 
 import com.nineone.nocm.annotation.Socialuser;
+import com.nineone.nocm.domain.ApiResponse;
 import com.nineone.nocm.domain.ContentsFile;
 import com.nineone.nocm.domain.Message;
 import com.nineone.nocm.domain.User;
 import com.nineone.nocm.service.FileStorageService;
 import com.nineone.nocm.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,13 +42,13 @@ public class FileController {
     @Autowired
     private FileStorageService fileStorageService;
 
-
     // Exception 처리 필요
     @PostMapping("/upload")
     @Transactional
     public ResponseEntity<?> uploadFile(@RequestParam("files") MultipartFile[] files,
                                         @RequestParam("channel_id") int channel_id,
                                         @RequestParam("sender") String sender, @Socialuser User user) {
+
         Message message = Message.builder().channel_id(channel_id)
                 .sender(sender)
                 .user(user)

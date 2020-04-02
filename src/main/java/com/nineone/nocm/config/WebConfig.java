@@ -20,11 +20,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(userArgumentResolver);
     }
-    @Bean
-    public CommonsMultipartResolver multipartResolver(){
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        commonsMultipartResolver.setDefaultEncoding("UTF-8");
-        commonsMultipartResolver.setMaxUploadSizePerFile(100 * 1024 * 1024); // 10MB
-        return commonsMultipartResolver;
-    }
+//    @Bean
+//    public CommonsMultipartResolver multipartResolver(){
+//        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+//        commonsMultipartResolver.setDefaultEncoding("UTF-8");
+//        commonsMultipartResolver.setMaxUploadSizePerFile(100 * 1024 * 1024); // 10MB
+//        return commonsMultipartResolver;
+//    }
 }

@@ -161,7 +161,9 @@
           })
       },
       addFile: function (e) {
+        const maxUploadSize = 100 * 1024 * 1024;
         let droppedFiles = e.dataTransfer.files;
+        let fileSize = 0;
         if (!droppedFiles) return;
         let formData = new FormData();
         // formData에 multi로 파일을 담는 방법에 대해 추후 확인
@@ -171,8 +173,12 @@
         });
         files.forEach(file => {
           formData.append("files", file)
+          fileSize += file.size
         });
-
+        if(fileSize >= maxUploadSize){
+          this.$alertModal('alert','한번에 보낼 수 있는 파일 용량은 100MB 입니다.')
+          return;
+        }
         /////////////////////////////////////
         formData.append('channel_id', this.currentChannel.id)
         formData.append('sender', this.message.sender)
@@ -321,7 +327,7 @@
         } else {
           if (!this.isScrollAtEnd(this.wrapperEl)) {
             let copymsg = JSON.parse(JSON.stringify(this.msgArray[this.msgArray.length - 1]))
-            this.previewObj.content = CommonClass.replacemsgForPreview(copymsg.content)
+            this.previewObj.content = copymsg.content==null? "첨부파일" : CommonClass.replacemsgForPreview(copymsg.content)
             this.previewObj.username = this.msgArray[this.msgArray.length - 1].user.name
             this.msgPreviewBool = true
           }
