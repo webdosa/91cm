@@ -23,9 +23,9 @@ class EventListener{
     blurEvt() {
         window.addEventListener('blur', function() {
             if(!store.state.isLogout){
-            store.commit('setFocus',false)
-            let isfocus = store.state.isfocus
-            AboutChannel.updateFocus(isfocus)
+                store.commit('setFocus',false)
+                let isfocus = store.state.isfocus
+                AboutChannel.updateFocus(isfocus)
         }
         })
       }

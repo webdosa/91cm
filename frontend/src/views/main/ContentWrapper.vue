@@ -168,7 +168,7 @@
             this.scrollToEnd(true)
         }
           else{
-            this.message.content = CommonClass.replacemsg(this.message.content)
+            this.message.content = CommonClass.replaceErrorMsg(this.message.content)
             this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
             let errormsg =  JSON.parse(JSON.stringify(this.message))
             this.msgArray.push(errormsg)
@@ -202,6 +202,10 @@
             this.cursorPoint.first = false
             this.cursorPoint.cursorId = res.data[res.data.length - 1].id
           }
+          console.log(res.data)
+          for(let i =0; i < res.data.length; i++){
+            res.data[i].content = CommonClass.replacemsg(res.data[i].content)
+          } 
           this.msgArray = res.data.reverse().concat(this.msgArray)
           if (wrapperEl != null) {
             this.$nextTick(() => {
