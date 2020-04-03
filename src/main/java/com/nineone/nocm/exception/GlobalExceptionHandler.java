@@ -2,8 +2,6 @@ package com.nineone.nocm.exception;
 
 import com.nineone.nocm.domain.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.http.HttpStatus;
@@ -44,7 +42,12 @@ public class GlobalExceptionHandler{
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ApiResponse> handleException(Exception e){
+        log.error("exception :"+e.getMessage());
+        final ApiResponse response = ApiResponse.builder().error("500").message("Internal Server Error").build();
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }
 // 참조 :https://cheese10yun.github.io/spring-guide-exception/
