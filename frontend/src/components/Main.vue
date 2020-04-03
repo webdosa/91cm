@@ -50,9 +50,10 @@
   import EventListener from '../service/eventlistener'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
-  import UserInfo from "../views/user/UserInfo";
-  import EditProfile from "../views/user/EditProfile";
-  import ChannelHeader from "../views/main/ChannelHeader";
+  import UserInfo from "../views/user/UserInfo"
+  import EditProfile from "../views/user/EditProfile"
+  import ChannelHeader from "../views/main/ChannelHeader"
+  import CommonClass from '../service/common'
 
 
   export default {
@@ -177,6 +178,7 @@
         console.log(this.$store.state.isfocus)
         NotificationClass.sendNotification(this.$store.state.isfocus,data)
         if (data.channel_id == this.modalObj.currentChannel.id && this.$store.state.selectComponent == 'main') {
+          data.content = CommonClass.replacemsg(data.content)
           if (fail) {
             data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
           }

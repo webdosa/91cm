@@ -1,5 +1,11 @@
 class CommonClass {
   replacemsg(originContent) {
+      let content = ''
+      content = originContent.replace(/&lt;p&gt;/gim, '<p>')
+      content = content.replace(/&lt;\/p&gt;/gim, '</p>')
+      return content
+  }
+  replaceErrorMsg(){
     let array = originContent.split("\n")
     let content = ''
     for (let i in array) {
@@ -9,13 +15,13 @@ class CommonClass {
   }
 
   replacemsgForPreview(originContent) {
-    let array = originContent.split("</p><p>")
+    let array = originContent.split("&lt;/p&gt;&lt;p&gt;")
     let content = ''
     for (let i in array) {
       content += array[i] + ' '
     }
-    content = content.replace('</p>', '')
-    content = content.replace('<p>', '')
+    content = content.replace('&lt;/p&gt;', '')
+    content = content.replace('&lt;p&gt;', '')
     console.log(content)
     return content
   }
