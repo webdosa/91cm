@@ -30,6 +30,9 @@
     <RSidebar v-if="channelList[0]!=null"
               :modalObj="modalObj"
               @passData="passData"></RSidebar>
+    <div v-if="!$store.state.stompClient.connected" style="width: 100vw;height: 100vh;z-index: 1000;position: fixed;top: 0;">
+                    
+    </div>
   </div>
 </template>
 <script>
@@ -135,6 +138,7 @@
       },
       connect() {
         this.$store.state.stompClient.connect({}, () => {
+          console.log("asd!")
           for (let i in this.channelList) {
             this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
               this.channelSubscribeCallBack(e)

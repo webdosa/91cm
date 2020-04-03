@@ -14,9 +14,8 @@
           </template>
           <template #m-content>
             <!-- #으로 단축해서 사용 -->
-            <div v-html="TextbyFilter(msg.content)" class="mychat-content"></div>
+            <div v-if="msg.files == null || msg.content" v-html="TextbyFilter(msg.content)" class="mychat-content"></div>
 
-            <div v-if="msg.files == null || msg.content" v-html="msg.content" class="mychat-content"></div>
             <b-container fluid v-else-if="msg.files.length > 0" class="p-4 bg-white">
               <b-row>
                 <b-col v-for="file in msg.files">
@@ -141,7 +140,6 @@
     },
     updated() {
       this.scrollToEnd()
-      console.log(this.msgArray)
     },
     activated(){
       if(this.$store.state.oldComponent != 'main' && this.$store.state.selectComponent == 'main' ){
