@@ -5,7 +5,7 @@ class CommonClass {
       content = content.replace(/&lt;\/p&gt;/gim, '</p>')
       return content
   }
-  replaceErrorMsg(){
+  replaceErrorMsg(originContent){
     let array = originContent.split("\n")
     let content = ''
     for (let i in array) {

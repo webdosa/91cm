@@ -158,7 +158,9 @@
       },
       send: async function (e) {
         console.log(e)
-        e.preventDefault()
+        if(e!=null){
+          e.preventDefault()
+        }
         this.message.channel_id = this.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if(CommonClass.byteLimit(this.stringByteLength)){
@@ -202,7 +204,6 @@
             this.cursorPoint.first = false
             this.cursorPoint.cursorId = res.data[res.data.length - 1].id
           }
-          console.log(res.data)
           for(let i =0; i < res.data.length; i++){
             res.data[i].content = CommonClass.replacemsg(res.data[i].content)
           } 
