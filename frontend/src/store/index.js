@@ -10,17 +10,27 @@ export default new Vuex.Store({
     userChannelList: [],
     stompClient: Stomp.over(new SockJS('http://localhost:9191/endpoint/')),
     selectComponent: 'main',
+    oldComponent: '',
     currentUser: {},
     userList : [],
     currentChannelUser: [],
     isLActive: false,
-    isRActive: false
+    isRActive: false,
+    isfocus: true,
+    isLogout: false,
+    isSearchMode: false,
+    isInviteMode: false,
+    searchText: ''
   },
   mutations: {
     setChannelList: function(state,payload){
       state.userChannelList = payload
     },
     getSelectComponent: function(state, payload){
+      console.log(state.selectComponent)
+      console.log('index.js')
+      state.oldComponent = state.selectComponent
+      console.log(state.oldComponent)
       state.selectComponent = payload
     },
     getUserList: function(state,payload) {
@@ -31,6 +41,15 @@ export default new Vuex.Store({
     },
     resetCurrentUser: function (state) {
       state.currentUser = {}
+    },
+    setFocus: function (state, payload)  {
+      state.isfocus = payload
+    },
+    setIsLogout: function (state,payload) {
+      state.isLogout = payload
+    },
+    setSearchText: function (state,paylod) {
+      state.searchText = paylod
     }
   },
   actions: {

@@ -48,6 +48,7 @@ export default {
       this.$store.state.isRActive = true
     },
     SignOut() {
+      this.$store.commit('setIsLogout',true)
       window.location.href="/logout"
     }
   },

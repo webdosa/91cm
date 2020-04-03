@@ -22,7 +22,7 @@ id int unsigned  primary key auto_increment not null,
 name varchar(100) not null,
 register_date datetime not null default CURRENT_TIMESTAMP,
 member_email varchar(100) not null,
-foreign key (member_email) references member(email) on delete cascade on update cascade
+foreign key (member_email) references member(email) on update cascade
 );
 
 create table joininfo(
@@ -30,6 +30,7 @@ id int unsigned  primary key auto_increment not null,
 channel_id int unsigned not null,
 register_date  datetime not null default CURRENT_TIMESTAMP,
 member_email varchar(100) not null,
+last_access_date datetime default CURRENT_TIMESTAMP,
 foreign key (member_email) references member(email) on delete cascade on update cascade,
 foreign key (channel_id) references channel(id) on delete cascade on update cascade
 );
@@ -79,7 +80,7 @@ edit_date  datetime not null default CURRENT_TIMESTAMP,
 position int not null,
 register varchar(100) not null,
 foreign key (channel_id) references channel(id) on delete cascade on update cascade,
-foreign key (register) references member(email) on delete cascade on update cascade
+foreign key (register) references member(email) on update cascade
 );
 
 
@@ -93,7 +94,7 @@ register varchar(100) not null,
 state boolean not null,
 position int not null,
 foreign key (list_id) references list(id) on delete cascade on update cascade,
-foreign key (register) references member(email) on delete cascade on update cascade
+foreign key (register) references member(email) on update cascade
 );
 
 

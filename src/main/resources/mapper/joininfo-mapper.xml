@@ -21,4 +21,8 @@
     <insert id="insertJoinInfo">
         insert joininfo (channel_id,member_email) values (#{channel_id},#{member_email})
     </insert>
+    
+    <update id="updateLastAccessDate">
+    	update joininfo set last_access_date = #{last_access_date} where channel_id = #{channel_id} and member_email = #{member_email}
+    </update>
 </mapper>
