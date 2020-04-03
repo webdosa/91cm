@@ -1,4 +1,3 @@
-`
 <template>
   <main class="mainwrapper">
     <div class="h-inherit" v-cloak @drop.prevent="dropFile" @dragover.prevent>
@@ -54,7 +53,6 @@
             no-resize
             v-model="message.content"
             @keydown.enter.exact="send"
-            @keydown.enter.prevent
             @keyup="byteCheck"
             @keydown.shift.50='inviteToggle'
           ></b-form-textarea>
@@ -75,9 +73,9 @@
               <option v-for="user in $store.state.userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
             </datalist>
           </div>
-          <SearchInput 
+          <SearchInput
             :msgArray="msgArray"
-            :cursorPoint="cursorPoint" 
+            :cursorPoint="cursorPoint"
             :wrapperEl="wrapperEl"
             @getMessage="getMessage"></SearchInput>
           <div style="display: flex;">
@@ -237,7 +235,9 @@
       },
       send: async function (e) {
         console.log(e)
-        e.preventDefault()
+        if (e != null){
+          e.preventDefault()
+        }
         this.message.channel_id = this.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if (CommonClass.byteLimit(this.stringByteLength)) {
@@ -247,6 +247,7 @@
             this.scrollToEnd(true)
         }
           else{
+            console.log('asd')
             this.message.content = CommonClass.replaceErrorMsg(this.message.content)
             this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
             let errormsg = JSON.parse(JSON.stringify(this.message))
@@ -284,7 +285,7 @@
           console.log(res.data)
           for(let i =0; i < res.data.length; i++){
             res.data[i].content = CommonClass.replacemsg(res.data[i].content)
-          } 
+          }
           this.msgArray = res.data.reverse().concat(this.msgArray)
           if (wrapperEl != null) {
             this.$nextTick(() => {
@@ -335,7 +336,7 @@
         // v-model을 썼음에도 e.target.value를 사용하는 이유는 한글은 바로 바인딩이 안되기때문에 수동적으로 값들을 message.content에 넣기 위함이다.
         this.message.content = e.target.value
         this.stringByteLength = CommonClass.byteCount(this.message.content)
-        if((47< e.keyCode && e.keyCode < 112 && e.ctrlKey == false) || (e.keyCode == 13 && e.shiftKey == true) || e.keyCode == 32 
+        if((47< e.keyCode && e.keyCode < 112 && e.ctrlKey == false) || (e.keyCode == 13 && e.shiftKey == true) || e.keyCode == 32
         || e.keyCode == 229 ){
           CommonClass.byteLimit(this.stringByteLength)
         }

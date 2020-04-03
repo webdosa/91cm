@@ -72,11 +72,11 @@
     computed: {
       whichComponent() {
         console.log(this.$store.state.oldComponent)
-        AboutChannel.updateLastAccessStatus(this.$store.state.oldComponent,this.$store.state.selectComponent)
+        AboutChannel.updateLastAccessStatus(this.$store.state.oldComponent, this.$store.state.selectComponent)
         switch (this.$store.state.selectComponent) {
           case 'main':
             return 'ContentWrapper'
-          case 'user':            
+          case 'user':
             return 'UserInfo'
           case 'edit':
             return 'EditProfile'
@@ -85,7 +85,7 @@
         }
       },
     },
-    deactivated(){
+    deactivated() {
       console.log('deactiveed')
     },
     created() {
@@ -95,7 +95,7 @@
         res => {
           this.channelList = res.data
           console.log(this.channelList)
-          
+
           // 처음 로그인하자마자 제일 처음에 만든 채널로 현재 채널객체를 초기화한다.
           if (this.modalObj.currentChannel == null && this.channelList[0] != null) {
             this.channelList[0].count = 0
@@ -119,9 +119,9 @@
         this.$store.dispatch('initCurrentUser')
       },
       sendTitle(channel) {
-        if(this.$store.state.oldComponent=='main'){
+        if (this.$store.state.oldComponent == 'main') {
           let oldChannel = this.modalObj.currentChannel
-          AboutChannel.updateLastAccessDate(channel.id,oldChannel.id)
+          AboutChannel.updateLastAccessDate(channel.id, oldChannel.id)
           console.log(oldChannel.id)
         }
         this.channelTitle = channel.name
@@ -150,8 +150,8 @@
             this.channelSubscribeCallBack(e, true)
           })
 
-        }, function() {
-            window.location.href="/"
+        }, function () {
+          window.location.href = "/"
         })
       },
       channelUpdate(newChannelList) {
@@ -177,29 +177,29 @@
       channelSubscribeCallBack(e, fail) {
         let data = JSON.parse(e.body)
         console.log(this.$store.state.isfocus)
-        NotificationClass.sendNotification(this.$store.state.isfocus,data)
+        NotificationClass.sendNotification(this.$store.state.isfocus, data)
         if (data.channel_id == this.modalObj.currentChannel.id && this.$store.state.selectComponent == 'main') {
           data.content = CommonClass.replacemsg(data.content)
           if (fail) {
             data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
           }
           this.msgArray.push(data)
-          if(!this.$store.state.isfocus){
-            this.msgCounting(data)  
+          if (!this.$store.state.isfocus) {
+            this.msgCounting(data)
           }
-        }else {
+        } else {
           this.msgCounting(data)
         }
       },
-      msgCounting(data){
-        for(let i=0; i < this.channelList.length; i++){
-            if(data.channel_id == this.channelList[i].id){
-              this.channelList[i].count += 1 
-              break
-            }
+      msgCounting(data) {
+        for (let i = 0; i < this.channelList.length; i++) {
+          if (data.channel_id == this.channelList[i].id) {
+            this.channelList[i].count += 1
+            break
           }
+        }
       }
-   
+
     }
 
   }
