@@ -65,7 +65,7 @@ channel_id int unsigned not null,
 sender varchar(100) not null,
 recipient varchar(100) not null,
 send_date datetime not null default CURRENT_TIMESTAMP,
-invite_state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ),
+invite_state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ) default 'STAND_BY',
 foreign key (sender) references member(email) on delete cascade on update cascade,
 foreign key (recipient) references member(email) on delete cascade on update cascade,
 foreign key (channel_id) references channel(id) on delete cascade on update cascade

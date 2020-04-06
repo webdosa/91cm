@@ -1,56 +1,119 @@
 <template>
-<header>
-        <b-navbar toggleable="lg" type="light" variant="white">
-            <i v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info"@click="LSidebarToggle" ></i>
-            <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle" ></i>
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            <b-nav-item-dropdown no-caret right toggle-class="nonoutline" class="verti-align">
-              <template v-slot:button-content>
-                <i class="im im-bell"></i>
-              </template>
-              <b-dropdown-item href="#">EN</b-dropdown-item>
-              <b-dropdown-item href="#">ES</b-dropdown-item>
-              <b-dropdown-item href="#">RU</b-dropdown-item>
-              <b-dropdown-item href="#">FA</b-dropdown-item>
-            </b-nav-item-dropdown>
-            <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
-            <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
-              <!-- Using 'button-content' slot -->
-              <template v-slot:button-content style="padding:0px;">
-<!--                이미지 가지고 오는 것 느림-->
-                <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture" width="40" height="40">
-                <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
-              </template>
-              <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
-              <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
-        </b-navbar>
-      </header>
+  <header>
+    <b-navbar toggleable="lg" type="light" variant="white">
+      <i v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
+      <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" right>
+          <template v-slot:button-content>
+            <i class="im im-bell"></i>
+          </template>
+          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="width: 25vw;" class="border">
+            <div>
+              <div class="row float-right">
+                <b-button class="float-right" id="esc" size="sm" variant="nonoutline"
+                          @click="getAlarmList.splice(index,1)"><i
+                  class="im im-x-mark"></i></b-button>
+              </div>
+              <div class="row">
+                <p>{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
+              </div>
+              <div class="row float-right">
+                <b-button size="sm" variant="nonoutline" @click="inviteAgree(alarm,index)"><i class="im im-check-mark-circle"
+                                                                                        style="color: #42b983;"></i>
+                </b-button>
+                <b-button size="sm" variant="nonoutline" @click="inviteDisagree(alarm,index)"><i class="im im-x-mark-circle"
+                                                                                           style="color: red;"></i>
+                </b-button>
+              </div>
+            </div>
+          </b-dropdown-text>
+        </b-dropdown>
+        <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
+        <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
+          <!-- Using 'button-content' slot -->
+          <template v-slot:button-content style="padding:0px;">
+            <!--                이미지 가지고 오는 것 느림-->
+            <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture"
+                 width="40" height="40">
+            <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
+          </template>
+          <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
+          <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-navbar>
+  </header>
 </template>
 
 <script>
-export default {
-  name: 'MainHeader',
-  data() {
-    return {
-    }
-  },
-  methods: {
-    callComponent: function(){
-      this.$store.commit('getSelectComponent','user')
+  export default {
+    name: 'MainHeader',
+    data() {
+      return {
+        alarmList: [],
+
+      }
     },
-    LSidebarToggle: function () {
-      this.$store.state.isLActive = !this.$store.state.isLActive
+    computed: {
+      getAlarmList: function () {
+        while (this.alarmList.length > 5) {
+          this.alarmList.pop()
+        }
+        return this.alarmList
+      }
     },
-    RSidebarOpen: function () {
-      this.$store.state.isRActive = true
+    created() {
+      this.$http.get('/api/invite/list')
+        .then(res=>{
+          this.alarmList = res.data.reverse()
+          console.log(this.alarmList)
+        })
+        .catch()
+      this.$store.state.stompClient.connect({}, () => {
+        this.$store.state.stompClient.subscribe("/sub/invite/room/" + this.$store.state.currentUser.email, (e) => {
+          console.log("get callback")
+          let invite = JSON.parse(e.body)
+          console.log(invite.sender)
+          this.alarmList.unshift(invite)
+        })
+      })
     },
-    SignOut() {
-      this.$store.commit('setIsLogout',true)
-      window.location.href="/logout"
-    }
-  },
-}
+    methods: {
+      inviteAgree: function (alarm,index) {
+        this.$http.post('/api/invite/accept', alarm)
+          .then(res => {
+            console.log(res)
+            // 현재 채널을 변경하는 로직을 구현해야할듯
+            this.alarmList.splice(index,1);
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      },
+      inviteDisagree: function (alarm,index) {
+        // 초대가 거절됐다는 메시지를 채널에 보내는 로직을 구현해야함
+        this.alarmList.splice(index,1);
+      },
+      callComponent: function () {
+        this.$store.commit('getSelectComponent', 'user')
+      },
+      LSidebarToggle: function () {
+        this.$store.state.isLActive = !this.$store.state.isLActive
+      },
+      RSidebarOpen: function () {
+        this.$store.state.isRActive = true
+      },
+      SignOut() {
+        this.$store.commit('setIsLogout', true)
+        window.location.href = "/logout"
+      },
+      getUserNameByEmail: function (email) {
+        return this.$store.state.userList.find(element => {
+          return element.email == email
+        }).name
+      }
+    },
+  }
 </script>

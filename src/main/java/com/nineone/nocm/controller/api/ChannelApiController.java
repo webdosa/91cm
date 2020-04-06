@@ -46,7 +46,6 @@ public class ChannelApiController {
     // 사용자의 채널 리스트를 반환
     @GetMapping("/list")
     public List<Channel> channelList(@Socialuser User user) {
-        log.info(user.getName());
         return channelService.channelList(user.getEmail());
     }
 
@@ -78,10 +77,8 @@ public class ChannelApiController {
     public void updateLastAccessDate(@RequestBody Map<String,Object> map, @Socialuser User user,HttpSession session) {
     	// 채널에서 채널로 이동했을때 실행
     	LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
-    	System.out.println("뭐지 : "+lastAccess.isContentWrapper());
     	lastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
     	session.setAttribute("lastAccess", lastAccess);
-    	System.out.println(map.get("oldChannelId"));
         joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
     }
     

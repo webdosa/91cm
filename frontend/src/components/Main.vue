@@ -40,8 +40,6 @@
   import AboutChannel from '../service/aboutchannel'
   import NotificationClass from '../service/notification'
   import EventListener from '../service/eventlistener'
-  import SockJS from 'sockjs-client'
-  import Stomp from 'webstomp-client'
   import UserInfo from "../views/user/UserInfo"
   import EditProfile from "../views/user/EditProfile"
   import ChannelHeader from "../views/main/ChannelHeader"
