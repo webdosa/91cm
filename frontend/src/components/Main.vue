@@ -1,5 +1,7 @@
 <template>
   <div class="wrapper">
+
+    <template v-if="$store.state.stompClient.connected">
     <!-- Sidebar  -->
     <LSidebar
       :modalObj="modalObj"
@@ -11,9 +13,7 @@
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
       <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
-      <div v-if="channelList[0]==null && $store.state.selectComponent=='main'">
-        <p>채팅방을 만들거나 가입해주세요</p>
-      </div>
+      <NoChannel v-if="channelList[0]==null && $store.state.selectComponent=='main'"/>  
       <!-- CjannelHeader -->
       <div v-else>
         <ChannelHeader v-if="$store.state.selectComponent=='main'"
@@ -30,9 +30,9 @@
     <RSidebar v-if="channelList[0]!=null"
               :modalObj="modalObj"
               @passData="passData"></RSidebar>
-    <div v-if="!$store.state.stompClient.connected" style="width: 100vw;height: 100vh;z-index: 1000;position: fixed;top: 0;">
-                    
-    </div>
+
+    </template>
+    <Loading v-else/>
   </div>
 </template>
 <script>
@@ -49,7 +49,8 @@
   import EditProfile from "../views/user/EditProfile"
   import ChannelHeader from "../views/main/ChannelHeader"
   import CommonClass from '../service/common'
-
+  import NoChannel from '../views/main/NoChannel'
+  import Loading from '../views/main/Loading'
 
   export default {
     name: 'Main',
@@ -60,7 +61,9 @@
       'ChannelHeader': ChannelHeader,
       'ContentWrapper': ContentWrapper,
       'UserInfo': UserInfo,
-      'EditProfile': EditProfile
+      'EditProfile': EditProfile,
+      'NoChannel' : NoChannel,
+      'Loading' : Loading
     },
     data() {
       return {
@@ -137,26 +140,27 @@
         this.modalObj.modalTitle = modalObj.modalTitle
       },
       connect() {
-        this.$store.state.stompClient.connect({}, () => {
-          console.log("asd!")
-          for (let i in this.channelList) {
-            this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
-              this.channelSubscribeCallBack(e)
-            })
-          }
-          this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
-            if (res.body == 'true') {
-              this.storeUpdate()
-            }
-          })
-          this.$store.state.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
-            //메시지 전송 실패시
-            this.channelSubscribeCallBack(e, true)
-          })
+        console.log(this.$store.state.stompClient)
+        // this.$store.state.stompClient.connect({}, () => {
+        //   console.log("asd!")
+        //   for (let i in this.channelList) {
+        //     this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
+        //       this.channelSubscribeCallBack(e)
+        //     })
+        //   }
+        //   this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
+        //     if (res.body == 'true') {
+        //       this.storeUpdate()
+        //     }
+        //   })
+        //   this.$store.state.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
+        //     //메시지 전송 실패시
+        //     this.channelSubscribeCallBack(e, true)
+        //   })
 
-        }, function () {
-          window.location.href = "/"
-        })
+        // }, function () {
+        //   window.location.href = "/"
+        // })
       },
       channelUpdate(newChannelList) {
         let num = newChannelList.length - this.channelList.length

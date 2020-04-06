@@ -10,6 +10,16 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  name:'NotFound',
+  props: ['type'],
+  mounted () {
+    console.log(this.type)
+  }
+
+}
+</script>
 
 <style scoped>
   @import "../assets/css/error.css";

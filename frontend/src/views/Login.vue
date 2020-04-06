@@ -67,6 +67,7 @@
         }).catch(error => {
         console.log(error)
       })
+      console.log(this.$store.state.stompClient)
     }
   }
 </script>

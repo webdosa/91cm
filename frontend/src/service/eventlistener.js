@@ -16,7 +16,9 @@ class EventListener{
                 store.commit('setFocus',true)
                 let isfocus = store.state.isfocus
                 AboutChannel.updateFocus(isfocus)
-                instance.modalObj.currentChannel.count = 0
+                if(instance.modalObj.currentChannel!=null){
+                    instance.modalObj.currentChannel.count = 0
+                }
             }
         })
     }

@@ -1,3 +1,26 @@
+
+.myfile-upload{
+    position: absolute;
+    z-index: 1;
+    bottom: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+.mytextarea-wrapper{
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    background-color: #fff;
+    padding-bottom: 30px;
+}
+.mytextarea{
+    position: relative;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #ced4da;
+    padding-bottom: 0px;
+}
+
 .addhighlight{
     background-color: #FFFF00;
 }
