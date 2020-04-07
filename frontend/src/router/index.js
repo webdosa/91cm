@@ -30,8 +30,8 @@ const routes = [
   },
   {
     path: '*',
-    component: NotFound,
-    alias: '/errorpage'
+    component: NotFound
+    // redirect: '/errorpage' 
   },
   {
     path: '/clock',

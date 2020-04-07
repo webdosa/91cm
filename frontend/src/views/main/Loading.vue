@@ -6,6 +6,7 @@
 </template>
 <script>
 import router from "../../router"; 
+import store from '../../store';
 export default {
     name:'Loading',
     mounted () {
@@ -14,8 +15,10 @@ export default {
     methods:{
         redirect502Page(){
             setTimeout(function() {
-              router.replace({ path: 'errorpage', query: { type: '502' }})
-            }, 10000);
+              if(!store.state.stompClient.connected){
+                router.replace({ path: 'errorpage', query: { type: '502' }})
+              }
+            }, 20000);
         }
     }
 }

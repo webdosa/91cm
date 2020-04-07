@@ -141,26 +141,26 @@
       },
       connect() {
         console.log(this.$store.state.stompClient)
-        // this.$store.state.stompClient.connect({}, () => {
-        //   console.log("asd!")
-        //   for (let i in this.channelList) {
-        //     this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
-        //       this.channelSubscribeCallBack(e)
-        //     })
-        //   }
-        //   this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
-        //     if (res.body == 'true') {
-        //       this.storeUpdate()
-        //     }
-        //   })
-        //   this.$store.state.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
-        //     //메시지 전송 실패시
-        //     this.channelSubscribeCallBack(e, true)
-        //   })
+        this.$store.state.stompClient.connect({}, () => {
+          console.log("asd!")
+          for (let i in this.channelList) {
+            this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
+              this.channelSubscribeCallBack(e)
+            })
+          }
+          this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
+            if (res.body == 'true') {
+              this.storeUpdate()
+            }
+          })
+          this.$store.state.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
+            //메시지 전송 실패시
+            this.channelSubscribeCallBack(e, true)
+          })
 
-        // }, function () {
-        //   window.location.href = "/"
-        // })
+        }, function () {
+          window.location.href = "/"
+        })
       },
       channelUpdate(newChannelList) {
         let num = newChannelList.length - this.channelList.length

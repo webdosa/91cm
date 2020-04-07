@@ -1,4 +1,9 @@
-
+.info-w{
+    height: 100%;
+  background-color: white;
+  border: solid 1px #e6e6e6;
+  flex-direction: column;
+}
 .myfile-upload{
     position: absolute;
     z-index: 1;
@@ -81,11 +86,11 @@
   }
   
   .info-wrapper {
-    width: 450px;
-    height: auto;
-    background-color: white;
-    border: solid 1px #e6e6e6;
-    padding: 40px;
+    width: 100%;
+    height: inherit;
+    flex-direction: column;
+    overflow: auto;
+    padding: 0px;
   }
   .cetered-align {
     display: flex;
@@ -468,10 +473,6 @@ ul.CTAs a {
     #c-c-preview.active{
         width: calc(100% - 250px);
     }
-    .info-wrapper {
-        width: 350px;
-        padding: 40px 0;
-      }
     #sidebar {
         margin-left: -250px;
     }

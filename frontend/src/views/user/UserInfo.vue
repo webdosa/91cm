@@ -1,18 +1,18 @@
 <template>
-  <main class="mainwrapper">
-    <div class="h-inherit cetered-align" style="flex-direction:column;">
-      <div class="info-wrapper">
-        <h4 class="center">회원정보</h4>
-        <br>
-        <div class="hori-align" style="margin: 24px 0px 35px 0;">
+  <main class="mainwrapper" style="height: calc(100vh - 60px);">
+    <div class="h-inherit" style="padding: 60px;">
+      <div class="info-w verti-align">
+        <h4 style="padding-top: 40px;">회원정보</h4>
+      <div class="info-wrapper cetered-align">
+        <div style="margin: 0px 0px 35px 0;">
           <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture" width="200" height="200">
           <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="200" height="200">
         </div>
-        <table>
+        <table style="margin-top: 50px;">
           <tbody>
           <tr>
             <th>
-              <p>이름</p>
+              <label for="name">이름</label>
             </th>
             <td>
               <span>{{$store.state.currentUser.name}}</span>
@@ -20,7 +20,7 @@
           </tr>
           <tr>
             <th>
-              <p>이메일</p>
+              <label for="email">이메일</label>
             </th>
             <td>
               <span>{{$store.state.currentUser.email}}</span>
@@ -28,7 +28,7 @@
           </tr>
           <tr>
             <th>
-              <p>전화번호</p>
+              <label for="phone">전화번호</label>
             </th>
             <td>
               <span>{{$store.state.currentUser.phone}}</span>
@@ -38,6 +38,7 @@
         </table>
       </div>
       <b-button style="margin:15px;" variant="primary" @click="callComponent">수정</b-button>
+    </div>
     </div>
   </main>
 </template>
