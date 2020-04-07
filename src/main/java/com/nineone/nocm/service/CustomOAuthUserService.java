@@ -1,10 +1,9 @@
 package com.nineone.nocm.service;
 
-import com.nineone.nocm.domain.User;
-import com.nineone.nocm.oauth.OAuthAttributes;
-import com.nineone.nocm.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -14,8 +13,13 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
-import java.util.Collections;
+import com.nineone.nocm.domain.LastAccess;
+import com.nineone.nocm.domain.User;
+import com.nineone.nocm.oauth.OAuthAttributes;
+import com.nineone.nocm.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -38,6 +42,8 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
                 oAuth2User.getAttributes());
         User user = saveOrUpdate(attributes);
+        LastAccess lastAccess = setLastAccess();
+        httpSession.setAttribute("lastAccess", lastAccess);
         httpSession.setAttribute("user", user);
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("USER")),
@@ -49,11 +55,21 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
     private User saveOrUpdate(OAuthAttributes attributes) {
         // 임시 setter로 저장 해준 값은 소셜 로그인을 통해서 가져올 수 없는 값
         // 사용자에게 값을 받거나 해서 지정 해줘야 함으로 지금은 임시로 지정
-    	User user = userRepository.getUserfindById(attributes.getId());
+    	User user;
+        if(attributes.getEmail()==null) {
+        	user = userRepository.getUserfindById(attributes.getId());
+        }else {
+        	user = userRepository.getUserfindByEmail(attributes.getEmail());
+        }    	
         if (user == null){
             user = attributes.toEntity();
-            //userRepository.insertUser(user);
         }
         return user;
+    }
+    
+    private LastAccess setLastAccess() {
+    	LastAccess lastAccess = LastAccess.builder()
+    			.currentChannelId(0).isContentWrapper(true).isFocus(true).build();
+    	return lastAccess;
     }
 }

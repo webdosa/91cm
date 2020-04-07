@@ -31,6 +31,15 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 
+	@Override
+	public int userInfoUpdate(User user) {
+		return sqlSession.update(namespace+".updateUser",user);
+	}
+
+	@Override
+	public List<User> thisChannelUserList(int channel_id) {
+		return sqlSession.selectList(namespace + ".thisChannelUserList",channel_id);
+	}
 
 	@Override
 	public int insertSNSInfo(Map<String, Object> map) {

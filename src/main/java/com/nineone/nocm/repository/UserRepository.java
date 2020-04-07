@@ -7,7 +7,9 @@ import com.nineone.nocm.domain.User;
 import java.util.List;
 
 public interface UserRepository {
-	public int insertSNSInfo(Map<String,Object> map);
+	int userInfoUpdate(User user);
+	List<User> thisChannelUserList(int channel_id);
+	int insertSNSInfo(Map<String,Object> map);
 	int insertUser(User user);
 	User getUserfindById(String email);
     List<User> getAllUserList();

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '../store'
 import VueRouter from 'vue-router'
 import Home from '../components/Home.vue'
 import NotFound from '../views/NotFound.vue'
@@ -6,10 +7,11 @@ import Clock from '../views/Clock'
 import Main from '../components/Main'
 import ContentWrapper from '../views/main/ContentWrapper'
 import ChannelHeader from '../views/main/ChannelHeader'
-import test from '../views/user/test'
+import test from '../views/user/UserInfo'
 import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
-import Axios from 'axios'
+import FormSignUp from "../views/FormSignUp";
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -29,6 +31,7 @@ const routes = [
   {
     path: '*',
     component: NotFound
+    // redirect: '/errorpage' 
   },
   {
     path: '/clock',
@@ -38,31 +41,25 @@ const routes = [
     path: '/main',
     name: 'main',
     component: Main,
-    children:[
-      { path:'', components: {default:ContentWrapper,ChannelHeader:ChannelHeader }},
-    ]
-  },
-  {
-    path: '/user',
-    component: Main,
-    children:[
-      { path:'', component: test},
-      { path:'edit', component: EditProfile},
-    ]
+    beforeEnter: async function (to, from, next) {
+      await store.dispatch('initCurrentUser')
+      if (store.state.currentUser.phone != null) {
+        next()
+      } else {
+        next('/signup')
+      }
+    }
   },
   {
     path: '/signup',
     component: SignUp
 
+  },
+  {
+    path: '/formSignUp',
+    component: FormSignUp
   }
-  //,
-  // {
-  //   path: '/user/edit',
-  //   component: Main,
-  //   children:[
-  //     { path:'', component: EditProfile},
-  //   ]
-  // }
+
 ]
 
 const router = new VueRouter({

@@ -1,56 +1,131 @@
 <template>
-    <main class="mainwrapper">
-        <div class="h-inherit cetered-align" style="flex-direction:column;">
-            <h4>회원정보 수정</h4>
-          <div class="info-wrapper">
-            <div class="hori-align" style="margin: 24px 0px 35px 0;">
-              <svg
-                style="fill:#e6e6e6;"
-                xmlns="http://www.w3.org/2000/svg"
-                width="100"
-                height="100"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 22c-3.123 0-5.914-1.441-7.749-3.69.259-.588.783-.995 1.867-1.246 2.244-.518 4.459-.981 3.393-2.945-3.155-5.82-.899-9.119 2.489-9.119 3.322 0 5.634 3.177 2.489 9.119-1.035 1.952 1.1 2.416 3.393 2.945 1.082.25 1.61.655 1.871 1.241-1.836 2.253-4.628 3.695-7.753 3.695z"
-                ></path>
-              </svg>
-            </div>
-           <table>
-              <tbody>
-                <tr>
-                  <th>
-                    <label for="name">이름</label>
-                  </th>
-                  <td>
-                    <b-input type="text" name="name"></b-input>
-                  </td>
-                </tr>
-                <tr>
-                  <th>
-                    <label for="name">이메일</label>
-                  </th>
-                  <td>
-                   <b-input type="email" name="email" disabled="true" value="username@test.com"></b-input>
-                  </td>
-                </tr>
-                <tr>
-                  <th>
-                    <label for="name">전화번호</label>
-                  </th>
-                  <td>
-                    <b-input type="text" name="phone"></b-input>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <b-button style="margin:15px;" variant="primary">수정</b-button>
+  <main class="mainwrapper" style="height: calc(100vh - 60px);">
+    <div class="h-inherit " style="padding: 60px;">
+      <div class="info-w verti-align">
+        <h4  style="padding-top: 40px;">회원정보 수정</h4>
+      <div class="info-wrapper cetered-align">
+        <br>
+        <div class="hori-align" style="margin: 0px 0px 35px 0;">
+          <b-button v-if="$store.state.currentUser.picture" variant="light" v-b-modal.modal-prevent-closing>
+            <img class="icon-round" :src="$store.state.currentUser.picture" width="200" height="200">
+          </b-button>
+          <b-button v-else variant="light" v-b-modal.modal-prevent-closing>
+            <img class="icon-round" src="../../assets/images/default-user-picture.png" width="200" height="200">
+          </b-button>
         </div>
-    </main>
+        <table>
+          <tbody>
+          <tr>
+            <th>
+              <label>이름</label>
+            </th>
+            <td>
+              <b-input type="text" name="name" v-model="user.name"></b-input>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              <label>이메일</label>
+            </th>
+            <td>
+              <b-input type="email" name="email" disabled="true" v-model="$store.state.currentUser.email"></b-input>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              <label>전화번호</label>
+            </th>
+            <td>
+              <b-input type="text" @keyup="phoneFormatter" name="phone" v-model="user.phone"></b-input>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <b-button style="margin:15px;" variant="primary" @click="edit">수정</b-button>
+      </div>
+    </div>
+
+    <b-modal
+      id="modal-prevent-closing"
+      ref="modal"
+      title="프로필 사진"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <form ref="form" @submit.stop.prevent="">
+        <b-form-group
+          :state="nameState"
+          label="이미지 url"
+          label-for="name-input"
+          invalid-feedback="url 주소가 필요합니다."
+        >
+          <b-form-input
+            id="name-input"
+            v-model="imageUrl"
+            :state="nameState"
+            required
+          ></b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
+  </main>
 </template>
 <script>
-export default {
-    name:'EditUser'
-}
+  // 이름 길이 제한 및 핸드폰 번호 정규식 추가 예정
+  export default {
+    name: 'EditUser',
+    data() {
+      return {
+        imageUrl: '',
+        nameState: null,
+        user: Object.assign({}, this.$store.state.currentUser)
+      }
+    },
+    mounted() {
+      this.$eventBus.$on('stomp',)
+    },
+    methods: {
+      handleOk: function (bvModalEvt) {
+        bvModalEvt.preventDefault()
+        this.handleSubmit()
+      },
+      handleSubmit: function () {
+        if (!this.checkFormValidity) {
+          // 추후 url 주소 정규식 검사 추가
+          return
+        }
+        this.user.picture = this.imageUrl
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-prevent-closing')
+        })
+      },
+      checkFormValidity: function () {
+        const valid = this.$refs.form.checkValidity()
+        this.nameState = valid
+        return valid
+      },
+      resetModal: function () {
+        this.imageUrl = ''
+      },
+      edit: function () {
+        this.$http.post('/api/user/update', this.user)
+          .then(res => {
+            console.log(this.user)
+            if (res.data) {
+              console.log(res.data)
+              this.$store.state.stompClient.send('/pub/sync/info',null,{})
+              this.$store.dispatch('initCurrentUser')
+              this.$store.commit('getSelectComponent', 'user')
+            }
+          })
+
+      },
+      phoneFormatter: function () {
+        this.user.phone = this.user.phone.replace(/[^0-9]/g, "") // 숫자만 추출 되도록하는 정규식
+        this.user.phone = this.user.phone.replace(/(^02.{0}|^01.{1}|[0-9]{4})([0-9]+)([0-9]{4})/, "$1-$2-$3");// 휴대폰번호 자동 하이픈 넣어주는 정규식
+      },
+    }
+  }
 </script>

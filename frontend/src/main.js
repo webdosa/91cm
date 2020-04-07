@@ -9,8 +9,12 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
 import VueSession from 'vue-session'
 import './assets/css/main.css'
+import AlertModal from "./plugins/AlertModal";
 
+
+Vue.use(AlertModal)
 Vue.use(VueSession, { persist: true})
+Vue.prototype.$eventBus = new Vue();
 Vue.prototype.$http = axios
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false
