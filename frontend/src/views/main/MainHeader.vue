@@ -20,11 +20,11 @@
                 <p>{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
               </div>
               <div class="row float-right">
-                <b-button size="sm" variant="nonoutline" @click="inviteAgree(alarm,index)"><i class="im im-check-mark-circle"
-                                                                                        style="color: #42b983;"></i>
+                <b-button size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)"><i class="im im-check-mark-circle"
+                                                                                               style="color: #42b983;"></i>
                 </b-button>
-                <b-button size="sm" variant="nonoutline" @click="inviteDisagree(alarm,index)"><i class="im im-x-mark-circle"
-                                                                                           style="color: red;"></i>
+                <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)"><i class="im im-x-mark-circle"
+                                                                                               style="color: red;"></i>
                 </b-button>
               </div>
             </div>
@@ -70,7 +70,9 @@
           this.alarmList = res.data.reverse()
           console.log(this.alarmList)
         })
-        .catch()
+        .catch(error=>{
+          console.log(error)
+        })
       this.$store.state.stompClient.connect({}, () => {
         this.$store.state.stompClient.subscribe("/sub/invite/room/" + this.$store.state.currentUser.email, (e) => {
           console.log("get callback")
@@ -81,7 +83,7 @@
       })
     },
     methods: {
-      inviteAgree: function (alarm,index) {
+      inviteAccept: function (alarm, index) {
         this.$http.post('/api/invite/accept', alarm)
           .then(res => {
             console.log(res)
@@ -92,7 +94,7 @@
             console.log(error)
           })
       },
-      inviteDisagree: function (alarm,index) {
+      inviteRefuse: function (alarm, index) {
         // 초대가 거절됐다는 메시지를 채널에 보내는 로직을 구현해야함
         this.alarmList.splice(index,1);
       },

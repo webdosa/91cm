@@ -8,4 +8,5 @@ import java.util.List;
 public interface InviteService {
     boolean saveInvite(Invite invite);
     List<Invite> getInviteList(String recipient);
+    boolean updateInvite(Invite invite);
 }

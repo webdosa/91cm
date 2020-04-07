@@ -43,6 +43,11 @@ public class ChannelApiController {
         return joinInfoService.leaveUser(info);
     }
 
+    @GetMapping("/all")
+    public List<Channel> channelListAll(){
+        return channelService.channelListAll();
+    }
+
     // 사용자의 채널 리스트를 반환
     @GetMapping("/list")
     public List<Channel> channelList(@Socialuser User user) {

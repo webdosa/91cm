@@ -5,6 +5,7 @@ import com.nineone.nocm.domain.ApiResponse;
 import com.nineone.nocm.domain.Invite;
 import com.nineone.nocm.domain.JoinInfo;
 import com.nineone.nocm.domain.User;
+import com.nineone.nocm.domain.enums.InviteState;
 import com.nineone.nocm.service.ChannelService;
 import com.nineone.nocm.service.InviteService;
 import com.nineone.nocm.service.JoinInfoService;
@@ -76,11 +77,14 @@ public class InviteApiController {
                 .channel_id(invite.getChannel_id())
                 .member_email(invite.getRecipient())
                 .build());
+        invite.setInvite_state(InviteState.ACCEPT);
+        inviteService.updateInvite(invite);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
     @PostMapping("/refuse")
     public ResponseEntity<?> refuseUser(@RequestBody Invite invite) throws RuntimeException{
         // 거절 내용을 채널에 보내는 로직을 구현해야함
+        invite.setInvite_state(InviteState.REFUSE);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
     @GetMapping("/list")

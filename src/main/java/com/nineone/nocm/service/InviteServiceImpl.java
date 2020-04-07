@@ -24,4 +24,9 @@ public class InviteServiceImpl implements InviteService {
 
         return inviteRepository.receiveInvites(recipient);
     }
+
+    @Override
+    public boolean updateInvite(Invite invite) {
+        return (inviteRepository.updateInvite(invite) > 0);
+    }
 }

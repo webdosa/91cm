@@ -1,7 +1,7 @@
 <template>
   <b-navbar toggleable="lg" type="light" variant="white">
     <!-- <b-nav-text>Navbar text</b-nav-text> -->
-    <li class="list-unstyled" style="font-weight:bold;">{{ channelTitle }}</li>
+    <li class="list-unstyled" style="font-weight:bold;">{{ $store.state.currentChannel.name }}</li>
     <div class="ml-auto" style="display: flex;">
     <a @click="toggleSearchMode" style="margin-right: 15px;" class="verti-align"><i class="im im-magnifier"></i></a>
     <a class="nuj verti-align" @click="RSidebarOpen">
@@ -12,7 +12,6 @@
 </template>
 <script>
   export default {
-    props: ['channelTitle'],
     name: 'ChannelHeader',
     data() {
       return {}

@@ -86,9 +86,9 @@
         <b-button v-if="!$store.state.isInviteMode && !$store.state.isSearchMode" @click="send"
                   style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
         </b-button>
-<!--        <b-button v-if="$store.state.isInviteMode" @click="invite" style="height: 57px; width: 70px; margin-left:20px;"-->
-<!--                  variant="primary">전송-->
-<!--        </b-button>-->
+        <!--        <b-button v-if="$store.state.isInviteMode" @click="invite" style="height: 57px; width: 70px; margin-left:20px;"-->
+        <!--                  variant="primary">전송-->
+        <!--        </b-button>-->
       </div>
     </div>
   </main>
@@ -114,7 +114,7 @@
           username: ''
         },
         message: {
-          channel_id: this.currentChannel.channel_id,
+          channel_id: this.$store.state.currentChannel.id,
           content: '',
           sender: this.$store.state.currentUser.email,
           user: {}
@@ -134,7 +134,7 @@
       }
     },
     created() {
-      this.getMessage()
+      //this.getMessage()
     },
     mounted() {
       this.$nextTick(() => {
@@ -217,8 +217,7 @@
       invite: async function () {
         const userName = this.message.content.split(' ')[0]
         const userEmail = this.message.content.split(' ')[1]
-        console.log(this.currentChannel.id)
-        await InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)
+        await InviteService.invite(this.$store.state.currentUser.email, this.$store.state.currentChannel.id, userEmail)
           .then(res => {
             // 모두가 초대 메시지를 보게 할 것인지 아닌지
             // 그리고 지금은 초대했다는 메시지가 보여도 상대방이 수락하기 전까지는 채널에 대상 유저가 없다.
@@ -241,7 +240,7 @@
         if (e != null) {
           e.preventDefault()
         }
-        this.message.channel_id = this.currentChannel.id
+        this.message.channel_id = this.$store.state.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if (CommonClass.byteLimit(this.stringByteLength)) {
           if (this.$store.state.stompClient && this.$store.state.stompClient.connected) {
@@ -271,7 +270,8 @@
       },
 
       getMessage: function (wrapperEl) {
-        this.cursorPoint.channel_id = this.currentChannel.id
+        console.log(this.$store.state.currentChannel)
+        this.cursorPoint.channel_id = this.$store.state.currentChannel.id
         this.$http.post('http://localhost:9191/api/message/getmsg', JSON.stringify(this.cursorPoint), {
           headers: {
             'Content-Type': 'application/json'
@@ -286,9 +286,6 @@
           }
           console.log(res.data)
           for (let i = 0; i < res.data.length; i++) {
-            if (res.data[i].content == null) {
-              continue
-            }
             res.data[i].content = CommonClass.replacemsg(res.data[i].content)
           }
           this.msgArray = res.data.reverse().concat(this.msgArray)
@@ -328,7 +325,7 @@
         this.msgPreviewBool = false
       },
       initData() {
-        this.cursorPoint.channel_id = this.currentChannel.id
+        this.cursorPoint.channel_id = this.$store.state.currentChannel
         this.cursorPoint.first = true
         this.cursorPoint.cursorId = 0
         this.cursorPoint.empty = false
@@ -350,8 +347,13 @@
         return this.$options.filters.highlight(content, this.$store.state.searchText);
       }
     },
+    computed:{
+      getCurrentChannel: function(){
+        return this.$store.state.currentChannel
+      }
+    },
     watch: {
-      currentChannel: function (newv, oldv) {
+      getCurrentChannel: function (newv, oldv) {
         this.initData()
         this.getMessage()
         this.scrollToEnd()

@@ -25,4 +25,9 @@ public class InviteRepositoryImpl implements InviteRepository{
         return sqlSession.selectList(namespace+".receiveInvites",recipient);
     }
 
+    @Override
+    public int updateInvite(Invite invite) {
+        return sqlSession.update(namespace + ".updateInvite",invite);
+    }
+
 }
