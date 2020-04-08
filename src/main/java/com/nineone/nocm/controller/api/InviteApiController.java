@@ -9,20 +9,15 @@ import com.nineone.nocm.domain.enums.InviteState;
 import com.nineone.nocm.service.ChannelService;
 import com.nineone.nocm.service.InviteService;
 import com.nineone.nocm.service.JoinInfoService;
-import com.nineone.nocm.service.MessageService;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -53,7 +48,7 @@ public class InviteApiController {
             if (joinInfoService.AuthorityCheck(invite)) {
                 inviteService.saveInvite(invite);
                 log.info(invite.getRecipient());
-                messagingTemplate.convertAndSend("/sub/invite/room/" + invite.getRecipient(), invite);
+                messagingTemplate.convertAndSend("/sub/alarm/" + invite.getRecipient(), invite);
                 return new ResponseEntity<>("{}", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(ApiResponse.builder().error("403")
@@ -84,7 +79,9 @@ public class InviteApiController {
     @PostMapping("/refuse")
     public ResponseEntity<?> refuseUser(@RequestBody Invite invite) throws RuntimeException{
         // 거절 내용을 채널에 보내는 로직을 구현해야함
+        log.info("refuse");
         invite.setInvite_state(InviteState.REFUSE);
+        inviteService.updateInvite(invite);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
     @GetMapping("/list")

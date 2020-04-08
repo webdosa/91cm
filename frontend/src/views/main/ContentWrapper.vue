@@ -114,9 +114,9 @@
           username: ''
         },
         message: {
-          channel_id: this.$store.state.currentChannel.id,
+          channel_id: 0,
           content: '',
-          sender: this.$store.state.currentUser.email,
+          sender: '',
           user: {}
         },
         // 채널 옮길 때마다 초기화 되어야한다.
@@ -131,6 +131,7 @@
         wrapperEl: null,
         msgPreviewBool: false,
         getmsgBool: false,
+
       }
     },
     created() {
@@ -325,6 +326,8 @@
         this.msgPreviewBool = false
       },
       initData() {
+        this.message.channel_id = this.getCurrentChannel.id
+        this.message.sender = this.$store.state.currentUser.email
         this.cursorPoint.channel_id = this.$store.state.currentChannel
         this.cursorPoint.first = true
         this.cursorPoint.cursorId = 0
@@ -354,6 +357,7 @@
     },
     watch: {
       getCurrentChannel: function (newv, oldv) {
+        console.log(newv)
         this.initData()
         this.getMessage()
         this.scrollToEnd()

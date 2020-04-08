@@ -147,6 +147,7 @@
         this.msgArray = newmsgArray
       },
       channelSubscribeCallBack(e, fail) {
+        console.log(e)
         let data = JSON.parse(e.body)
         console.log(this.$store.state.isfocus)
         NotificationClass.sendNotification(this.$store.state.isfocus, data)

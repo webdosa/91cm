@@ -1,7 +1,7 @@
 <template>
   <b-navbar toggleable="lg" type="light" variant="white">
     <!-- <b-nav-text>Navbar text</b-nav-text> -->
-    <li class="list-unstyled" style="font-weight:bold;">{{ $store.state.currentChannel.name }}</li>
+    <li class="list-unstyled" style="font-weight:bold;">{{ getCurrentChannel }}</li>
     <div class="ml-auto" style="display: flex;">
     <a @click="toggleSearchMode" style="margin-right: 15px;" class="verti-align"><i class="im im-magnifier"></i></a>
     <a class="nuj verti-align" @click="RSidebarOpen">
@@ -14,7 +14,18 @@
   export default {
     name: 'ChannelHeader',
     data() {
-      return {}
+      return {
+      }
+    },
+    computed:{
+      getCurrentChannel: function () {
+        console.log('tests')
+        if (this.$store.state.currentChannel == null){
+          return
+        }
+        let currentChannel = this.$store.state.currentChannel
+        return currentChannel.name
+      }
     },
     methods: {
       RSidebarOpen: function () {
@@ -27,6 +38,4 @@
     }
   }
 </script>
-<style lang="scss">
 
-</style>

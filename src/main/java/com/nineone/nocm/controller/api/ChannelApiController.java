@@ -60,7 +60,6 @@ public class ChannelApiController {
                 .name(channelInfo.get("name"))
                 .member_email(channelInfo.get("member_email"))
                 .build();
-        
         return channelService.createChannel(channel);
     }
 

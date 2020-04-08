@@ -11,7 +11,7 @@
         <div class="menulist-header">
           <span>Channels</span>
           <div class="menulist-header-icon">
-            <a data-mode="create" @click="prepareModal" style="margin-right: 5px;">
+            <a @click="prepareModal('create')" style="margin-right: 5px;">
               <i class="im im-plus-circle"></i>
             </a>
           </div>
@@ -44,9 +44,9 @@
         </ul>
       </ul>
     </div>
-    <b-modal id="channelCU" centered ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
+    <b-modal id="channelCU" centered ref="modal" @hidden="resetModal" @ok="handleOk">
       <template #modal-title>
-        {{ modalObj.modalTitle }}
+        {{ channelmode }}
       </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
@@ -60,7 +60,6 @@
 
 <script>
   import AboutChannel from '../../service/aboutchannel'
-
   export default {
     props: ['modalObj', 'msgCountObj'],
     watch: {
@@ -92,25 +91,29 @@
     },
     mounted() {
       console.log("LSidebar mounted")
+      this.$eventBus.$on('useModal', res =>{
+        this.prepareModal(res)
+      })
       // this.getUserList()
     },
     updated() {
       console.log("LSidebar updated")
     },
     methods: {
+
       sendSelectChannel: function (index) {
         this.$store.commit('getSelectComponent', 'main')
         this.$store.commit('setCurrentChannel',this.$store.state.userChannelList[index])
         this.$emit('sendTitle', this.$store.state.userChannelList[index])   // 나중에 변경
       },
-      prepareModal: function (e) {
-        if (e.target.parentNode.dataset.mode == 'create') {
-          this.channelmode = 'create'
-          this.modalObj.modalTitle = '채널 생성'
-          this.$bvModal.show('channelCU')
-        } else if (this.modalObj.modalTitle === '채널 수정') {
-          this.channelTitle = this.modalObj.currentChannel.name
+      prepareModal: function (mode) {
+        console.log(mode)
+        if (mode == 'create') {
+          this.channelmode = '채널 생성'
+        } else if(mode == 'edit'){
+          this.channelmode = '채널 수정'
         }
+        this.$bvModal.show('channelCU')
       },
       // 채널 생성 부분
       checkFormValidity: function () {
@@ -140,14 +143,15 @@
         this.$nextTick(() => {
           this.$bvModal.hide('channelCU')
         })
-        if (this.modalObj.modalTitle === '채널 생성') {
+        if (this.channelmode === '채널 생성') {
           this.createChannel()
-        } else if (this.modalObj.modalTitle === '채널 수정') {
+        } else if (this.channelmode === '채널 수정') {
           this.$store.state.currentChannel.name = this.channelTitle
           this.updateChannel()
         }
       },
       updateChannel: function () {
+        console.log(this.$store.state.currentChannel)
         AboutChannel.updateChannelAPI(this.$store.state.currentChannel)
           .then(res => {
             console.log(res)
@@ -157,7 +161,7 @@
       },
       createChannel: function () {
         // vuex에서 currentUser 객체 사용
-        AboutChannel.createChannel(this.$store.state.currentChannel.name, this.$store.state.currentUser.email)
+        AboutChannel.createChannel(this.channelTitle, this.$store.state.currentUser.email)
           .then(res => {
             // 채널 생성 후 리스트를 업데이트 하는 부분
             AboutChannel.getChannelList().then(res => {
@@ -170,6 +174,3 @@
     }
   }
 </script>
-<style lang="scss">
-  @import '../../assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
-</style>

@@ -20,11 +20,13 @@
                 <p>{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
               </div>
               <div class="row float-right">
-                <b-button size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)"><i class="im im-check-mark-circle"
-                                                                                               style="color: #42b983;"></i>
+                <b-button size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)"><i
+                  class="im im-check-mark-circle"
+                  style="color: #42b983;"></i>
                 </b-button>
-                <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)"><i class="im im-x-mark-circle"
-                                                                                               style="color: red;"></i>
+                <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)"><i
+                  class="im im-x-mark-circle"
+                  style="color: red;"></i>
                 </b-button>
               </div>
             </div>
@@ -66,20 +68,20 @@
     },
     created() {
       this.$http.get('/api/invite/list')
-        .then(res=>{
+        .then(res => {
           this.alarmList = res.data.reverse()
           console.log(this.alarmList)
         })
-        .catch(error=>{
+        .catch(error => {
           console.log(error)
         })
-      this.$store.state.stompClient.connect({}, () => {
-        this.$store.state.stompClient.subscribe("/sub/invite/room/" + this.$store.state.currentUser.email, (e) => {
-          console.log("get callback")
-          let invite = JSON.parse(e.body)
-          console.log(invite.sender)
-          this.alarmList.unshift(invite)
-        })
+    },
+    mounted() {
+      this.$store.state.stompClient.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
+        console.log("get callback")
+        let invite = JSON.parse(e.body)
+        console.log(invite.sender)
+        this.alarmList.unshift(invite)
       })
     },
     methods: {
@@ -88,15 +90,22 @@
           .then(res => {
             console.log(res)
             // 현재 채널을 변경하는 로직을 구현해야할듯
-            this.alarmList.splice(index,1);
+            this.alarmList.splice(index, 1);
           })
           .catch(error => {
             console.log(error)
           })
       },
+      // 거절 과 수락은 하나의 api로 해서 신호를 하나 줘서 분기 시키는게 더 좋을 듯
       inviteRefuse: function (alarm, index) {
         // 초대가 거절됐다는 메시지를 채널에 보내는 로직을 구현해야함
-        this.alarmList.splice(index,1);
+        this.$http.post('/api/invite/refuse',alarm)
+          .then(res =>{
+            this.alarmList.splice(index, 1);
+          })
+          .catch(error => {
+            console.log(error)
+          })
       },
       callComponent: function () {
         this.$store.commit('getSelectComponent', 'user')

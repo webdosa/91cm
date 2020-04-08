@@ -26,7 +26,7 @@
             <div style="display:flex;">
               <p>Channel Name</p>
               <template v-if="$store.state.currentChannel.member_email == $store.state.currentUser.email">
-                <a class="verti-align" data-mode="edit" @click="prepareModal">Edit</a>
+                <a class="verti-align" data-mode="edit" @click="useModal('edit')">Edit</a>
                 <a class="verti-align" @click="deleteChannel">Delete</a>
               </template>
             </div>
@@ -90,12 +90,9 @@
       RSidebarClose: function () {
         this.$store.state.isRActive = false
       },
-      prepareModal: function (e) {
-        if (e.target.dataset.mode == 'edit') {
-          this.modalObj.modalTitle = '채널 수정'
-          //Cha1는 나중에 현재 채널 정보에서 가져올 채널 이름값
-          // this.modalObj.channelTitle ='Cha1'
-          this.$bvModal.show('channelCU')
+      useModal: function (mode) {
+        if (mode == 'edit') {
+          this.$eventBus.$emit('useModal',mode)
         }
       },
       msgBox: async function (content) {
