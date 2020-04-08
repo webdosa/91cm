@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
 
-    <template v-if="$store.state.stompClient.connected">
+    <template v-if="connectionCheck">
     <!-- Sidebar  -->
     <LSidebar
       :modalObj="modalObj"
@@ -90,6 +90,11 @@
             return 'ContentWrapper'
         }
       },
+      connectionCheck() {
+        if(this.$store.state.stompClient!=null){
+          return this.$store.state.stompClient.connected
+        }
+      }
     },
     deactivated() {
       console.log('deactiveed')
@@ -207,8 +212,8 @@
             break
           }
         }
-      }
-
+      },
+      
     }
 
   }

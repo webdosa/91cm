@@ -1,6 +1,6 @@
 <template>
   <main class="mainwrapper" style="height: calc(100vh - 60px);">
-    <div class="h-inherit" style="padding: 60px;">
+    <div class="h-inherit" style="padding: 40px;">
       <div class="info-w verti-align">
         <h4 style="padding-top: 40px;">회원정보</h4>
       <div class="info-wrapper cetered-align">
@@ -8,7 +8,7 @@
           <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture" width="200" height="200">
           <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="200" height="200">
         </div>
-        <table style="margin-top: 50px;">
+        <table>
           <tbody>
           <tr>
             <th>
