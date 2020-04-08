@@ -3,17 +3,22 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    syncSignal: {
+      syncChannel: false,
+      syncChannelUser: false,
+    },
     currentChannel: {},
     userChannelList: [],
-    stompClient: Stomp.over(new SockJS('http://localhost:9191/endpoint/')),
+    stompClient: null,
     selectComponent: 'main',
     oldComponent: '',
     currentUser: {},
-    userList : [],
+    userList: [],
     currentChannelUser: [],
     isLActive: false,
     isRActive: false,
@@ -27,17 +32,17 @@ export default new Vuex.Store({
     setCurrentChannel: function (state, payload) {
       state.currentChannel = payload
     },
-    setChannelList: function(state,payload){
+    setChannelList: function (state, payload) {
       state.userChannelList = payload
     },
-    getSelectComponent: function(state, payload){
+    getSelectComponent: function (state, payload) {
       console.log(state.selectComponent)
       console.log('index.js')
       state.oldComponent = state.selectComponent
       console.log(state.oldComponent)
       state.selectComponent = payload
     },
-    getUserList: function(state,payload) {
+    getUserList: function (state, payload) {
       state.userList = payload
     },
     setCurrentUser: function (state, payload) {
@@ -46,13 +51,13 @@ export default new Vuex.Store({
     resetCurrentUser: function (state) {
       state.currentUser = {}
     },
-    setFocus: function (state, payload)  {
+    setFocus: function (state, payload) {
       state.isfocus = payload
     },
-    setIsLogout: function (state,payload) {
+    setIsLogout: function (state, payload) {
       state.isLogout = payload
     },
-    setSearchText: function (state,paylod) {
+    setSearchText: function (state, paylod) {
       state.searchText = paylod
     }
   },
@@ -60,9 +65,9 @@ export default new Vuex.Store({
     userListUpdate: function (context) {
       axios.get('/api/user/list')
         .then(res => {
-          context.commit('getUserList',res.data);
+          context.commit('getUserList', res.data);
         }).catch(error => {
-          console.log(error);
+        console.log(error);
       })
     },
     channelList: async function (context) {
@@ -76,13 +81,22 @@ export default new Vuex.Store({
       await axios.get('/api/user/info')
         .then(res => {
           console.log(res.data)
-          context.commit('setCurrentUser',res.data)
+          context.commit('setCurrentUser', res.data)
         })
     },
     resetCurrentUser: function (context) {
       context.commit('resetCurrentUser')
     }
   },
-  modules: {
+  modules: {},
+  getters: {
+    getStompClient: state => {
+      if (state.stompClient != null) {
+        if (state.stompClient.connected != null) {
+          return state.stompClient
+        }
+      }
+    },
+    getUserChannelList: state => state.userChannelList
   }
 })

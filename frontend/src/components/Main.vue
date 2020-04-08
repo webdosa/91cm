@@ -38,6 +38,8 @@
   import EditProfile from "../views/user/EditProfile"
   import ChannelHeader from "../views/main/ChannelHeader"
   import CommonClass from '../service/common'
+  import Stomp from "webstomp-client";
+  import SockJS from "sockjs-client";
 
   export default {
     name: 'Main',
@@ -86,7 +88,7 @@
       await this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[0])
       const currentChannel = this.$store.state.currentChannel
       console.log(currentChannel)
-      if (currentChannel != null){
+      if (currentChannel != null) {
         currentChannel.count = 0
         await AboutChannel.initCurrentChannel(currentChannel.id)
       }
@@ -110,16 +112,25 @@
         this.$store.state.isSearchMode = false
       },
       connect() {
+        // 새로고침 했을때 Main의 로직이 실행되지 않는 환경에서는 문제가 생길 수 있음
+        this.$store.state.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
         this.$store.state.stompClient.connect({}, () => {
 
-          this.$store.state.userChannelList.forEach(channel=>{
+          this.$store.state.userChannelList.forEach(channel => {
             this.$store.state.stompClient.subscribe("/sub/chat/room/" + channel.id, (e) => {
-              this.channelSubscribeCallBack(e)
+              console.log(e.headers['message-type'])
+              if (e.headers['message-type'] == 'test') {
+                this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser
+              } else {
+                this.channelSubscribeCallBack(e)
+              }
             })
           })
           this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
             if (res.body == 'true') {
               this.storeUpdate()
+            } else if (res.body == 'userList') {
+              this.$store.dispatch('userListUpdate')
             }
           })
           this.$store.state.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
@@ -139,7 +150,7 @@
             this.channelSubscribeCallBack(e)
           })
         }
-        this.$store.commit('setChannelList',newChannelList)
+        this.$store.commit('setChannelList', newChannelList)
 
 
       },

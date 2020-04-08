@@ -50,21 +50,38 @@
 </template>
 
 <script>
+  import {mapGetters} from "vuex";
+
   export default {
     name: 'MainHeader',
     data() {
       return {
         alarmList: [],
+      }
+    },
 
+    watch: {
+      StompClient: function (newVal, oldVal) {
+        if(newVal.connected){
+          newVal.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
+            console.log("get callback")
+            let invite = JSON.parse(e.body)
+            console.log(invite.sender)
+            this.alarmList.unshift(invite)
+          })
+        }
       }
     },
     computed: {
+      ...mapGetters({
+        StompClient: 'getStompClient'
+      }),
       getAlarmList: function () {
         while (this.alarmList.length > 5) {
           this.alarmList.pop()
         }
         return this.alarmList
-      }
+      },
     },
     created() {
       this.$http.get('/api/invite/list')
@@ -77,12 +94,7 @@
         })
     },
     mounted() {
-      this.$store.state.stompClient.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
-        console.log("get callback")
-        let invite = JSON.parse(e.body)
-        console.log(invite.sender)
-        this.alarmList.unshift(invite)
-      })
+
     },
     methods: {
       inviteAccept: function (alarm, index) {
@@ -91,40 +103,49 @@
             console.log(res)
             // 현재 채널을 변경하는 로직을 구현해야할듯
             this.alarmList.splice(index, 1);
+            this.$store.state.stompClient.send('/sub/chat/room/'+alarm.channel_id,null,{'message-type':'test'})
+            this.$store.dispatch('channelList')
           })
           .catch(error => {
             console.log(error)
           })
-      },
+      }
+      ,
       // 거절 과 수락은 하나의 api로 해서 신호를 하나 줘서 분기 시키는게 더 좋을 듯
       inviteRefuse: function (alarm, index) {
         // 초대가 거절됐다는 메시지를 채널에 보내는 로직을 구현해야함
-        this.$http.post('/api/invite/refuse',alarm)
-          .then(res =>{
+        this.$http.post('/api/invite/refuse', alarm)
+          .then(res => {
             this.alarmList.splice(index, 1);
           })
           .catch(error => {
             console.log(error)
           })
-      },
+      }
+      ,
       callComponent: function () {
         this.$store.commit('getSelectComponent', 'user')
-      },
+      }
+      ,
       LSidebarToggle: function () {
         this.$store.state.isLActive = !this.$store.state.isLActive
-      },
+      }
+      ,
       RSidebarOpen: function () {
         this.$store.state.isRActive = true
-      },
+      }
+      ,
       SignOut() {
         this.$store.commit('setIsLogout', true)
         window.location.href = "/logout"
-      },
+      }
+      ,
       getUserNameByEmail: function (email) {
         return this.$store.state.userList.find(element => {
           return element.email == email
         }).name
       }
-    },
+    }
+    ,
   }
 </script>

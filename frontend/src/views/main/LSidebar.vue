@@ -21,7 +21,7 @@
           <a v-b-toggle.collapse-1 class="dropdown-toggle">Channels</a>
           <b-collapse id="collapse-1" visible>
             <ul class="list-unstyled">
-              <li v-for="(channel, index ) in $store.state.userChannelList" :key="channel.id">
+              <li v-for="(channel, index ) in userChannelList" :key="channel.id">
                 <a @click="sendSelectChannel(index)" style="display: flex;">
                   <div>{{ channel.name }}</div>
                   <div class="menulist-header-icon">
@@ -60,6 +60,7 @@
 
 <script>
   import AboutChannel from '../../service/aboutchannel'
+  import {mapGetters} from "vuex";
   export default {
     props: ['modalObj', 'msgCountObj'],
     watch: {
@@ -72,7 +73,14 @@
       }
     },
     computed: {
+      ...mapGetters({
+        userChannelList: 'getUserChannelList'
+      }),
       getCurrentChannel: function () {
+        console.log("test")
+        if (this.$store.state.syncSignal.syncChannelUser){
+          return this.$store.state.currentChannel
+        }
         return this.$store.state.currentChannel
       }
     },
