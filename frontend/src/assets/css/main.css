@@ -1,3 +1,103 @@
+.info-w{
+    height: 100%;
+  background-color: white;
+  border: solid 1px #e6e6e6;
+  flex-direction: column;
+}
+.myfile-upload{
+    position: absolute;
+    z-index: 1;
+    bottom: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+.mytextarea-wrapper{
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    background-color: #fff;
+    padding-bottom: 30px;
+}
+.mytextarea{
+    position: relative;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #ced4da;
+    padding-bottom: 0px;
+}
+
+.addhighlight{
+    background-color: #FFFF00;
+}
+
+.searchinput {
+    margin-bottom: 0px !important;
+    margin-right: .5rem !important;
+    padding-left: 40px;
+}
+
+#c-c-preview p{
+    margin-bottom: 0;
+}
+.channel-nowrap,
+#c-c-preview .p-nowrap {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#c-c-preview .p-wrapper {
+    display: flex;
+    white-space: nowrap;
+    padding: 10px 25px;
+}
+#c-c-preview {
+    z-index: 998;
+    position: fixed;
+    bottom: 141px;
+    width: calc(100% - 250px);
+    background-color: rgba(80, 188, 223, 0.75);
+    font-weight: bold;
+    transition: all ease 0.3s 0s;
+  }
+
+#c-c-preview.active {
+    width: 100%
+}
+
+.icon-round{
+    border-radius: 50%;
+}
+
+.info-wrapper tr {
+    margin-bottom: 15px;
+    display: flex;
+  }
+  .info-wrapper label {
+    margin: 0 35px 0 0;
+    width: 100px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .info-wrapper table,
+  .hori-align {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .info-wrapper {
+    width: 100%;
+    height: inherit;
+    flex-direction: column;
+    overflow: auto;
+    padding: 0px;
+  }
+  .cetered-align {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
 .mychat-content > p {
     margin:0px;
     display:flex;
@@ -102,7 +202,8 @@ MainContents
     overflow: auto;
     height: calc(100% - 141px);
     padding: 20px 25px 0px 25px !important;
-    margin-bottom: 0px;
+    margin-bottom: 0px;    
+    position: relative;
 }
 
 .c-i-wrapper {
@@ -118,6 +219,7 @@ MainContents
     margin-right: 3px;
 }
 
+.info-wrapper th,
 .verti-align {
     display: flex;
     align-items: center;
@@ -130,7 +232,7 @@ MainContents
     font-weight: 600;
     margin-left: 5px;
 }
-
+.nav-item .nav-link,
 .navbar-nav .nav-link {
     padding: 0 0.5rem;
 }
@@ -365,6 +467,12 @@ ul.CTAs a {
 ----------------------------------------------------- */
 
 @media (max-width: 768px) {
+    #c-c-preview{
+        width:100%
+    }
+    #c-c-preview.active{
+        width: calc(100% - 250px);
+    }
     #sidebar {
         margin-left: -250px;
     }

@@ -1,9 +1,16 @@
 HELP.md
 .gradle
 build/
+### custom 설정 ###
+bin/**
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**
+!**/src/main/java/**
 !**/src/test/**
+bin
+**/src/main/resources/static/**
+frontend/node_modules/**
+frontend/npm-v6.13.4/**
+**/application.yml
 
 ### STS ###
 .apt_generated

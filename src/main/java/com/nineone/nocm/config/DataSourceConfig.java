@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -22,18 +24,18 @@ public class DataSourceConfig {
 	
 	@Bean
 	public HikariConfig hikariConfig() {
+		System.out.println("아니 왜 안되는거야");
 		HikariConfig config = new HikariConfig();
         config.setMaximumPoolSize(10);
         config.setMinimumIdle(5);
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setJdbcUrl("jdbc:mysql://localhost:3306/nocm?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&verifyServerCertificate=false&useSSL=false");
-        config.addDataSourceProperty("user", "root");
-        config.addDataSourceProperty("password", "0221");
-
+        config.addDataSourceProperty("user", "91cm");
+        config.addDataSourceProperty("password", "91cm");
 		return config;
 	}
 	
-	@Bean
+	@Bean 
 	public DataSource dataSource() {
 		DataSource dataSource = new HikariDataSource(hikariConfig());
 		logger.info("datasource : {}", dataSource);
@@ -55,5 +57,10 @@ public class DataSourceConfig {
 	 public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) { 
 		 return new SqlSessionTemplate(sqlSessionFactory); 
 	 }
+	 
+	 @Bean
+	 public PlatformTransactionManager transactionManager() {
+	        return new DataSourceTransactionManager(dataSource());
+	    }
 	
 }

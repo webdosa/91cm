@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import com.nineone.nocm.domain.LastAccess;
 import com.nineone.nocm.domain.User;
 import com.nineone.nocm.oauth.OAuthAttributes;
 import com.nineone.nocm.repository.UserRepository;
@@ -25,37 +26,50 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-	  private final HttpSession httpSession;
-	    private final UserRepository userRepository;
+    private final HttpSession httpSession;
+    private final UserRepository userRepository;
 
-	    @Override
-	    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-	        OAuth2UserService delegate = new DefaultOAuth2UserService();
-	        OAuth2User oAuth2User = delegate.loadUser(userRequest);
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2UserService delegate = new DefaultOAuth2UserService();
+        OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-	        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-	        String userNameAttributeName = userRequest.getClientRegistration()
-	                .getProviderDetails()
-	                .getUserInfoEndpoint()
-	                .getUserNameAttributeName();
-	        OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
-	                oAuth2User.getAttributes());
-	        User user = saveOrUpdate(attributes);
-	        httpSession.setAttribute("user", user);
-	        return new DefaultOAuth2User(
-	                Collections.singleton(new SimpleGrantedAuthority("USER")),
-	                attributes.getAttributes(),
-	                attributes.getNameAttributeKey());
-	    }
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String userNameAttributeName = userRequest.getClientRegistration()
+                .getProviderDetails()
+                .getUserInfoEndpoint()
+                .getUserNameAttributeName();
+        OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
+                oAuth2User.getAttributes());
+        User user = saveOrUpdate(attributes);
+        LastAccess lastAccess = setLastAccess();
+        httpSession.setAttribute("lastAccess", lastAccess);
+        httpSession.setAttribute("user", user);
+        return new DefaultOAuth2User(
+                Collections.singleton(new SimpleGrantedAuthority("USER")),
+                attributes.getAttributes(),
+                attributes.getNameAttributeKey());
+        
+    }
 
-	    private User saveOrUpdate(OAuthAttributes attributes) {
-	        // 임시 setter로 저장 해준 값은 소셜 로그인을 통해서 가져올 수 없는 값
-	        // 사용자에게 값을 받거나 해서 지정 해줘야 함으로 지금은 임시로 지정
-	        User user = userRepository.getUserById(attributes.getId());
-	        if (user == null){
-	            user = attributes.toEntity();
-	            userRepository.insertUser(user);
-	        }
-	        return user;
-	    }
+    private User saveOrUpdate(OAuthAttributes attributes) {
+        // 임시 setter로 저장 해준 값은 소셜 로그인을 통해서 가져올 수 없는 값
+        // 사용자에게 값을 받거나 해서 지정 해줘야 함으로 지금은 임시로 지정
+    	User user;
+        if(attributes.getEmail()==null) {
+        	user = userRepository.getUserfindById(attributes.getId());
+        }else {
+        	user = userRepository.getUserfindByEmail(attributes.getEmail());
+        }    	
+        if (user == null){
+            user = attributes.toEntity();
+        }
+        return user;
+    }
+    
+    private LastAccess setLastAccess() {
+    	LastAccess lastAccess = LastAccess.builder()
+    			.currentChannelId(0).isContentWrapper(true).isFocus(true).build();
+    	return lastAccess;
+    }
 }

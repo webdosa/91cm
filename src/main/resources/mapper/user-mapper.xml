@@ -5,13 +5,36 @@
 
     <mapper namespace="com.nineone.nocm.mapper.user">
 
-    <insert id="insertUser">
-    	insert member (userid,password,name,phone,email,icon)
-    		values(#{userid},#{password},#{name},#{phone},#{email},#{icon})
-    </insert>
-    
-    <select id="getUserid" resultType="java.lang.String">
-    	select userid from member where userid = #{userid}
+    <update id="updateUser">
+        update member set name = #{name}, phone = #{phone}, picture = #{picture} where email = #{email}
+    </update>
+    <select id="thisChannelUserList" parameterType="java.lang.Integer" resultType="com.nineone.nocm.domain.User">
+        select member.* from member join joininfo on member.email = joininfo.member_email where joininfo.channel_id = #{channel_id}
     </select>
 
+    <insert id="insertUser">
+    	insert member (name,phone,email,picture)
+    		values(#{name},#{phone},#{email},#{picture})
+    </insert>
+    
+    <insert id="insertSNSInfo">
+    	insert sns_info (identifier,member_email)
+    		values(#{identifier},#{email})
+    </insert>
+    
+<!--    <select id="getUserid" resultType="java.lang.String">-->
+<!--    	select userid from member where userid = #{id}-->
+<!--    </select>-->
+    
+    <select id="getUserfindById" parameterType="java.lang.String" resultType="com.nineone.nocm.domain.User">
+        select * from member where email = (select member_email from sns_info where identifier = #{id})
+    </select>
+	
+	<select id="getUserfindByEmail" resultType="com.nineone.nocm.domain.User">
+        select * from member where email = #{email}
+    </select>
+	
+    <select id="getAllUserList" resultType="com.nineone.nocm.domain.User">
+        select * from member
+    </select>
     </mapper>

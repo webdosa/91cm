@@ -1,24 +1,38 @@
 <template>
   <div class="wrapper">
+
+    <template v-if="$store.state.stompClient.connected">
     <!-- Sidebar  -->
-    <LSidebar :modalObj="modalObj" @passData="passData"></LSidebar>
+    <LSidebar
+      :modalObj="modalObj"
+      :channelList="channelList"
+      :msgCountObj="msgCountObj"
+      @channelUpdate="channelUpdate"
+      @sendTitle="sendTitle"></LSidebar>
     <!-- Page Content  -->
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
-      <router-view name="ChannelHeader"></router-view>
-      <router-view  :currentChannel="currentChannel" 
-        :stompClient="stompClient"
-        :msgArray="msgArray"
-        @msgArrayUnshift="msgArrayUnshift"></router-view>
-      <!-- <ContentWrapper 
-        :currentChannel="currentChannel" 
-        :stompClient="stompClient"
-        :msgArray="msgArray"
-        @msgArrayUnshift="msgArrayUnshift" >
-      </ContentWrapper> -->
-
+      <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
+      <NoChannel v-if="channelList[0]==null && $store.state.selectComponent=='main'"/>  
+      <!-- CjannelHeader -->
+      <div v-else>
+        <ChannelHeader v-if="$store.state.selectComponent=='main'"
+                       :channelTitle="modalObj.currentChannel.name"></ChannelHeader>
+        <keep-alive>
+          <component :is="whichComponent" :currentChannel="modalObj.currentChannel"
+                     :stompClient="$store.state.stompClient"
+                     :msgArray="msgArray"
+                     @msgArrayUpdate="msgArrayUpdate"
+          ></component>
+        </keep-alive>
+      </div>
     </div>
-    <RSidebar :modalObj="modalObj" @passData="passData"></RSidebar>
+    <RSidebar v-if="channelList[0]!=null"
+              :modalObj="modalObj"
+              @passData="passData"></RSidebar>
+
+    </template>
+    <Loading v-else/>
   </div>
 </template>
 <script>
@@ -27,85 +41,176 @@
   import MainHeader from '../views/main/MainHeader'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
-
-  import axios from 'axios'
+  import NotificationClass from '../service/notification'
+  import EventListener from '../service/eventlistener'
   import SockJS from 'sockjs-client'
   import Stomp from 'webstomp-client'
+  import UserInfo from "../views/user/UserInfo"
+  import EditProfile from "../views/user/EditProfile"
+  import ChannelHeader from "../views/main/ChannelHeader"
+  import CommonClass from '../service/common'
+  import NoChannel from '../views/main/NoChannel'
+  import Loading from '../views/main/Loading'
+
   export default {
     name: 'Main',
-    components: {MainHeader, LSidebar,RSidebar,ContentWrapper},
+    components: {
+      'MainHeader': MainHeader,
+      'LSidebar': LSidebar,
+      'RSidebar': RSidebar,
+      'ChannelHeader': ChannelHeader,
+      'ContentWrapper': ContentWrapper,
+      'UserInfo': UserInfo,
+      'EditProfile': EditProfile,
+      'NoChannel' : NoChannel,
+      'Loading' : Loading
+    },
     data() {
       return {
-        stompClient: null,
+        channelTitle: '',
         channelList: [],
         isRActive: false,
         msgArray: [],
-        currentChannel: 0,
         msgCountObj: {},
-        modalObj:{modalTitle:'',channelTitle:''}
+        modalObj: {modalTitle: '', currentChannel: null},
       }
     },
-    created () {
-    
+    computed: {
+      whichComponent() {
+        console.log(this.$store.state.oldComponent)
+        AboutChannel.updateLastAccessStatus(this.$store.state.oldComponent, this.$store.state.selectComponent)
+        switch (this.$store.state.selectComponent) {
+          case 'main':
+            return 'ContentWrapper'
+          case 'user':
+            return 'UserInfo'
+          case 'edit':
+            return 'EditProfile'
+          default:
+            return 'ContentWrapper'
+        }
+      },
+    },
+    deactivated() {
+      console.log('deactiveed')
+    },
+    created() {
+      // 적용은 mounted 이후에 가능한 것으로 보임...
+      this.$store.dispatch('userListUpdate')
       AboutChannel.getChannelList().then(
         res => {
           this.channelList = res.data
-          for(let i in this.channelList){
-            this.msgCountObj[this.channelList[i]] = 0
-          }
-          console.log(this.channelList)   
-          console.log(this.msgCountObj)
-          //사용자가 채널을 선택하지 않았다면.   
-          this.currentChannel = this.channelList[0]
-          
-          // 현재 채널에 저장되어있는 메시지 가져오기
-          // AboutChannel.getMsgList(this.currentChannel).then(
-          //   res=> {
+          console.log(this.channelList)
 
-          // })
+          // 처음 로그인하자마자 제일 처음에 만든 채널로 현재 채널객체를 초기화한다.
+          if (this.modalObj.currentChannel == null && this.channelList[0] != null) {
+            this.channelList[0].count = 0
+            this.modalObj.currentChannel = this.channelList[0]
+            this.channelTitle = this.modalObj.currentChannel.name
+            AboutChannel.initCurrentChannel(this.modalObj.currentChannel.id)
+          }
           this.connect()
+          EventListener.beforeunloadEvt()
+          EventListener.focusEvt(this)
+          EventListener.blurEvt()
+          NotificationClass.requestPermission()
         }
       )
-      
+    },
+    updated() {
     },
     methods: {
+      storeUpdate: function () {
+        this.$store.dispatch('userListUpdate')
+        this.$store.dispatch('initCurrentUser')
+      },
+      sendTitle(channel) {
+        if (this.$store.state.oldComponent == 'main') {
+          let oldChannel = this.modalObj.currentChannel
+          AboutChannel.updateLastAccessDate(channel.id, oldChannel.id)
+          console.log(oldChannel.id)
+        }
+        this.channelTitle = channel.name
+        this.modalObj.currentChannel = channel
+
+        this.modalObj.currentChannel.count = 0
+        this.$store.state.isSearchMode = false
+      },
       passData(modalObj) {
         this.modalObj.modalTitle = modalObj.modalTitle
-        this.modalObj.channelTitle = modalObj.channelTitle
       },
       connect() {
-        this.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
-        console.log('asd1')
-        this.stompClient.connect({},() => {
-          console.log('asd2')
-          for(let i in this.channelList){
-            this.stompClient.subscribe("/sub/chat/room/"+this.channelList[i],(e)=>{
-              let data = JSON.parse(e.body);
-              if(data.message.channel_id == this.currentChannel){
-                data.message.content = this.replacemsg(data.message.content)
-                console.log(data);
-                this.msgArray.push(data)  
-              }else{
-                this.msgCountObj[data.message.channel_id] += 1
-              }
+        this.$store.state.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
+        console.log(this.$store.state.stompClient)
+        this.$store.state.stompClient.connect({}, () => {
+          console.log("asd!")
+          for (let i in this.channelList) {
+            this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.channelList[i].id, (e) => {
+              this.channelSubscribeCallBack(e)
             })
           }
+          this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
+            if (res.body == 'true') {
+              this.storeUpdate()
+            }
+          })
+          this.$store.state.stompClient.subscribe("/sub/" + this.$store.state.currentUser.email, (e) => {
+            //메시지 전송 실패시
+            this.channelSubscribeCallBack(e, true)
+          })
+
+        }, function () {
+          window.location.href = "/"
         })
       },
-      replacemsg (originContent) {
-        let array = originContent.split("\n")
-        let content = ''
-        for(let i in array){
-          content += '<p>' + array[i] + '</p>'
+      channelUpdate(newChannelList) {
+        let num = newChannelList.length - this.channelList.length
+        for (let i = num; i > 0; i--) {
+          let idx = newChannelList.length - i
+          this.msgCountObj[newChannelList[idx].id] = 0
+          this.$store.state.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
+            this.channelSubscribeCallBack(e)
+          })
         }
-        return content.replace(/ /gi, '&nbsp;')
+        this.channelList = newChannelList
+
+        // 코드 확인 필요
+        if (this.modalObj.currentChannel == null) {
+          this.modalObj.currentChannel = this.channelList[0]
+          this.channelTitle = this.modalObj.currentChannel.name
+        }
       },
-      msgArrayUnshift () {
-        //console.log('함수실행')
+      msgArrayUpdate(newmsgArray) {
+        this.msgArray = newmsgArray
+      },
+      channelSubscribeCallBack(e, fail) {
+        let data = JSON.parse(e.body)
+        console.log(this.$store.state.isfocus)
+        NotificationClass.sendNotification(this.$store.state.isfocus, data)
+        if (data.channel_id == this.modalObj.currentChannel.id && this.$store.state.selectComponent == 'main') {
+          data.content = CommonClass.replacemsg(data.content)
+          if (fail) {
+            data.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + data.content
+          }
+          this.msgArray.push(data)
+          if (!this.$store.state.isfocus) {
+            this.msgCounting(data)
+          }
+        } else {
+          this.msgCounting(data)
+        }
+      },
+      msgCounting(data) {
+        for (let i = 0; i < this.channelList.length; i++) {
+          if (data.channel_id == this.channelList[i].id) {
+            this.channelList[i].count += 1
+            break
+          }
+        }
       }
-    },
-    mounted() {
 
     }
+
   }
+
 </script>
