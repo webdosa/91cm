@@ -1,6 +1,6 @@
 <template>
   <main class="mainwrapper" style="height: calc(100vh - 60px);">
-    <div class="h-inherit " style="padding: 60px;">
+    <div class="h-inherit " style="padding: 40px;">
       <div class="info-w verti-align">
         <h4  style="padding-top: 40px;">회원정보 수정</h4>
       <div class="info-wrapper cetered-align">

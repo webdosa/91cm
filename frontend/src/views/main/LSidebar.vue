@@ -169,6 +169,4 @@
     }
   }
 </script>
-<style lang="scss">
-  @import '../../assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
-</style>
+

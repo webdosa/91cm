@@ -10,7 +10,7 @@
              class="img-fluid mb-3 d-none d-md-block">
         <h1>91CM Login</h1>
                 <p class="font-italic text-muted mb-0">협업 메신저</p>
-                <a href="http://www.freepik.com">Designed by pikisuperstar / Freepik</a>
+                <a class ="d-none d-md-block" href="http://www.freepik.com">Designed by pikisuperstar / Freepik</a>
         <!--        <p class="font-italic text-muted">Snippet By <a href="https://bootstrapious.com" class="text-muted">-->
         <!--          <u>Bootstrapious</u></a>-->
         <!--        </p>-->
@@ -25,7 +25,7 @@
             <div class="input-group col-lg-12 mb-4">
               <div class="input-group-prepend">
                             <span class="input-group-text bg-white px-4 border-md border-right-0">
-                              <i class="im im-user-male"></i>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z"/></svg>
                             </span>
               </div>
               <input id="firstName" type="text" name="email" placeholder="Id"
@@ -35,7 +35,7 @@
             <div class="input-group col-lg-12 mb-4">
               <div class="input-group-prepend">
                             <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="im im-key"></i>
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12.451 17.337l-2.451 2.663h-2v2h-2v2h-6v-5l6.865-6.949c1.08 2.424 3.095 4.336 5.586 5.286zm11.549-9.337c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-3-3c0-1.104-.896-2-2-2s-2 .896-2 2 .896 2 2 2 2-.896 2-2z"/></svg>
                             </span>
               </div>
               <input id="password" type="password" name="password" placeholder="Password"
@@ -51,10 +51,10 @@
               </a>
             </div>
 
-            <div >
-              <a  href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
-              <a  href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
-              <a  href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
+            <div class="social-wrapper">
+              <a class="logo-wrapper" href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
+              <a class="logo-wrapper" href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
+              <a class="logo-wrapper" href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
               <!--        동작 에러 인해 주석처리-->
               <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
             </div>
@@ -111,8 +111,8 @@
   }
 </script>
 <style scoped>
-  @import "~bootstrap/dist/css/bootstrap.min.css";
-  @import '~bootstrap-vue/dist/bootstrap-vue.min.css';
+  /* @import "~bootstrap/dist/css/bootstrap.min.css";
+  @import '~bootstrap-vue/dist/bootstrap-vue.min.css'; */
   
   .social-logo{
   width: 50px;
