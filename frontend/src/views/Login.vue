@@ -1,5 +1,5 @@
 <template>
-   <div class="container" style="
+  <div class="container" style="
     height: 100vh;
     display: flex;
 ">
@@ -51,10 +51,10 @@
               </a>
             </div>
 
-            <div class="social-wrapper">
-              <a class="logo-wrapper" href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
-              <a class="logo-wrapper" href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
-              <a class="logo-wrapper" href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
+            <div >
+              <a  href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
+              <a  href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
+              <a  href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
               <!--        동작 에러 인해 주석처리-->
               <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
             </div>
@@ -76,7 +76,6 @@
 <script>
   import router from '../router'
   import axios from 'axios'
-
   export default {
     name: 'Login',
     data() {
@@ -112,7 +111,10 @@
   }
 </script>
 <style scoped>
- .social-logo{
+  @import "~bootstrap/dist/css/bootstrap.min.css";
+  @import '~bootstrap-vue/dist/bootstrap-vue.min.css';
+  
+  .social-logo{
   width: 50px;
   height: 50px;
 }
@@ -148,30 +150,23 @@
   * ==========================================
   *
   */
-
   .border-md {
     border-width: 2px;
   }
-
   .btn-facebook {
     background: #405D9D;
     border: none;
   }
-
   .btn-facebook:hover, .btn-facebook:focus {
     background: #314879;
   }
-
   .btn-twitter {
     background: #42AEEC;
     border: none;
   }
-
   .btn-twitter:hover, .btn-twitter:focus {
     background: #1799e4;
   }
-
-
   /*
   *
   * ==========================================
@@ -179,7 +174,6 @@
   * ==========================================
   *
   */
-
   .form-control:not(select) {
     padding: 1.5rem 0.5rem;
   }

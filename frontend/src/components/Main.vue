@@ -140,6 +140,7 @@
         this.modalObj.modalTitle = modalObj.modalTitle
       },
       connect() {
+        this.$store.state.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
         console.log(this.$store.state.stompClient)
         this.$store.state.stompClient.connect({}, () => {
           console.log("asd!")

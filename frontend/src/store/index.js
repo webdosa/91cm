@@ -8,7 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userChannelList: [],
-    stompClient: Stomp.over(new SockJS('http://localhost:9191/endpoint/')),
+    stompClient: null,
     selectComponent: 'main',
     oldComponent: '',
     currentUser: {},
