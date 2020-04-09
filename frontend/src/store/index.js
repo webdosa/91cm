@@ -80,5 +80,10 @@ export default new Vuex.Store({
     }
   },
   modules: {
+  },
+  getters: {
+    getSearchMode: state => {
+      return state.isSearchMode
+    }
   }
 })
