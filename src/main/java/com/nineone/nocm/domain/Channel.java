@@ -1,9 +1,12 @@
 package com.nineone.nocm.domain;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

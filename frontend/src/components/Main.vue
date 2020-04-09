@@ -1,5 +1,7 @@
 <template>
   <div class="wrapper">
+
+    <template v-if="connectionCheck">
     <!-- Sidebar  -->
     <LSidebar
       :msgCountObj="msgCountObj"
@@ -9,9 +11,7 @@
     <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
       <MainHeader></MainHeader>
       <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
-      <div v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'">
-        <p>채팅방을 만들거나 가입해주세요</p>
-      </div>
+      <NoChannel v-if="channelList[0]==null && $store.state.selectComponent=='main'"/>  
       <!-- CjannelHeader -->
       <div v-else>
         <ChannelHeader v-if="$store.state.selectComponent=='main'"></ChannelHeader>
@@ -24,6 +24,8 @@
       </div>
     </div>
     <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
+    </template>
+    <Loading v-else/>
   </div>
 </template>
 <script>
@@ -38,6 +40,8 @@
   import EditProfile from "../views/user/EditProfile"
   import ChannelHeader from "../views/main/ChannelHeader"
   import CommonClass from '../service/common'
+  import NoChannel from '../views/main/NoChannel'
+  import Loading from '../views/main/Loading'
   import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
 
@@ -50,7 +54,9 @@
       'ChannelHeader': ChannelHeader,
       'ContentWrapper': ContentWrapper,
       'UserInfo': UserInfo,
-      'EditProfile': EditProfile
+      'EditProfile': EditProfile,
+      'NoChannel' : NoChannel,
+      'Loading' : Loading
     },
     data() {
       return {
@@ -77,6 +83,11 @@
             return 'ContentWrapper'
         }
       },
+      connectionCheck() {
+        if(this.$store.state.stompClient!=null){
+          return this.$store.state.stompClient.connected
+        }
+      }
     },
     deactivated() {
       console.log('deactiveed')
@@ -184,8 +195,8 @@
             break
           }
         }
-      }
-
+      },
+      
     }
 
   }

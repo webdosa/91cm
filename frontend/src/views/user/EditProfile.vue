@@ -1,10 +1,11 @@
 <template>
-  <main class="mainwrapper">
-    <div class="h-inherit cetered-align" style="flex-direction:column;">
-      <div class="info-wrapper">
-        <h4 class="center">회원정보 수정</h4>
+  <main class="mainwrapper" style="height: calc(100vh - 60px);">
+    <div class="h-inherit " style="padding: 40px;">
+      <div class="info-w verti-align">
+        <h4  style="padding-top: 40px;">회원정보 수정</h4>
+      <div class="info-wrapper cetered-align">
         <br>
-        <div class="hori-align" style="margin: 24px 0px 35px 0;">
+        <div class="hori-align" style="margin: 0px 0px 35px 0;">
           <b-button v-if="$store.state.currentUser.picture" variant="light" v-b-modal.modal-prevent-closing>
             <img class="icon-round" :src="$store.state.currentUser.picture" width="200" height="200">
           </b-button>
@@ -42,6 +43,7 @@
         </table>
       </div>
       <b-button style="margin:15px;" variant="primary" @click="edit">수정</b-button>
+      </div>
     </div>
 
     <b-modal

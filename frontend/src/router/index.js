@@ -31,6 +31,7 @@ const routes = [
   {
     path: '*',
     component: NotFound
+    // redirect: '/errorpage' 
   },
   {
     path: '/clock',

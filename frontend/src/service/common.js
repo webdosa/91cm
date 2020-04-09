@@ -1,3 +1,4 @@
+import store from '../store'
 class CommonClass {
   replacemsg(originContent) {
     if (originContent == null){
@@ -60,7 +61,6 @@ class CommonClass {
         return require('@/assets/images/fileIcon/file_icon.png')
     }
   }
-
 }
 
 export default new CommonClass()
