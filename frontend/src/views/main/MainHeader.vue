@@ -7,12 +7,12 @@
           <b-navbar-nav class="ml-auto">
             <b-nav-item-dropdown no-caret right toggle-class="nonoutline" class="verti-align">
               <template v-slot:button-content>
+                <div style="position: relative;">
+                  <b-badge style="position: absolute;bottom: -2px;right: -5px;font-size: 10px;" variant="danger">1</b-badge>
                 <i class="im im-bell"></i>
+                </div>
               </template>
-              <b-dropdown-item href="#">EN</b-dropdown-item>
-              <b-dropdown-item href="#">ES</b-dropdown-item>
-              <b-dropdown-item href="#">RU</b-dropdown-item>
-              <b-dropdown-item href="#">FA</b-dropdown-item>
+             
             </b-nav-item-dropdown>
             <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
             <b-nav-item-dropdown no-caret right toggle-class="nonoutline">

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
 
-    <template v-if="$store.state.stompClient.connected">
+    <template v-if="connectionCheck">
     <!-- Sidebar  -->
     <LSidebar
       :modalObj="modalObj"
@@ -90,6 +90,11 @@
             return 'ContentWrapper'
         }
       },
+      connectionCheck() {
+        if(this.$store.state.stompClient!=null){
+          return this.$store.state.stompClient.connected
+        }
+      }
     },
     deactivated() {
       console.log('deactiveed')
@@ -140,6 +145,7 @@
         this.modalObj.modalTitle = modalObj.modalTitle
       },
       connect() {
+        this.$store.state.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
         console.log(this.$store.state.stompClient)
         this.$store.state.stompClient.connect({}, () => {
           console.log("asd!")
@@ -206,8 +212,8 @@
             break
           }
         }
-      }
-
+      },
+      
     }
 
   }
