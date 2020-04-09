@@ -7,8 +7,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.nineone.nocm.domain.ApiResponse;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +23,8 @@ import com.nineone.nocm.repository.UserRepository;
 import com.nineone.nocm.service.MessageService;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Slf4j
@@ -36,8 +43,7 @@ public class MessageController {
 
 	@MessageMapping("/chat/message")
 	@Transactional
-	public void message(Message message) throws ParseException {
-
+	public void message(Message message)throws ParseException {
 		message.setSend_date(messageService.makeDate());
 		message.setStr_send_date(messageService.makeStrDate(message.getSend_date()));
 		message.setContent(messageService.replacemsg(message.getContent()));
@@ -47,6 +53,15 @@ public class MessageController {
 			messagingTemplate.convertAndSend("/sub/"+message.getSender(), message);
 		}
 		 
+	}
+	@MessageMapping("/sync/info")
+	public void storeUpdateMessage(){
+		messagingTemplate.convertAndSend("/sub/sync/info","true");
+	}
+
+	@MessageMapping("/chat/room/{id}")
+	public void syncMessage(@DestinationVariable String id, @Payload ApiResponse apiResponse)throws Exception{
+		messagingTemplate.convertAndSend("/sub/chat/room/"+id,apiResponse.getMessage());
 	}
 	
 

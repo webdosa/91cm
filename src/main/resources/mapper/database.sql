@@ -5,6 +5,7 @@ use nocm;
 
 create table member (
 email varchar(100) primary key not null,
+password varchar(255),
 name varchar(100) not null,
 phone varchar(20) not null,
 picture varchar(100)
@@ -51,11 +52,11 @@ server_name varchar(130) not null,
 path varchar(130) not null,
 extension varchar(10),
 message_id int unsigned not null,
-byte int unsigned not null,
+file_size int unsigned not null,
 sender varchar(100) not null,
 send_date datetime not null default CURRENT_TIMESTAMP,
 foreign key (sender) references member(email) on update cascade,
-foreign key (message_id) references message(id) on delete cascade on update cascade
+foreign key (message_id) references message(id) on update cascade
 );
 
 
@@ -65,7 +66,7 @@ channel_id int unsigned not null,
 sender varchar(100) not null,
 recipient varchar(100) not null,
 send_date datetime not null default CURRENT_TIMESTAMP,
-invite_state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ),
+invite_state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ) default 'STAND_BY',
 foreign key (sender) references member(email) on delete cascade on update cascade,
 foreign key (recipient) references member(email) on delete cascade on update cascade,
 foreign key (channel_id) references channel(id) on delete cascade on update cascade
@@ -117,3 +118,4 @@ delete from message;
 delete from sns_info;
 delete from joininfo;
 delete from message;
+delete from file;

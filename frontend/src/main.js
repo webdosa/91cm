@@ -10,6 +10,8 @@ import axios from 'axios'
 import VueSession from 'vue-session'
 import './assets/css/main.css'
 import AlertModal from "./plugins/AlertModal";
+import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
+
 
 Vue.use(AlertModal)
 Vue.use(VueSession, { persist: true})

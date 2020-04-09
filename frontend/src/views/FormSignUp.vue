@@ -10,7 +10,6 @@
              class="img-fluid mb-3 d-none d-md-block">
         <h1>91CM Login</h1>
                 <p class="font-italic text-muted mb-0">협업 메신저</p>
-                <a class ="d-none d-md-block" href="http://www.freepik.com">Designed by pikisuperstar / Freepik</a>
         <!--        <p class="font-italic text-muted">Snippet By <a href="https://bootstrapious.com" class="text-muted">-->
         <!--          <u>Bootstrapious</u></a>-->
         <!--        </p>-->
@@ -25,7 +24,7 @@
             <div class="input-group col-lg-12 mb-4">
               <div class="input-group-prepend">
                             <span class="input-group-text bg-white px-4 border-md border-right-0">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z"/></svg>
+                              <i class="im im-user-male"></i>
                             </span>
               </div>
               <input id="firstName" type="text" name="email" placeholder="Id"
@@ -35,7 +34,7 @@
             <div class="input-group col-lg-12 mb-4">
               <div class="input-group-prepend">
                             <span class="input-group-text bg-white px-4 border-md border-right-0">
-                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12.451 17.337l-2.451 2.663h-2v2h-2v2h-6v-5l6.865-6.949c1.08 2.424 3.095 4.336 5.586 5.286zm11.549-9.337c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-3-3c0-1.104-.896-2-2-2s-2 .896-2 2 .896 2 2 2 2-.896 2-2z"/></svg>
+                                <i class="im im-key"></i>
                             </span>
               </div>
               <input id="password" type="password" name="password" placeholder="Password"
@@ -46,8 +45,8 @@
 
             <!-- Submit Button -->
             <div class="form-group col-lg-12 mx-auto mb-0">
-              <a @click="login" class="btn btn-primary btn-block py-2">
-                <span class="font-weight-bold" style="color: white;">로그인</span>
+              <a href="#" class="btn btn-primary btn-block py-2">
+                <span class="font-weight-bold">로그인</span>
               </a>
             </div>
 
@@ -73,48 +72,25 @@
     </div>
   </div>
 </template>
+
 <script>
-  import router from '../router'
-  import axios from 'axios'
+  // For Demo Purpose [Changing input group text on focus]
+  // $(function () {
+  //   $('input, select').on('focus', function () {
+  //     $(this).parent().find('.input-group-text').css('border-color', '#80bdff');
+  //   });
+  //   $('input, select').on('blur', function () {
+  //     $(this).parent().find('.input-group-text').css('border-color', '#ced4da');
+  //   });
+  // });
+
   export default {
-    name: 'Login',
-    data() {
-      return {
-        userid: '',
-        password: ''
-      }
-    },
-    methods: {
-      login: function () {
-        const form = new FormData()
-        form.append('userid', this.userid)
-        form.append('password', this.password)
-        axios.post('http://localhost:9191/', form)
-          .then(res => {
-            console.log(res)
-          }).catch(error => {
-          console.log(error)
-        })
-      }
-    },
-    mounted() {
-      axios.get('http://localhost:9191/api/user/login')
-        .then(res => {
-          if (res.data) {
-            console.log(res.data)
-            router.replace('/main')
-          }
-        }).catch(error => {
-        console.log(error)
-      })
-    }
+    name: "FormSignUp"
   }
 </script>
+
 <style scoped>
-  /* @import "~bootstrap/dist/css/bootstrap.min.css";
-  @import '~bootstrap-vue/dist/bootstrap-vue.min.css'; */
-  
-  .social-logo{
+.social-logo{
   width: 50px;
   height: 50px;
 }
@@ -140,7 +116,7 @@
     margin-bottom: 188px;
   }
   .margincustom{
-    margin-top: 80px;
+    margin-top: 0px;
   }
 }
   /*
@@ -150,23 +126,31 @@
   * ==========================================
   *
   */
+
   .border-md {
     border-width: 2px;
   }
+
   .btn-facebook {
     background: #405D9D;
     border: none;
   }
+</script>
+
   .btn-facebook:hover, .btn-facebook:focus {
     background: #314879;
   }
+
   .btn-twitter {
     background: #42AEEC;
     border: none;
   }
+
   .btn-twitter:hover, .btn-twitter:focus {
     background: #1799e4;
   }
+
+
   /*
   *
   * ==========================================
@@ -174,6 +158,7 @@
   * ==========================================
   *
   */
+
   .form-control:not(select) {
     padding: 1.5rem 0.5rem;
   }
@@ -191,4 +176,5 @@
     border-color:#ced4da;;
     outline: none;
 }
+
 </style>

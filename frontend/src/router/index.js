@@ -10,6 +10,7 @@ import ChannelHeader from '../views/main/ChannelHeader'
 import test from '../views/user/UserInfo'
 import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
+import FormSignUp from "../views/FormSignUp";
 
 Vue.use(VueRouter)
 
@@ -30,6 +31,7 @@ const routes = [
   {
     path: '*',
     component: NotFound
+    // redirect: '/errorpage' 
   },
   {
     path: '/clock',
@@ -49,23 +51,15 @@ const routes = [
     }
   },
   {
-    path: '/user',
-    component: Main,
-    children: []
-  },
-  {
     path: '/signup',
     component: SignUp
 
+  },
+  {
+    path: '/formSignUp',
+    component: FormSignUp
   }
-  //,
-  // {
-  //   path: '/user/edit',
-  //   component: Main,
-  //   children:[
-  //     { path:'', component: EditProfile},
-  //   ]
-  // }
+
 ]
 
 const router = new VueRouter({

@@ -53,4 +53,9 @@ public class ChannelServiceImpl implements ChannelService{
     public boolean updateChannel(Channel channel) {
         return (channelRepository.updateChannel(channel) > 0) ? true : false;
     }
+
+    @Override
+    public List<Channel> channelListAll() {
+        return channelRepository.channelListAll();
+    }
 }
