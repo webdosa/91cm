@@ -65,6 +65,7 @@
     props: ['modalObj', 'msgCountObj'],
     watch: {
       getCurrentChannel(newCurrentChannel, oldCurrentChannle) {
+        console.log("getCurrentChannel Watch...")
         this.$http.get('/api/user/channel/' + newCurrentChannel.id)
           .then(res => {
             this.channelUsers = res.data
@@ -77,7 +78,6 @@
         userChannelList: 'getUserChannelList'
       }),
       getCurrentChannel: function () {
-        console.log("test")
         if (this.$store.state.syncSignal.syncChannelUser){
           return this.$store.state.currentChannel
         }
@@ -96,6 +96,11 @@
     },
     created() {
       console.log("LSidebar created")
+      this.$http.get('/api/user/channel/' + this.$store.state.currentChannel.id)
+        .then(res => {
+          this.channelUsers = res.data
+          this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
+        })
     },
     mounted() {
       console.log("LSidebar mounted")

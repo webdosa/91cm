@@ -2,28 +2,28 @@
   <div class="wrapper">
 
     <template v-if="connectionCheck">
-    <!-- Sidebar  -->
-    <LSidebar
-      :msgCountObj="msgCountObj"
-      @channelUpdate="channelUpdate"
-      @sendTitle="sendTitle"></LSidebar>
-    <!-- Page Content  -->
-    <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
-      <MainHeader></MainHeader>
-      <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
-      <NoChannel v-if="channelList[0]==null && $store.state.selectComponent=='main'"/>  
-      <!-- CjannelHeader -->
-      <div v-else>
-        <ChannelHeader v-if="$store.state.selectComponent=='main'"></ChannelHeader>
-        <keep-alive>
-          <component :is="whichComponent"
-                     :msgArray="msgArray"
-                     @msgArrayUpdate="msgArrayUpdate"
-          ></component>
-        </keep-alive>
+      <!-- Sidebar  -->
+      <LSidebar
+        :msgCountObj="msgCountObj"
+        @channelUpdate="channelUpdate"
+        @sendTitle="sendTitle"></LSidebar>
+      <!-- Page Content  -->
+      <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
+        <MainHeader></MainHeader>
+        <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
+        <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
+        <!-- CjannelHeader -->
+        <div v-else>
+          <ChannelHeader v-if="$store.state.selectComponent=='main'"></ChannelHeader>
+          <keep-alive>
+            <component :is="whichComponent"
+                       :msgArray="msgArray"
+                       @msgArrayUpdate="msgArrayUpdate"
+            ></component>
+          </keep-alive>
+        </div>
       </div>
-    </div>
-    <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
+      <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
     </template>
     <Loading v-else/>
   </div>
@@ -55,8 +55,8 @@
       'ContentWrapper': ContentWrapper,
       'UserInfo': UserInfo,
       'EditProfile': EditProfile,
-      'NoChannel' : NoChannel,
-      'Loading' : Loading
+      'NoChannel': NoChannel,
+      'Loading': Loading
     },
     data() {
       return {
@@ -84,7 +84,7 @@
         }
       },
       connectionCheck() {
-        if(this.$store.state.stompClient!=null){
+        if (this.$store.state.stompClient != null) {
           return this.$store.state.stompClient.connected
         }
       }
@@ -130,7 +130,8 @@
           this.$store.state.userChannelList.forEach(channel => {
             this.$store.state.stompClient.subscribe("/sub/chat/room/" + channel.id, (e) => {
               console.log(e.body);
-              if (e.body == 'updateChannel') {
+              let data = JSON.parse(e.body)
+              if (data.message == 'updateChannel') {
                 this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
                 return;
               } else {
@@ -160,7 +161,15 @@
           let idx = newChannelList.length - i
           this.msgCountObj[newChannelList[idx].id] = 0
           this.$store.state.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
-            this.channelSubscribeCallBack(e)
+            console.log(e.body);
+            let data = JSON.parse(e.body)
+            if (data.message == 'updateChannel') {
+              this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
+              return;
+            } else {
+              this.channelSubscribeCallBack(e);
+              return;
+            }
           })
         }
         this.$store.commit('setChannelList', newChannelList)
@@ -196,7 +205,7 @@
           }
         }
       },
-      
+
     }
 
   }

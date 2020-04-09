@@ -41,11 +41,11 @@
         </div>
       </a>
       <div class="c-i-wrapper">
-        
+
         <!-- 더 뭔가 추가할 거 같아서 div로 감싸놓음 -->
         <div style="flex-grow:1;" class="myflex-column">
         <div style="position: relative;">
-           <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">  
+           <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
              <label for="file-input" style="display: block;margin-bottom: 0;">
               </label>
               <i class="im im-cloud-upload myfile-upload"></i>
@@ -60,10 +60,10 @@
               no-resize
               v-model="message.content"
               @keydown.enter.exact="send"
-            ></b-form-textarea>
               @keyup="byteCheck"
               @keydown.shift.50='inviteToggle'
-           </div> 
+            ></b-form-textarea>
+           </div>
 
           <div style="position: relative" v-if="$store.state.isInviteMode">
             <i style="position:absolute;left: 15px;top: calc(50% - 12px);" class="im im-user-circle"></i>
@@ -90,7 +90,7 @@
           <div style="display: flex;flex-grow: 1;">
             <span class="ml-auto"> {{ stringByteLength }} / 30000Byte</span>
           </div>
-        
+
         </div>
         <b-button v-if="!$store.state.isInviteMode && !$store.state.isSearchMode" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
         </b-button>

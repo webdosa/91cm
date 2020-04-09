@@ -5,15 +5,36 @@
             <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle" ></i>
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <b-nav-item-dropdown no-caret right toggle-class="nonoutline" class="verti-align">
+            <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline">
               <template v-slot:button-content>
                 <div style="position: relative;">
-                  <b-badge style="position: absolute;bottom: -2px;right: -5px;font-size: 10px;" variant="danger">1</b-badge>
+                  <b-badge style="position: absolute;bottom: -2px;right: -5px;font-size: 10px;" variant="danger">{{alarmList.length}}</b-badge>
                 <i class="im im-bell"></i>
                 </div>
               </template>
-             
-            </b-nav-item-dropdown>
+              <b-dropdown-text v-show="alarmList.length > 0" v-for="(alarm,index) in getAlarmList" style="width: 25vw;" class="border">
+                <div>
+                  <div class="row float-right">
+                    <b-button class="float-right" id="esc" size="sm" variant="nonoutline"
+                              @click="getAlarmList.splice(index,1)"><i
+                      class="im im-x-mark"></i></b-button>
+                  </div>
+                  <div class="row">
+                    <p>{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
+                  </div>
+                  <div class="row float-right">
+                    <b-button size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)"><i
+                      class="im im-check-mark-circle"
+                      style="color: #42b983;"></i>
+                    </b-button>
+                    <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)"><i
+                      class="im im-x-mark-circle"
+                      style="color: red;"></i>
+                    </b-button>
+                  </div>
+                </div>
+              </b-dropdown-text>
+            </b-dropdown>
             <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
             <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
               <!-- Using 'button-content' slot -->
@@ -41,22 +62,23 @@
       }
     },
 
-    watch: {
-      StompClient: function (newVal, oldVal) {
-        if(newVal.connected){
-          newVal.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
-            console.log("get callback")
-            let invite = JSON.parse(e.body)
-            console.log(invite.sender)
-            this.alarmList.unshift(invite)
-          })
-        }
-      }
-    },
+    // watch: {
+    //   // stomp 클라이언트가 null 일때가 없음으로 다시 구현
+    //   StompClient: function (newVal, oldVal) {
+    //     if(newVal.connected){
+    //       newVal.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
+    //         console.log("get callback")
+    //         let invite = JSON.parse(e.body)
+    //         console.log(invite.sender)
+    //         this.alarmList.unshift(invite)
+    //       })
+    //     }
+    //   }
+    // },
     computed: {
-      ...mapGetters({
-        StompClient: 'getStompClient'
-      }),
+      // ...mapGetters({
+      //   StompClient: 'getStompClient'
+      // }),
       getAlarmList: function () {
         while (this.alarmList.length > 5) {
           this.alarmList.pop()
@@ -65,6 +87,12 @@
       },
     },
     created() {
+      this.$store.state.stompClient.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
+        console.log("get callback")
+        let invite = JSON.parse(e.body)
+        console.log(invite.sender)
+        this.alarmList.unshift(invite)
+      })
       this.$http.get('/api/invite/list')
         .then(res => {
           this.alarmList = res.data.reverse()
@@ -86,7 +114,7 @@
             // 현재 채널을 변경하는 로직을 구현해야할듯
             this.alarmList.splice(index, 1);
             this.$store.state.stompClient.send('/pub/chat/room/'+alarm.channel_id,
-              JSON.stringify({'message':'updateChannel', 'error':"null"}))
+              JSON.stringify({"message":"updateChannel", "error":"null"}))
             this.$store.dispatch('channelList')
           })
           .catch(error => {
