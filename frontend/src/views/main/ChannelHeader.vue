@@ -19,12 +19,10 @@
     },
     computed:{
       getCurrentChannel: function () {
-        console.log('tests')
         if (this.$store.state.currentChannel == null){
           return
         }
-        let currentChannel = this.$store.state.currentChannel
-        return currentChannel.name
+        return this.$store.state.currentChannel.name
       }
     },
     methods: {

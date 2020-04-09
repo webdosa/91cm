@@ -68,11 +68,18 @@ public class InviteApiController {
 
     @PostMapping("/accept")
     public ResponseEntity<?> acceptUser(@RequestBody Invite invite) throws RuntimeException {
+        log.info("invite id :"+invite.getId()+"");
+        if (joinInfoService.isExistUser(invite)){
+            invite.setInvite_state(InviteState.ACCEPT);
+            inviteService.updateInvite(invite);
+            return new ResponseEntity<>("{}",HttpStatus.OK);
+        }
         joinInfoService.insertJoinInfo(JoinInfo.builder()
                 .channel_id(invite.getChannel_id())
                 .member_email(invite.getRecipient())
                 .build());
         invite.setInvite_state(InviteState.ACCEPT);
+        log.info("invite accept");
         inviteService.updateInvite(invite);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }

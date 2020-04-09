@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nineone.nocm.mapper.invite">
-    <insert id="saveInvite">
+    <insert id="saveInvite" useGeneratedKeys="true" keyProperty="id">
         insert invite (channel_id, sender, recipient)
             values (#{channel_id},#{sender},#{recipient})
     </insert>

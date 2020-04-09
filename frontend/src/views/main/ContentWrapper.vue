@@ -241,6 +241,7 @@
         if (e != null) {
           e.preventDefault()
         }
+        this.message.sender = this.$store.state.currentUser.email
         this.message.channel_id = this.$store.state.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if (CommonClass.byteLimit(this.stringByteLength)) {
@@ -357,7 +358,6 @@
     },
     watch: {
       getCurrentChannel: function (newv, oldv) {
-        console.log(newv)
         this.initData()
         this.getMessage()
         this.scrollToEnd()

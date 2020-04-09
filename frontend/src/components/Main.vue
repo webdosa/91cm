@@ -118,11 +118,13 @@
 
           this.$store.state.userChannelList.forEach(channel => {
             this.$store.state.stompClient.subscribe("/sub/chat/room/" + channel.id, (e) => {
-              console.log(e.headers['message-type'])
-              if (e.headers['message-type'] == 'test') {
-                this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser
+              console.log(e.body);
+              if (e.body == 'updateChannel') {
+                this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
+                return;
               } else {
-                this.channelSubscribeCallBack(e)
+                this.channelSubscribeCallBack(e);
+                return;
               }
             })
           })
@@ -158,7 +160,6 @@
         this.msgArray = newmsgArray
       },
       channelSubscribeCallBack(e, fail) {
-        console.log(e)
         let data = JSON.parse(e.body)
         console.log(this.$store.state.isfocus)
         NotificationClass.sendNotification(this.$store.state.isfocus, data)

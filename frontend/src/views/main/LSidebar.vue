@@ -171,6 +171,11 @@
         // vuex에서 currentUser 객체 사용
         AboutChannel.createChannel(this.channelTitle, this.$store.state.currentUser.email)
           .then(res => {
+            //res.data = 새로 생성된 channel 인스턴스
+            if(this.$store.state.currentChannel != null){
+              AboutChannel.updateLastAccessDate(res.data.id, this.$store.state.currentChannel.id)
+            }
+            this.$store.commit('setCurrentChannel',res.data)
             // 채널 생성 후 리스트를 업데이트 하는 부분
             AboutChannel.getChannelList().then(res => {
               this.$emit('channelUpdate', res.data)

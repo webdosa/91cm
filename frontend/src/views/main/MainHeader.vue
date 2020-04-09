@@ -98,12 +98,14 @@
     },
     methods: {
       inviteAccept: function (alarm, index) {
+        console.log(alarm)
         this.$http.post('/api/invite/accept', alarm)
           .then(res => {
             console.log(res)
             // 현재 채널을 변경하는 로직을 구현해야할듯
             this.alarmList.splice(index, 1);
-            this.$store.state.stompClient.send('/sub/chat/room/'+alarm.channel_id,null,{'message-type':'test'})
+            this.$store.state.stompClient.send('/pub/chat/room/'+alarm.channel_id,
+              JSON.stringify({'message':'updateChannel', 'error':"null"}))
             this.$store.dispatch('channelList')
           })
           .catch(error => {

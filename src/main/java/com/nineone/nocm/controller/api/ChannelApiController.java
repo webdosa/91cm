@@ -55,12 +55,13 @@ public class ChannelApiController {
     }
 
     @PostMapping("/create")
-    public boolean createChannel(@RequestBody Map<String, String> channelInfo) {
+    public Channel createChannel(@RequestBody Map<String, String> channelInfo) {
         Channel channel = Channel.builder()
                 .name(channelInfo.get("name"))
                 .member_email(channelInfo.get("member_email"))
                 .build();
-        return channelService.createChannel(channel);
+        channelService.createChannel(channel);
+        return channel;
     }
 
     @PostMapping("/update")
