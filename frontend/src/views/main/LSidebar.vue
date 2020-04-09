@@ -77,6 +77,7 @@
       ...mapGetters({
         userChannelList: 'getUserChannelList'
       }),
+      // 유저 초대 및 처음 채널 생성 시 동기화
       getCurrentChannel: function () {
         if (this.$store.state.syncSignal.syncChannelUser){
           return this.$store.state.currentChannel
@@ -113,7 +114,6 @@
       console.log("LSidebar updated")
     },
     methods: {
-
       sendSelectChannel: function (index) {
         this.$store.commit('getSelectComponent', 'main')
         this.$store.commit('setCurrentChannel',this.$store.state.userChannelList[index])
