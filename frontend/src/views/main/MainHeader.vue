@@ -1,54 +1,58 @@
 <template>
-<header>
-        <b-navbar toggleable="lg" type="light" variant="white">
-            <i v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info"@click="LSidebarToggle" ></i>
-            <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle" ></i>
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline">
-              <template v-slot:button-content>
-                <div style="position: relative;">
-                  <b-badge style="position: absolute;bottom: -2px;right: -5px;font-size: 10px;" variant="danger">{{alarmList.length}}</b-badge>
-                <i class="im im-bell"></i>
-                </div>
-              </template>
-              <b-dropdown-text v-show="alarmList.length > 0" v-for="(alarm,index) in getAlarmList" style="width: 25vw;" class="border">
-                <div>
-                  <div class="row float-right">
-                    <b-button class="float-right" id="esc" size="sm" variant="nonoutline"
-                              @click="getAlarmList.splice(index,1)"><i
-                      class="im im-x-mark"></i></b-button>
-                  </div>
-                  <div class="row">
-                    <p>{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
-                  </div>
-                  <div class="row float-right">
-                    <b-button size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)"><i
-                      class="im im-check-mark-circle"
-                      style="color: #42b983;"></i>
-                    </b-button>
-                    <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)"><i
-                      class="im im-x-mark-circle"
-                      style="color: red;"></i>
-                    </b-button>
-                  </div>
-                </div>
-              </b-dropdown-text>
-            </b-dropdown>
-            <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
-            <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
-              <!-- Using 'button-content' slot -->
-              <template v-slot:button-content style="padding:0px;">
-<!--                이미지 가지고 오는 것 느림-->
-                <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture" width="40" height="40">
-                <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
-              </template>
-              <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
-              <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
-        </b-navbar>
-      </header>
+  <header>
+    <b-navbar toggleable="lg" type="light" variant="white">
+      <i v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
+      <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" :disabled="getAlarmList.length <= 0">
+          <template v-slot:button-content>
+            <div style="position: relative;">
+              <b-badge style="position: absolute; right: -5px;font-size: 10px;" variant="danger" v-show="getAlarmList.length > 0">
+                {{alarmList.length}}
+              </b-badge>
+              <i class="im im-bell"></i>
+            </div>
+          </template>
+          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="width: 25vw;"
+                           class="border">
+            <div>
+              <div class="row float-right">
+                <b-button class="float-right" id="esc" size="sm" variant="nonoutline"
+                          @click="getAlarmList.splice(index,1)"><i
+                  class="im im-x-mark"></i></b-button>
+              </div>
+              <div class="row">
+                <p>{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
+              </div>
+              <div class="row float-right">
+                <b-button size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)"><i
+                  class="im im-check-mark-circle"
+                  style="color: #42b983;"></i>
+                </b-button>
+                <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)"><i
+                  class="im im-x-mark-circle"
+                  style="color: red;"></i>
+                </b-button>
+              </div>
+            </div>
+          </b-dropdown-text>
+        </b-dropdown>
+        <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
+        <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
+          <!-- Using 'button-content' slot -->
+          <template v-slot:button-content style="padding:0px;">
+            <!--                이미지 가지고 오는 것 느림-->
+            <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture"
+                 width="40" height="40">
+            <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
+          </template>
+          <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
+          <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-navbar>
+  </header>
 </template>
 
 <script>
@@ -113,9 +117,16 @@
             console.log(res)
             // 현재 채널을 변경하는 로직을 구현해야할듯
             this.alarmList.splice(index, 1);
-            this.$store.state.stompClient.send('/pub/chat/room/'+alarm.channel_id,
-              JSON.stringify({"message":"updateChannel", "error":"null"}))
+            this.$store.state.stompClient.send('/pub/chat/room/' + alarm.channel_id,
+              JSON.stringify({"message": "updateChannel", "error": "null"}))
+
             this.$store.dispatch('channelList')
+              .then(() => {
+                const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
+                console.log(joinChannel)
+                this.$store.commit('setCurrentChannel', joinChannel)
+              })
+
           })
           .catch(error => {
             console.log(error)
