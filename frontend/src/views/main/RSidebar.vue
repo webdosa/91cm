@@ -109,27 +109,6 @@
             return value
           })
       },
-      // deleteChannel: async function () {
-      //   //current vuex 사용
-      //   await this.msgBox("정말로 채널을 삭제하시겠습니까?")
-      //   console.log(this.userSelect)
-      //   const user = this.$store.state.currentUser
-      //   console.log(user)
-      //   if (!this.userSelect) {
-      //     return
-      //   }
-      //   if (this.modalObj.currentChannel.member_email == user.email) {
-      //     await this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
-      //     ).then(res => {
-      //       console.log(res)
-      //       this.modalObj.currentChannel = null
-      //       this.modalObj.modalTitle = null
-      //       this.$router.go('/main')
-      //     }).catch(error => {
-      //       console.log(error)
-      //     })
-      //   }
-      // }
     }
   }
 
