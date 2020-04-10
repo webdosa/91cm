@@ -143,7 +143,7 @@
       }
     },
     created() {
-      //this.getMessage()
+      this.getMessage()
     },
     mounted() {
       this.$nextTick(() => {

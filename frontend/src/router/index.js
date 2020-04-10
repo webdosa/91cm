@@ -11,6 +11,7 @@ import test from '../views/user/UserInfo'
 import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
 import FormSignUp from "../views/FormSignUp";
+import CopyRight from "../views/util/CopyRight"
 
 Vue.use(VueRouter)
 
@@ -58,6 +59,11 @@ const routes = [
   {
     path: '/formSignUp',
     component: FormSignUp
+  },
+  // 테스트용 path 테스트 후에 삭제 
+  {
+    path: '/test',
+    component: CopyRight
   }
 
 ]

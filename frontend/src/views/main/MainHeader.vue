@@ -5,7 +5,7 @@
       <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" :disabled="getAlarmList.length <= 0">
+        <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" :disabled="getAlarmList.length <= 0">
           <template v-slot:button-content>
             <div style="position: relative;">
               <b-badge style="position: absolute; right: -5px;font-size: 10px;" variant="danger" v-show="getAlarmList.length > 0">
@@ -112,6 +112,11 @@
     methods: {
       inviteAccept: function (alarm, index) {
         console.log(alarm)
+        const message = {
+          channel_id: alarm.channel_id,
+          sender: alarm.sender,
+          content: this.$store.state.currentUser.name+'님이 채널에 초대되었습니다.'
+        }
         this.$http.post('/api/invite/accept', alarm)
           .then(res => {
             console.log(res)
@@ -119,11 +124,10 @@
             this.alarmList.splice(index, 1);
             this.$store.state.stompClient.send('/pub/chat/room/' + alarm.channel_id,
               JSON.stringify({"message": "updateChannel", "error": "null"}))
-
+            this.$store.state.stompClient.send('/pub/chat/message',JSON.stringify(message))
             this.$store.dispatch('channelList')
               .then(() => {
                 const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
-                console.log(joinChannel)
                 this.$store.commit('setCurrentChannel', joinChannel)
               })
 
