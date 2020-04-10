@@ -1,11 +1,14 @@
 <template>
-  <div class="container">
+  <div class="container" style="
+    height: 100vh;
+    display: flex;
+">
     <div class="row py-5 mt-4 align-items-center">
       <!-- For Demo Purpose -->
       <div class="col-md-5 pr-lg-5 mb-5 mb-md-0">
-        <img src="https://res.cloudinary.com/mhmd/image/upload/v1569543678/form_d9sh6m.svg" alt=""
+        <img src="../assets/images/login.png" alt=""
              class="img-fluid mb-3 d-none d-md-block">
-        <h1>91CM Sing Up</h1>
+        <h1>91CM Login</h1>
                 <p class="font-italic text-muted mb-0">협업 메신저</p>
         <!--        <p class="font-italic text-muted">Snippet By <a href="https://bootstrapious.com" class="text-muted">-->
         <!--          <u>Bootstrapious</u></a>-->
@@ -13,18 +16,18 @@
       </div>
 
       <!-- Registeration Form -->
-      <div class="col-md-7 col-lg-6 ml-auto">
+      <div class="col-md-7 col-lg-6 ml-auto margincustom">
         <form action="#">
-          <div class="row">
+          <div class="row mycustom">
 
             <!-- Email -->
             <div class="input-group col-lg-12 mb-4">
               <div class="input-group-prepend">
                             <span class="input-group-text bg-white px-4 border-md border-right-0">
-                               <i class="im im-mail"></i>
+                              <i class="im im-user-male"></i>
                             </span>
               </div>
-              <input id="firstName" type="text" name="email" placeholder="Email"
+              <input id="firstName" type="text" name="email" placeholder="Id"
                      class="form-control bg-white border-left-0 border-md">
             </div>
             <!-- Password -->
@@ -38,90 +41,30 @@
                      class="form-control bg-white border-left-0 border-md">
             </div>
 
-            <!-- Password Confirmation -->
-            <div class="input-group col-lg-12 mb-4">
-              <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="im im-key"></i>
-                            </span>
-              </div>
-              <input id="passwordConfirmation" type="text" name="passwordConfirmation" placeholder="Confirm Password"
-                     class="form-control bg-white border-left-0 border-md">
-            </div>
-            <!-- Name -->
-            <div class="input-group col-lg-12 mb-4">
-              <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                               <i class="im im-user-male"></i>
-                            </span>
-              </div>
-              <input id="lastName" type="text" name="name" placeholder="Name"
-                     class="form-control bg-white border-left-0 border-md">
-            </div>
-            <!-- phone -->
-            <div class="input-group col-lg-12 mb-4">
-              <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                               <i class="im im-mobile"></i>
-                            </span>
-              </div>
-              <input id="email" type="email" name="phone" placeholder="Phone"
-                     class="form-control bg-white border-left-0 border-md">
-            </div>
-
-            <!-- Phone Number -->
-<!--            <div class="input-group col-lg-12 mb-4">-->
-<!--              <div class="input-group-prepend">-->
-<!--                            <span class="input-group-text bg-white px-4 border-md border-right-0">-->
-<!--                                <i class="fa fa-phone-square text-muted"></i>-->
-<!--                            </span>-->
-<!--              </div>-->
-<!--              <select id="countryCode" name="countryCode" style="max-width: 80px"-->
-<!--                      class="custom-select form-control bg-white border-left-0 border-md h-100 font-weight-bold text-muted">-->
-<!--                <option value="">+12</option>-->
-<!--                <option value="">+10</option>-->
-<!--                <option value="">+15</option>-->
-<!--                <option value="">+18</option>-->
-<!--              </select>-->
-<!--              <input id="phoneNumber" type="tel" name="phone" placeholder="Phone Number"-->
-<!--                     class="form-control bg-white border-md border-left-0 pl-3">-->
-<!--            </div>-->
-
-
 
 
             <!-- Submit Button -->
             <div class="form-group col-lg-12 mx-auto mb-0">
               <a href="#" class="btn btn-primary btn-block py-2">
-                <span class="font-weight-bold">가입</span>
+                <span class="font-weight-bold">로그인</span>
               </a>
             </div>
 
-            <!-- Divider Text -->
-<!--            <div class="form-group col-lg-12 mx-auto d-flex align-items-center my-4">-->
-<!--              <div class="border-bottom w-100 ml-5"></div>-->
-<!--              <span class="px-2 small text-muted font-weight-bold text-muted">OR</span>-->
-<!--              <div class="border-bottom w-100 mr-5"></div>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; Social Login &ndash;&gt;-->
-<!--            <div class="form-group col-lg-12 mx-auto">-->
-<!--              <a href="#" class="btn btn-primary btn-block py-2 btn-facebook">-->
-<!--                <i class="fa fa-facebook-f mr-2"></i>-->
-<!--                <span class="font-weight-bold">Continue with Facebook</span>-->
-<!--              </a>-->
-<!--              <a href="#" class="btn btn-primary btn-block py-2 btn-twitter">-->
-<!--                <i class="fa fa-twitter mr-2"></i>-->
-<!--                <span class="font-weight-bold">Continue with Twitter</span>-->
-<!--              </a>-->
-<!--            </div>-->
+            <div class="social-wrapper">
+              <a class="logo-wrapper" href="/oauth2/authorization/github"><img class="social-logo" src="../assets/images/github_logo.png"></a>
+              <a class="logo-wrapper" href="/oauth2/authorization/google"><img class="social-logo" src="../assets/images/google_logo.png"></a>
+              <a class="logo-wrapper" href="/oauth2/authorization/naver"><img class="social-logo" src="../assets/images/naver_logo.png"></a>
+              <!--        동작 에러 인해 주석처리-->
+              <!--        <a href="/oauth2/authorization/kakao"><img class="social-logo" src="../assets/images/kakao_logo.png"></a>-->
+            </div>
 
             <!-- Already Registered -->
             <br><br><br>
             <div class="text-center w-100">
-              <p class="text-muted font-weight-bold">로그인 페이지로 <a href="#" class="text-primary ml-2">Login</a>
+              <p class="text-muted font-weight-bold">회원가입하기 <a href="#" class="text-primary ml-2">Sign Up</a>
               </p>
             </div>
+
 
           </div>
         </form>
@@ -147,6 +90,35 @@
 </script>
 
 <style scoped>
+.social-logo{
+  width: 50px;
+  height: 50px;
+}
+.social-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.logo-wrapper{
+  margin: 10px;
+}
+.mycustom{
+   margin-bottom: 0px;
+}
+.margincustom{
+  margin-top: 120px;
+}
+@media (max-width: 768px) {
+  .mycustom{
+    margin-bottom: 188px;
+  }
+  .margincustom{
+    margin-top: 0px;
+  }
+}
   /*
   *
   * ==========================================
@@ -163,6 +135,7 @@
     background: #405D9D;
     border: none;
   }
+
 
   .btn-facebook:hover, .btn-facebook:focus {
     background: #314879;
@@ -194,8 +167,14 @@
     font-weight: bold;
     font-size: 0.9rem;
   }
+
+
   .form-control:focus {
     box-shadow: none;
-  }
+    color: #495057;
+    background-color: #fff;
+    border-color:#ced4da;;
+    outline: none;
+}
 
 </style>

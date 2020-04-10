@@ -65,6 +65,7 @@
     props: ['modalObj', 'msgCountObj'],
     watch: {
       getCurrentChannel(newCurrentChannel, oldCurrentChannle) {
+        console.log("getCurrentChannel Watch...")
         this.$http.get('/api/user/channel/' + newCurrentChannel.id)
           .then(res => {
             this.channelUsers = res.data
@@ -76,8 +77,8 @@
       ...mapGetters({
         userChannelList: 'getUserChannelList'
       }),
+      // 유저 초대 및 처음 채널 생성 시 동기화
       getCurrentChannel: function () {
-        console.log("test")
         if (this.$store.state.syncSignal.syncChannelUser){
           return this.$store.state.currentChannel
         }
@@ -96,6 +97,11 @@
     },
     created() {
       console.log("LSidebar created")
+      this.$http.get('/api/user/channel/' + this.$store.state.currentChannel.id)
+        .then(res => {
+          this.channelUsers = res.data
+          this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
+        })
     },
     mounted() {
       console.log("LSidebar mounted")
@@ -108,7 +114,6 @@
       console.log("LSidebar updated")
     },
     methods: {
-
       sendSelectChannel: function (index) {
         this.$store.commit('getSelectComponent', 'main')
         this.$store.commit('setCurrentChannel',this.$store.state.userChannelList[index])
@@ -187,3 +192,4 @@
     }
   }
 </script>
+

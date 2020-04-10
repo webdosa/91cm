@@ -5,11 +5,17 @@
       <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" right>
+        <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" :disabled="getAlarmList.length <= 0">
           <template v-slot:button-content>
-            <i class="im im-bell"></i>
+            <div style="position: relative;">
+              <b-badge style="position: absolute; right: -5px;font-size: 10px;" variant="danger" v-show="getAlarmList.length > 0">
+                {{alarmList.length}}
+              </b-badge>
+              <i class="im im-bell"></i>
+            </div>
           </template>
-          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="width: 25vw;" class="border">
+          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="width: 25vw;"
+                           class="border">
             <div>
               <div class="row float-right">
                 <b-button class="float-right" id="esc" size="sm" variant="nonoutline"
@@ -60,22 +66,23 @@
       }
     },
 
-    watch: {
-      StompClient: function (newVal, oldVal) {
-        if(newVal.connected){
-          newVal.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
-            console.log("get callback")
-            let invite = JSON.parse(e.body)
-            console.log(invite.sender)
-            this.alarmList.unshift(invite)
-          })
-        }
-      }
-    },
+    // watch: {
+    //   // stomp 클라이언트가 null 일때가 없음으로 다시 구현
+    //   StompClient: function (newVal, oldVal) {
+    //     if(newVal.connected){
+    //       newVal.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
+    //         console.log("get callback")
+    //         let invite = JSON.parse(e.body)
+    //         console.log(invite.sender)
+    //         this.alarmList.unshift(invite)
+    //       })
+    //     }
+    //   }
+    // },
     computed: {
-      ...mapGetters({
-        StompClient: 'getStompClient'
-      }),
+      // ...mapGetters({
+      //   StompClient: 'getStompClient'
+      // }),
       getAlarmList: function () {
         while (this.alarmList.length > 5) {
           this.alarmList.pop()
@@ -84,6 +91,12 @@
       },
     },
     created() {
+      this.$store.state.stompClient.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
+        console.log("get callback")
+        let invite = JSON.parse(e.body)
+        console.log(invite.sender)
+        this.alarmList.unshift(invite)
+      })
       this.$http.get('/api/invite/list')
         .then(res => {
           this.alarmList = res.data.reverse()
@@ -99,14 +112,25 @@
     methods: {
       inviteAccept: function (alarm, index) {
         console.log(alarm)
+        const message = {
+          channel_id: alarm.channel_id,
+          sender: alarm.sender,
+          content: this.$store.state.currentUser.name+'님이 채널에 초대되었습니다.'
+        }
         this.$http.post('/api/invite/accept', alarm)
           .then(res => {
             console.log(res)
             // 현재 채널을 변경하는 로직을 구현해야할듯
             this.alarmList.splice(index, 1);
-            this.$store.state.stompClient.send('/pub/chat/room/'+alarm.channel_id,
-              JSON.stringify({'message':'updateChannel', 'error':"null"}))
+            this.$store.state.stompClient.send('/pub/chat/room/' + alarm.channel_id,
+              JSON.stringify({"message": "updateChannel", "error": "null"}))
+            this.$store.state.stompClient.send('/pub/chat/message',JSON.stringify(message))
             this.$store.dispatch('channelList')
+              .then(() => {
+                const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
+                this.$store.commit('setCurrentChannel', joinChannel)
+              })
+
           })
           .catch(error => {
             console.log(error)

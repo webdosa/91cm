@@ -61,7 +61,7 @@ public class MessageController {
 
 	@MessageMapping("/chat/room/{id}")
 	public void syncMessage(@DestinationVariable String id, @Payload ApiResponse apiResponse)throws Exception{
-		messagingTemplate.convertAndSend("/sub/chat/room/"+id,apiResponse.getMessage());
+		messagingTemplate.convertAndSend("/sub/chat/room/"+id,apiResponse);
 	}
 	
 

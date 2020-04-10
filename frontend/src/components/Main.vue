@@ -1,29 +1,31 @@
 <template>
   <div class="wrapper">
-    <!-- Sidebar  -->
-    <LSidebar
-      :msgCountObj="msgCountObj"
-      @channelUpdate="channelUpdate"
-      @sendTitle="sendTitle"></LSidebar>
-    <!-- Page Content  -->
-    <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
-      <MainHeader></MainHeader>
-      <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
-      <div v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'">
-        <p>채팅방을 만들거나 가입해주세요</p>
+
+    <template v-if="connectionCheck">
+      <!-- Sidebar  -->
+      <LSidebar
+        :msgCountObj="msgCountObj"
+        @channelUpdate="channelUpdate"
+        @sendTitle="sendTitle"></LSidebar>
+      <!-- Page Content  -->
+      <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
+        <MainHeader></MainHeader>
+        <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
+        <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
+        <!-- CjannelHeader -->
+        <div v-else>
+          <ChannelHeader v-if="$store.state.selectComponent=='main'"></ChannelHeader>
+          <keep-alive>
+            <component :is="whichComponent"
+                       :msgArray="msgArray"
+                       @msgArrayUpdate="msgArrayUpdate"
+            ></component>
+          </keep-alive>
+        </div>
       </div>
-      <!-- CjannelHeader -->
-      <div v-else>
-        <ChannelHeader v-if="$store.state.selectComponent=='main'"></ChannelHeader>
-        <keep-alive>
-          <component :is="whichComponent"
-                     :msgArray="msgArray"
-                     @msgArrayUpdate="msgArrayUpdate"
-          ></component>
-        </keep-alive>
-      </div>
-    </div>
-    <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
+      <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
+    </template>
+    <Loading v-else/>
   </div>
 </template>
 <script>
@@ -38,6 +40,8 @@
   import EditProfile from "../views/user/EditProfile"
   import ChannelHeader from "../views/main/ChannelHeader"
   import CommonClass from '../service/common'
+  import NoChannel from '../views/main/NoChannel'
+  import Loading from '../views/main/Loading'
   import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
 
@@ -50,7 +54,9 @@
       'ChannelHeader': ChannelHeader,
       'ContentWrapper': ContentWrapper,
       'UserInfo': UserInfo,
-      'EditProfile': EditProfile
+      'EditProfile': EditProfile,
+      'NoChannel': NoChannel,
+      'Loading': Loading
     },
     data() {
       return {
@@ -77,6 +83,11 @@
             return 'ContentWrapper'
         }
       },
+      connectionCheck() {
+        if (this.$store.state.stompClient != null) {
+          return this.$store.state.stompClient.connected
+        }
+      }
     },
     deactivated() {
       console.log('deactiveed')
@@ -119,7 +130,8 @@
           this.$store.state.userChannelList.forEach(channel => {
             this.$store.state.stompClient.subscribe("/sub/chat/room/" + channel.id, (e) => {
               console.log(e.body);
-              if (e.body == 'updateChannel') {
+              let data = JSON.parse(e.body)
+              if (data.message == 'updateChannel') {
                 this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
                 return;
               } else {
@@ -149,7 +161,15 @@
           let idx = newChannelList.length - i
           this.msgCountObj[newChannelList[idx].id] = 0
           this.$store.state.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
-            this.channelSubscribeCallBack(e)
+            console.log(e.body);
+            let data = JSON.parse(e.body)
+            if (data.message == 'updateChannel') {
+              this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
+              return;
+            } else {
+              this.channelSubscribeCallBack(e);
+              return;
+            }
           })
         }
         this.$store.commit('setChannelList', newChannelList)
@@ -184,7 +204,7 @@
             break
           }
         }
-      }
+      },
 
     }
 

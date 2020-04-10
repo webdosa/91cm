@@ -88,11 +88,15 @@ export default new Vuex.Store({
       context.commit('resetCurrentUser')
     }
   },
-  modules: {},
+  modules: {
+  },
   getters: {
+    getSearchMode: state => {
+      return state.isSearchMode
+    },
     getStompClient: state => {
-      if (state.stompClient != null) {
         if (state.stompClient.connected != null) {
+      if (state.stompClient != null) {
           return state.stompClient
         }
       }
