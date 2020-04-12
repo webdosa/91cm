@@ -12,9 +12,11 @@
             </div>
         </b-modal>
         <b-button @click="shakeTest">test</b-button>
-        <div :class="{shake: check}">
+        <div :class="{swing: check}">
             test
         </div>
+        <b-button @click="testAni">test</b-button>
+        <h1 ref="swings">Example</h1>
     </div>
 </template>
 <script>
@@ -22,6 +24,7 @@
         name: 'CopyRight',
         data() {
             return {
+                swingChecker: false,
                 check: false,
                 messageList: ['1','2','3'],
             }
@@ -35,6 +38,17 @@
             }
         },
         methods: {
+            testAni : function(){
+                const node = this.$refs.swings
+                node.classList.add("animated","shake")
+                function handleAnimationEnd(){
+                    node.classList.remove("animated","shake")
+                    node.removeEventListener("animationend", handleAnimationEnd)
+                    if (typeof callback === 'function')
+                        callback()
+                }
+                node.addEventListener("animationend", handleAnimationEnd)
+            },
             test: function () {
                 this.$bvModal.show("test-modal")
             },
@@ -59,7 +73,7 @@
     }
 </script>
 <style scope>
-@import "../../assets/css/wickedcss.min.css";
+@import "../../assets/css/animate.css";
     .button-margin{
         margin-bottom: 10px ;
         
