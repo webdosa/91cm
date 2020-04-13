@@ -14,5 +14,6 @@ public interface ChannelService {
     List<Channel> channelList(String userId);
 
     boolean updateChannel(Channel name);
-    
+
+    List<Channel> channelListAll();
 }

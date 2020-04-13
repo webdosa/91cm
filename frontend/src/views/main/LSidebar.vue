@@ -11,7 +11,7 @@
         <div class="menulist-header">
           <span>Channels</span>
           <div class="menulist-header-icon">
-            <a data-mode="create" @click="prepareModal" style="margin-right: 5px;">
+            <a @click="prepareModal('create')" style="margin-right: 5px;">
               <i class="im im-plus-circle"></i>
             </a>
           </div>
@@ -19,18 +19,20 @@
         <li>
 
           <a v-b-toggle.collapse-1 class="dropdown-toggle">Channels</a>
-        <b-collapse id="collapse-1" visible>
-          <ul class="list-unstyled">
-            <li v-for="(channel, index ) in channelList" :key="channel.id">
-              <a @click="sendSelectChannel(index)" style="display: flex;">
-                <div>{{ channel.name }}</div>
-                <div class="menulist-header-icon">
-                 <b-badge v-if="channel.count!=0" variant="danger" class="verti-align channel-nowrap">{{ channel.count }}</b-badge>
-                 </div>
-              </a>
-            </li>
-          </ul>
-        </b-collapse>
+          <b-collapse id="collapse-1" visible>
+            <ul class="list-unstyled">
+              <li v-for="(channel, index ) in userChannelList" :key="channel.id">
+                <a @click="sendSelectChannel(index)" style="display: flex;">
+                  <div>{{ channel.name }}</div>
+                  <div class="menulist-header-icon">
+                    <b-badge v-if="channel.count!=0" variant="danger" class="verti-align channel-nowrap">{{
+                      channel.count }}
+                    </b-badge>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </b-collapse>
         </li>
         <div class="menulist-header">
           <span>Users</span>
@@ -42,9 +44,9 @@
         </ul>
       </ul>
     </div>
-    <b-modal id="channelCU" centered ref="modal" @show="prepareModal" @hidden="resetModal" @ok="handleOk">
+    <b-modal id="channelCU" centered ref="modal" @hidden="resetModal" @ok="handleOk">
       <template #modal-title>
-        {{modalObj.modalTitle}}
+        {{ channelmode }}
       </template>
       <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
         <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
@@ -58,15 +60,31 @@
 
 <script>
   import AboutChannel from '../../service/aboutchannel'
+  import {mapGetters} from "vuex";
   export default {
-    props: ['modalObj', 'channelList','msgCountObj'],
+    props: ['modalObj', 'msgCountObj'],
     watch: {
-      channelList: function (newVal) {
-        this.channelList = newVal
-        this.getUserList()
-      },
+      getCurrentChannel(newCurrentChannel, oldCurrentChannle) {
+        console.log("getCurrentChannel Watch...")
+        this.$http.get('/api/user/channel/' + newCurrentChannel.id)
+          .then(res => {
+            this.channelUsers = res.data
+            this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
+          })
+      }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        userChannelList: 'getUserChannelList'
+      }),
+      // 유저 초대 및 처음 채널 생성 시 동기화
+      getCurrentChannel: function () {
+        if (this.$store.state.syncSignal.syncChannelUser){
+          return this.$store.state.currentChannel
+        }
+        return this.$store.state.currentChannel
+      }
+    },
     name: 'LSidebar',
     data() {
       return {
@@ -79,37 +97,36 @@
     },
     created() {
       console.log("LSidebar created")
+      this.$http.get('/api/user/channel/' + this.$store.state.currentChannel.id)
+        .then(res => {
+          this.channelUsers = res.data
+          this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
+        })
     },
     mounted() {
       console.log("LSidebar mounted")
-      this.getUserList()
+      this.$eventBus.$on('useModal', res =>{
+        this.prepareModal(res)
+      })
+      // this.getUserList()
     },
     updated() {
       console.log("LSidebar updated")
     },
     methods: {
-      getUserList: function () {
-        this.$http.get('/api/user/channel/' + this.channelList[this.channelIndex].id)
-          .then(res => {
-            this.channelUsers = res.data
-            this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
-
-          })
-      },
       sendSelectChannel: function (index) {
-        this.$store.commit('getSelectComponent','main')
-        this.channelIndex = index
-        this.$emit('sendTitle', this.channelList[this.channelIndex])
-        this.getUserList()
+        this.$store.commit('getSelectComponent', 'main')
+        this.$store.commit('setCurrentChannel',this.$store.state.userChannelList[index])
+        this.$emit('sendTitle', this.$store.state.userChannelList[index])   // 나중에 변경
       },
-      prepareModal: function (e) {
-        if (e.target.parentNode.dataset.mode == 'create') {
-          this.channelmode = 'create'
-          this.modalObj.modalTitle = '채널 생성'
-          this.$bvModal.show('channelCU')
-        } else if (this.modalObj.modalTitle === '채널 수정') {
-          this.channelTitle = this.modalObj.currentChannel.name
+      prepareModal: function (mode) {
+        console.log(mode)
+        if (mode == 'create') {
+          this.channelmode = '채널 생성'
+        } else if(mode == 'edit'){
+          this.channelmode = '채널 수정'
         }
+        this.$bvModal.show('channelCU')
       },
       // 채널 생성 부분
       checkFormValidity: function () {
@@ -139,32 +156,38 @@
         this.$nextTick(() => {
           this.$bvModal.hide('channelCU')
         })
-        if (this.modalObj.modalTitle === '채널 생성') {
+        if (this.channelmode === '채널 생성') {
           this.createChannel()
-        } else if (this.modalObj.modalTitle === '채널 수정') {
-          this.modalObj.currentChannel.name = this.channelTitle
+        } else if (this.channelmode === '채널 수정') {
+          this.$store.state.currentChannel.name = this.channelTitle
           this.updateChannel()
         }
       },
       updateChannel: function () {
-        AboutChannel.updateChannelAPI(this.modalObj.currentChannel)
+        console.log(this.$store.state.currentChannel)
+        AboutChannel.updateChannelAPI(this.$store.state.currentChannel)
           .then(res => {
             console.log(res)
           }).catch(error => {
-            console.log(error)
+          console.log(error)
         })
       },
       createChannel: function () {
         // vuex에서 currentUser 객체 사용
-            AboutChannel.createChannel(this.channelTitle,this.$store.state.currentUser.email)
-              .then(res => {
-                // 채널 생성 후 리스트를 업데이트 하는 부분
-                AboutChannel.getChannelList().then(res => {
-                  this.$emit('channelUpdate', res.data)
-                })
-              }).catch(error => {
-                console.warn(error)
-              })
+        AboutChannel.createChannel(this.channelTitle, this.$store.state.currentUser.email)
+          .then(res => {
+            //res.data = 새로 생성된 channel 인스턴스
+            if(this.$store.state.currentChannel != null){
+              AboutChannel.updateLastAccessDate(res.data.id, this.$store.state.currentChannel.id)
+            }
+            this.$store.commit('setCurrentChannel',res.data)
+            // 채널 생성 후 리스트를 업데이트 하는 부분
+            AboutChannel.getChannelList().then(res => {
+              this.$emit('channelUpdate', res.data)
+            })
+          }).catch(error => {
+          console.warn(error)
+        })
       }
     }
   }

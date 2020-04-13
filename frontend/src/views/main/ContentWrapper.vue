@@ -20,9 +20,11 @@
               <b-row>
                 <b-col v-for="file in msg.files">
                   <a @click="fileDownload(file)">
-                    <b-img thumbnail rounded fluid :src="selectImage(file)" alt="이미지를 찾을 수 없습니다." style="max-width: 200px"></b-img>
+                    <b-img thumbnail rounded fluid :src="selectImage(file)" alt="이미지를 찾을 수 없습니다."
+                           style="max-width: 200px"></b-img>
                     <p><b>{{file.original_name}}</b></p>
-                    <p>file size : {{(file.file_size / 1024).toLocaleString(undefined,{minimumFractionDigits:2})}} kb</p>
+                    <p>file size : {{(file.file_size / 1024).toLocaleString(undefined,{minimumFractionDigits:2})}}
+                      kb</p>
                   </a>
                 </b-col>
               </b-row>
@@ -39,16 +41,16 @@
         </div>
       </a>
       <div class="c-i-wrapper">
-        
+
         <!-- 더 뭔가 추가할 거 같아서 div로 감싸놓음 -->
         <div style="flex-grow:1;" class="myflex-column">
         <div style="position: relative;">
-           <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">  
+           <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
              <label for="file-input" style="display: block;margin-bottom: 0;">
-              <i class="im im-cloud-upload myfile-upload"></i>
               </label>
-
+              <i class="im im-cloud-upload myfile-upload"></i>
               <input id="file-input" type="file" ref="fileInput" multiple @change="attachFile" hidden/>
+
             <b-form-textarea
               class="mytextarea"
               autofocus
@@ -61,19 +63,17 @@
               @keyup="byteCheck"
               @keydown.shift.50='inviteToggle'
             ></b-form-textarea>
-           </div> 
+           </div>
 
-                <div class="input-group" v-if="$store.state.isInviteMode">
-            <div class="input-group-prepend">
-              <span class="input-group-text">@</span>
-            </div>
+          <div style="position: relative" v-if="$store.state.isInviteMode">
+            <i style="position:absolute;left: 15px;top: calc(50% - 12px);" class="im im-user-circle"></i>
             <b-form-input
               @keydown.enter.exact="invite"
               @keydown.esc.exact="inviteToggle"
               list="user-info-list"
-              style="height: 80px;"
+              placeholder="invite user"
+              style="height: 80px;padding-left: 50px;"
               v-model="message.content"
-              ref="testinput"
               autofocus
             ></b-form-input>
             <datalist id="user-info-list">
@@ -90,12 +90,13 @@
           <div style="display: flex;flex-grow: 1;">
             <span class="ml-auto"> {{ stringByteLength }} / 30000Byte</span>
           </div>
-        
+
         </div>
         <b-button v-if="!$store.state.isInviteMode && !$store.state.isSearchMode" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
         </b-button>
-        <b-button v-if="$store.state.isInviteMode" @click="invite" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
-        </b-button>
+        <!--        <b-button v-if="$store.state.isInviteMode" @click="invite" style="height: 57px; width: 70px; margin-left:20px;"-->
+        <!--                  variant="primary">전송-->
+        <!--        </b-button>-->
       </div>
     </div>
   </main>
@@ -110,7 +111,7 @@
     props: ['currentChannel', 'stompClient', 'msgArray'],
     name: 'ContentWrapper',
     components: {
-      MsgBox,SearchInput
+      MsgBox, SearchInput
     },
     data() {
       return {
@@ -121,9 +122,9 @@
           username: ''
         },
         message: {
-          channel_id: this.currentChannel.channel_id,
+          channel_id: 0,
           content: '',
-          sender: this.$store.state.currentUser.email,
+          sender: '',
           user: {}
         },
         // 채널 옮길 때마다 초기화 되어야한다.
@@ -137,7 +138,8 @@
         oldScrollHeight: 0,
         wrapperEl: null,
         msgPreviewBool: false,
-        getmsgBool:false,
+        getmsgBool: false,
+
       }
     },
     created() {
@@ -145,26 +147,26 @@
     },
     mounted() {
       this.$nextTick(() => {
-          this.wrapperEl = document.querySelector('.c-c-wrapper')
+        this.wrapperEl = document.querySelector('.c-c-wrapper')
       })
     },
     updated() {
       this.scrollToEnd()
     },
-    activated(){
-      if(this.$store.state.oldComponent != 'main' && this.$store.state.selectComponent == 'main' ){
+    activated() {
+      if (this.$store.state.oldComponent != 'main' && this.$store.state.selectComponent == 'main') {
         this.scrollToEnd(true)
       }
     },
-    deactivated(){
+    deactivated() {
       console.log('deactiveed contentwrapper')
     },
     methods: {
-      dropFile: function(e){
+      dropFile: function (e) {
         this.addFile(e.dataTransfer.files)
         console.log(e)
       },
-      attachFile: function(e){
+      attachFile: function (e) {
         console.log(e)
         this.addFile(e.target.files)
         this.$refs.fileInput.value = null
@@ -172,11 +174,11 @@
       selectImage: function (file) {
         return CommonClass.checkFileType(file)
       },
-      fileDownload: function(file){
-        this.$http.get(file.path,{
+      fileDownload: function (file) {
+        this.$http.get(file.path, {
           responseType: 'blob'
         })
-          .then(res =>{
+          .then(res => {
             const url = window.URL.createObjectURL(new Blob([res.data]))
             const link = document.createElement('a')
             link.href = url;
@@ -202,8 +204,8 @@
           formData.append("files", file)
           fileSize += file.size
         });
-        if(fileSize >= maxUploadSize){
-          this.$alertModal('alert','한번에 보낼 수 있는 파일 용량은 100MB 입니다.')
+        if (fileSize >= maxUploadSize) {
+          this.$alertModal('alert', '한번에 보낼 수 있는 파일 용량은 100MB 입니다.')
           return;
         }
         /////////////////////////////////////
@@ -223,10 +225,10 @@
       invite: async function () {
         const userName = this.message.content.split(' ')[0]
         const userEmail = this.message.content.split(' ')[1]
-        console.log(this.currentChannel.id)
-        await InviteService.invite(this.$store.state.currentUser.email, this.currentChannel.id, userEmail)
+        await InviteService.invite(this.$store.state.currentUser.email, this.$store.state.currentChannel.id, userEmail)
           .then(res => {
-            console.log(res)
+            // 모두가 초대 메시지를 보게 할 것인지 아닌지
+            // 그리고 지금은 초대했다는 메시지가 보여도 상대방이 수락하기 전까지는 채널에 대상 유저가 없다.
             this.message.content = userName + '님을 초대했습니다.'
             this.$eventBus.$emit('getUserList', true)
             this.send()
@@ -243,18 +245,18 @@
       },
       send: async function (e) {
         console.log(e)
-        if (e != null){
+        if (e != null) {
           e.preventDefault()
         }
-        this.message.channel_id = this.currentChannel.id
+        this.message.sender = this.$store.state.currentUser.email
+        this.message.channel_id = this.$store.state.currentChannel.id
         this.message.user = this.$store.state.currentUser
         if (CommonClass.byteLimit(this.stringByteLength)) {
           if (this.$store.state.stompClient && this.$store.state.stompClient.connected) {
             this.$store.state.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
             this.message.content = ''
             this.scrollToEnd(true)
-        }
-          else{
+          } else {
             console.log('asd')
             this.message.content = CommonClass.replaceErrorMsg(this.message.content)
             this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
@@ -277,7 +279,8 @@
       },
 
       getMessage: function (wrapperEl) {
-        this.cursorPoint.channel_id = this.currentChannel.id
+        console.log(this.$store.state.currentChannel)
+        this.cursorPoint.channel_id = this.$store.state.currentChannel.id
         this.$http.post('http://localhost:9191/api/message/getmsg', JSON.stringify(this.cursorPoint), {
           headers: {
             'Content-Type': 'application/json'
@@ -291,7 +294,7 @@
             this.cursorPoint.cursorId = res.data[res.data.length - 1].id
           }
           console.log(res.data)
-          for(let i =0; i < res.data.length; i++){
+          for (let i = 0; i < res.data.length; i++) {
             res.data[i].content = CommonClass.replacemsg(res.data[i].content)
           }
           this.msgArray = res.data.reverse().concat(this.msgArray)
@@ -310,8 +313,8 @@
           if (this.firstLoad) {
             this.oldScrollHeight = this.wrapperEl.scrollHeight
           }
-          if (this.isScrollAtEnd(this.wrapperEl)|| this.firstLoad || bool ||
-              ((this.oldScrollHeight == this.wrapperEl.clientHeight)&& (this.wrapperEl.scrollHeight > this.wrapperEl.clientHeight))) {
+          if (this.isScrollAtEnd(this.wrapperEl) || this.firstLoad || bool ||
+            ((this.oldScrollHeight == this.wrapperEl.clientHeight) && (this.wrapperEl.scrollHeight > this.wrapperEl.clientHeight))) {
 
             this.wrapperEl.scrollTop = this.wrapperEl.scrollHeight
             this.firstLoad = false
@@ -331,7 +334,9 @@
         this.msgPreviewBool = false
       },
       initData() {
-        this.cursorPoint.channel_id = this.currentChannel.id
+        this.message.channel_id = this.getCurrentChannel.id
+        this.message.sender = this.$store.state.currentUser.email
+        this.cursorPoint.channel_id = this.$store.state.currentChannel
         this.cursorPoint.first = true
         this.cursorPoint.cursorId = 0
         this.cursorPoint.empty = false
@@ -340,21 +345,26 @@
           this.scrollHeight = 0,
           this.$emit('msgArrayUpdate', this.msgArray)
       },
-      byteCheck(e){
+      byteCheck(e) {
         // v-model을 썼음에도 e.target.value를 사용하는 이유는 한글은 바로 바인딩이 안되기때문에 수동적으로 값들을 message.content에 넣기 위함이다.
         this.message.content = e.target.value
         this.stringByteLength = CommonClass.byteCount(this.message.content)
-        if((47< e.keyCode && e.keyCode < 112 && e.ctrlKey == false) || (e.keyCode == 13 && e.shiftKey == true) || e.keyCode == 32
-        || e.keyCode == 229 ){
+        if ((47 < e.keyCode && e.keyCode < 112 && e.ctrlKey == false) || (e.keyCode == 13 && e.shiftKey == true) || e.keyCode == 32
+          || e.keyCode == 229) {
           CommonClass.byteLimit(this.stringByteLength)
         }
       },
-      TextbyFilter (content) {
+      TextbyFilter(content) {
         return this.$options.filters.highlight(content, this.$store.state.searchText);
       }
     },
+    computed:{
+      getCurrentChannel: function(){
+        return this.$store.state.currentChannel
+      }
+    },
     watch: {
-      currentChannel: function (newv, oldv) {
+      getCurrentChannel: function (newv, oldv) {
         this.initData()
         this.getMessage()
         this.scrollToEnd()
@@ -363,23 +373,23 @@
         // 스크롤을 최상단으로 올려 메시지를 가져올 때 실행되는 것을 막기 위한 if문
         if (this.getmsgBool) {
           this.getmsgBool = false
-        }else{
-          if(!this.isScrollAtEnd(this.wrapperEl) && this.msgArray.length > 0){
-            let copymsg = JSON.parse(JSON.stringify(this.msgArray[this.msgArray.length-1]))
-            this.previewObj.content = copymsg.content==null? "첨부파일" : CommonClass.replacemsgForPreview(copymsg.content)
-            this.previewObj.username = this.msgArray[this.msgArray.length-1].user.name
+        } else {
+          if (!this.isScrollAtEnd(this.wrapperEl) && this.msgArray.length > 0) {
+            let copymsg = JSON.parse(JSON.stringify(this.msgArray[this.msgArray.length - 1]))
+            this.previewObj.content = copymsg.content == null ? "첨부파일" : CommonClass.replacemsgForPreview(copymsg.content)
+            this.previewObj.username = this.msgArray[this.msgArray.length - 1].user.name
             this.msgPreviewBool = true
           }
         }
       }
     },
     filters: {
-    highlight: function(stringToSearch, searchTerm) {
+      highlight: function (stringToSearch, searchTerm) {
         if (searchTerm === "") return stringToSearch;
         var iQuery = new RegExp(searchTerm, "ig");
         return stringToSearch
           .toString()
-          .replace(iQuery, function(matchedText, a, b) {
+          .replace(iQuery, function (matchedText, a, b) {
             return "<span class='highlight'>" + matchedText + "</span>";
           });
       }

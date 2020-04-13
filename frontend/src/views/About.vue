@@ -1,80 +1,76 @@
 <template>
-  <div>
-    <img src="../assets/images/fileIcon/txt_icon.png" alt="이미지를 찾을 수 없음"/>
-  </div>
+  <header>
+    <b-navbar toggleable="lg" type="light" variant="white">
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" right>
+          <template v-slot:button-content>
+            <i class="im im-bell"></i>
+          </template>
+          <b-dropdown-text v-for="(alarm,index) in alarmList" style="width: 25vw;" class="border">
+            <div>
+              <div class="row float-right">
+                <b-button size="sm" id="esc" variant="nonoutline" @click="alarmList.splice(index,1)"><i
+                  class="im im-x-mark" ></i></b-button>
+              </div>
+              <div class="row">
+                <p>{{alarm.info}}</p>
+              </div>
+              <div class="row float-right">
+                <div >
+                  <b-button variant="nonoutline"><i class="im im-check-mark-circle"
+                                                              style="color: #42b983;"></i>
+                  </b-button>
+                  <b-button variant="nonoutline"><i class="im im-x-mark-circle" style="color: red;"></i>
+                  </b-button>
+                </div>
+              </div>
+            </div>
+          </b-dropdown-text>
+        </b-dropdown>
+        <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
+        <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
+          <!-- Using 'button-content' slot -->
+          <template v-slot:button-content style="padding:0px;">
+          </template>
+          <b-dropdown-item>Profile</b-dropdown-item>
+          <b-dropdown-item>Sign Out</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-navbar>
+  </header>
 </template>
 <script>
   export default {
     name: 'About',
     data() {
       return {
-        files: []
+        alarmList: [],
+        alarm: {
+          info: null,
+          state: 'wait',
+        }
       }
     },
-    computed: {
-      uploadDisabled() {
-        return this.files.length === 0;
+    created() {
+      for (let i = 0; i < 10; i++) {
+        this.alarm.info = '알림' + i
+        this.alarmList.push(JSON.parse(JSON.stringify(this.alarm)))
       }
     },
+    computed: {},
     updated() {
     },
-    methods: {
-      testDown: function () {
-        let text = 'test.xlsx'
-        this.$http.get('/api/file/download/44dbf5cb6ff146898f8e7692df5e947e',
-          {
-            'fileName': '장비 현황.xlsx'
-          }, {
-            responseType: 'blob'
-          }
-        )
-          .then(res => {
-            console.log(res)
-            const url = window.URL.createObjectURL(new Blob([res.data]))
-            const link = document.createElement('a')
-            link.href = url;
-            const contentDisposition = res.headers['content-disposition']
-            console.log(contentDisposition)
-            let fileName = 'unKnown'
-            if (contentDisposition) {
-              const fileNameMatch = contentDisposition.match(/filename\*?=['"]?(?:UTF-\d['"]*)?([^;\r\n"']*)['"]?;?/)
-              console.log(fileNameMatch)
-              console.log(fileNameMatch.length)
-              if (fileNameMatch.length === 2) {
-                fileName = fileNameMatch[1];
-                fileName = decodeURI(fileName)
-              }
-              console.log(decodeURIComponent(fileName))
-              console.log(fileName)
-            }
-            link.setAttribute('download', fileName)
-            document.body.appendChild(link)
-            link.click()
-            link.remove()
-            window.URL.revokeObjectURL(url)
-          })
-      },
-      addFile(e) {
-        let droppedFiles = e.dataTransfer.files;
-        if (!droppedFiles) return;
-        ([...droppedFiles]).forEach(f => {
-          this.files.push(f);
-        })
-      },
-      removeFile(file) {
-        this.files = this.files.filter(f => {
-          return f != file;
-        })
-      },
-      upload() {
-        let formData = new FormData()
-        this.files.forEach((f, x) => {
-          formData.append('file' + (x + 1), f)
-        })
-        console.log(formData.get('file1'))
-      }
-    }
+    methods: {}
 
   }
 
 </script>
+<style scoped>
+  #esc{
+    color: #7f7f7f;
+  }
+  #esc:hover{
+    color: black;
+  }
+</style>

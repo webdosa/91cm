@@ -35,7 +35,6 @@ public class MessageServiceImpl implements MessageService {
 		return time.getTime();
 	}
 
-
 	@Override
 	public List<Message> getMessageList(Map<String, Object> map) {
 		List<Message> list = messageRepository.getMessageList(map);

@@ -5,6 +5,7 @@ use nocm;
 
 create table member (
 email varchar(100) primary key not null,
+password varchar(255),
 name varchar(100) not null,
 phone varchar(20) not null,
 picture varchar(100)
@@ -65,36 +66,34 @@ channel_id int unsigned not null,
 sender varchar(100) not null,
 recipient varchar(100) not null,
 send_date datetime not null default CURRENT_TIMESTAMP,
-invite_state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ),
+invite_state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ) default 'STAND_BY',
 foreign key (sender) references member(email) on delete cascade on update cascade,
 foreign key (recipient) references member(email) on delete cascade on update cascade,
 foreign key (channel_id) references channel(id) on delete cascade on update cascade
 );
 
-create table list(
+create table tasklist(
 id int unsigned  primary key auto_increment not null,
 name varchar(80) not null,
 channel_id int unsigned not null,
 register_date  datetime not null default CURRENT_TIMESTAMP,
 edit_date  datetime not null default CURRENT_TIMESTAMP,
 position int not null,
-register varchar(100) not null,
-foreign key (channel_id) references channel(id) on delete cascade on update cascade,
-foreign key (register) references member(email) on update cascade
+foreign key (channel_id) references channel(id) on delete cascade on update cascade
 );
 
 
 create table task(
 id int unsigned  primary key auto_increment not null,
-list_id int unsigned not null,
+tasklist_id int unsigned not null,
 content text,
 register_date  datetime not null default CURRENT_TIMESTAMP,
 edit_date  datetime not null default CURRENT_TIMESTAMP,
-register varchar(100) not null,
+member_email varchar(100) not null,
 state boolean not null,
 position int not null,
-foreign key (list_id) references list(id) on delete cascade on update cascade,
-foreign key (register) references member(email) on update cascade
+foreign key (tasklist_id) references list(id) on delete cascade on update cascade,
+foreign key (member_email) references member(email) on update cascade
 );
 
 

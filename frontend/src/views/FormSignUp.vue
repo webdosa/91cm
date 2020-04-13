@@ -40,7 +40,7 @@
               <input id="password" type="password" name="password" placeholder="Password"
                      class="form-control bg-white border-left-0 border-md">
             </div>
-           
+
 
 
             <!-- Submit Button -->
@@ -106,7 +106,7 @@
   margin: 10px;
 }
 .mycustom{
-   margin-bottom: 0px; 
+   margin-bottom: 0px;
 }
 .margincustom{
   margin-top: 120px;
@@ -135,6 +135,7 @@
     background: #405D9D;
     border: none;
   }
+
 
   .btn-facebook:hover, .btn-facebook:focus {
     background: #314879;
@@ -166,8 +167,8 @@
     font-weight: bold;
     font-size: 0.9rem;
   }
-  
-  
+
+
   .form-control:focus {
     box-shadow: none;
     color: #495057;
