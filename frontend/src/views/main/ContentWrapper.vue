@@ -293,8 +293,8 @@
             this.cursorPoint.first = false
             this.cursorPoint.cursorId = res.data[res.data.length - 1].id
           }
-          console.log(res.data)
           for (let i = 0; i < res.data.length; i++) {
+
             res.data[i].content = CommonClass.replacemsg(res.data[i].content)
           }
           this.msgArray = res.data.reverse().concat(this.msgArray)
