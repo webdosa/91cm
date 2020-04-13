@@ -25,10 +25,7 @@
           <div>
             <div style="display:flex;">
               <p>Channel Name</p>
-              <template v-if="$store.state.currentChannel.member_email == $store.state.currentUser.email">
                 <a class="verti-align" data-mode="edit" @click="useModal('edit')">Edit</a>
-                <a class="verti-align" @click="deleteChannel">Delete</a>
-              </template>
             </div>
             <li class="list-unstyled">{{ $store.state.currentChannel.name }}</li>
           </div>
@@ -46,7 +43,7 @@
       <!-- Users 메뉴 끝 -->
 
       <!-- to do list 메뉴 시작 -->
-      <a class="r-style">
+      <a class="r-style" @click="callComponent('todoList')">
         <i class="im im-task-o"></i>
         <span style="margin-left:20px;">Todo List</span>
       </a>
@@ -76,6 +73,9 @@
       })
     },
     methods: {
+      callComponent: function (componentName) {
+        this.$store.commit('getSelectComponent',componentName)
+      },
       leaveChannle: function () {
         this.$http.post('/api/channel/leave', {
           // 모두가 나가면 채널 삭제
@@ -111,25 +111,25 @@
             return value
           })
       },
-      deleteChannel: async function () {
-        //current vuex 사용
-        await this.msgBox("정말로 채널을 삭제하시겠습니까?")
-        console.log(this.userSelect)
-        const user = this.$store.state.currentUser
-        console.log(user)
-        if (!this.userSelect) {
-          return
-        }
-        if (this.$store.state.currentChannel.member_email == user.email) {
-          await this.$http.post('http://localhost:9191/api/channel/delete', this.$store.state.currentChannel
-          ).then(res => {
-            console.log(res)
-            this.$router.go('/main')
-          }).catch(error => {
-            console.log(error)
-          })
-        }
-      }
+      // deleteChannel: async function () {
+      //   //current vuex 사용
+      //   await this.msgBox("정말로 채널을 삭제하시겠습니까?")
+      //   console.log(this.userSelect)
+      //   const user = this.$store.state.currentUser
+      //   console.log(user)
+      //   if (!this.userSelect) {
+      //     return
+      //   }
+      //   if (this.$store.state.currentChannel.member_email == user.email) {
+      //     await this.$http.post('http://localhost:9191/api/channel/delete', this.$store.state.currentChannel
+      //     ).then(res => {
+      //       console.log(res)
+      //       this.$router.go('/main')
+      //     }).catch(error => {
+      //       console.log(error)
+      //     })
+      //   }
+      // }
     }
   }
 

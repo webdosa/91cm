@@ -1,43 +1,85 @@
 <template>
-    <div>
-        <b-button @click="test">test</b-button>
-        <b-modal id="test-modal" size="lg" scrollable>
-            <div v-for="message in messageList">
-                <b-button class="button-margin" v-b-toggle.collapse-1 variant="primary" block>TEST</b-button>
+        <b-modal id="copyRight-modal" size="lg" scrollable ok-only>
+                <b-button class="button-margin" v-b-toggle.collapse-1 variant="outline-dark" block>Animate.css</b-button>
                 <b-collapse id="collapse-1" class="mt-2">
-                <b-card>
-                    <p class="card-text">{{message}}</p>
-                </b-card>
+                    <b-card>
+                        <span>link :</span>
+                        <b-link href="https://github.com/daneden/animate.css" style="color: blue;">https://github.com/daneden/animate.css</b-link>
+                        <p class="card-text" >
+                            The MIT License (MIT)
+                            <br>
+                            Copyright (c) 2019 Daniel Eden
+                            <br>
+                            Permission is hereby granted, free of charge, to any person obtaining a copy
+                            of this software and associated documentation files (the "Software"), to deal
+                            in the Software without restriction, including without limitation the rights
+                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                            copies of the Software, and to permit persons to whom the Software is
+                            furnished to do so, subject to the following conditions:
+                            <br>
+                            The above copyright notice and this permission notice shall be included in all
+                            copies or substantial portions of the Software.
+                            <br>
+                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                            SOFTWARE.
+                        </p>
+                    </b-card>
                 </b-collapse>
-            </div>
+                <b-button class="button-margin" v-b-toggle.collapse-2 variant="outline-dark" block>SortableJS/Vue.Draggable</b-button>
+                <b-collapse id="collapse-2" class="mt-2">
+                    <b-card>
+                        <span>link :</span>
+                        <b-link href="https://github.com/SortableJS/Vue.Draggable" style="color: blue;">https://github.com/SortableJS/Vue.Draggable</b-link>
+                        <p class="card-text" >
+                            The MIT License (MIT)
+                            <br>
+                            Copyright (c) 2016-2019 David Desmaisons
+                            <br>
+                            Permission is hereby granted, free of charge, to any person obtaining a copy
+                            of this software and associated documentation files (the "Software"), to deal
+                            in the Software without restriction, including without limitation the rights
+                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                            copies of the Software, and to permit persons to whom the Software is
+                            furnished to do so, subject to the following conditions:
+                            <br>
+                            The above copyright notice and this permission notice shall be included in all
+                            copies or substantial portions of the Software.
+                            <br>
+                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                            SOFTWARE.
+                        </p>
+                    </b-card>
+                </b-collapse>
+
         </b-modal>
-        <b-button @click="shakeTest">test</b-button>
-        <div :class="{swing: check}">
-            test
-        </div>
-        <b-button @click="testAni">test</b-button>
-        <h1 ref="swings">Example</h1>
-    </div>
 </template>
 <script>
     export default {
         name: 'CopyRight',
         data() {
             return {
-                swingChecker: false,
-                check: false,
-                messageList: ['1','2','3'],
             }
         },
         created: {
-            makeTextMessage: function() {
-                let message = ''
-                for(let i=0;i<10;i++){
-                    this.messageList.append(message+i)
-                }
-            }
         },
         methods: {
+            testBtn: function (){
+                const element = this.$refs.testBtn
+                element.classList.add("animated","shake")
+                element.addEventListener("animationend",()=>{
+                    element.classList.remove("animated","shake")
+                })
+            },
             testAni : function(){
                 const node = this.$refs.swings
                 node.classList.add("animated","shake")
@@ -50,7 +92,7 @@
                 node.addEventListener("animationend", handleAnimationEnd)
             },
             test: function () {
-                this.$bvModal.show("test-modal")
+                this.$bvModal.show("copyRight-modal")
             },
             shakeTest: function(){
             this.check = true
