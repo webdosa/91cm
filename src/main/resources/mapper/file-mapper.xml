@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nineone.nocm.mapper.file">
+    <insert id="saveFile">
+        insert file(original_name, server_name, path, extension, message_id,sender,file_size)
+            values (#{original_name}, #{server_name}, #{path}, #{extension}, #{message_id}, #{sender}, #{file_size})
+    </insert>
+</mapper>

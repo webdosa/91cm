@@ -8,8 +8,11 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
 import VueSession from 'vue-session'
+import "@/assets/css/app.scss"
 import './assets/css/main.css'
 import AlertModal from "./plugins/AlertModal";
+import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
+
 
 Vue.use(AlertModal)
 Vue.use(VueSession, { persist: true})

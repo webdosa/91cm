@@ -1,11 +1,16 @@
+import store from '../store'
 class CommonClass {
   replacemsg(originContent) {
-      let content = ''
-      content = originContent.replace(/&lt;p&gt;/gim, '<p>')
-      content = content.replace(/&lt;\/p&gt;/gim, '</p>')
-      return content
+    if (originContent == null){
+      return
+    }
+    let content = ''
+    content = originContent.replace(/&lt;p&gt;/gim, '<p>')
+    content = content.replace(/&lt;\/p&gt;/gim, '</p>')
+    return content
   }
-  replaceErrorMsg(originContent){
+  
+  replaceErrorMsg(originContent) {
     let array = originContent.split("\n")
     let content = ''
     for (let i in array) {
@@ -40,6 +45,22 @@ class CommonClass {
     }
   }
 
+  checkFileType(file) {
+    let type = file.extension
+    type = type.toLowerCase().trim()
+    switch (type) {
+      case ('png' || 'jpg' || 'gif'):
+        return file.path
+      case ('zip' || '7z' || 'tar'):
+        return require('@/assets/images/fileIcon/zip_icon.png')
+      case 'pdf':
+        return require('@/assets/images/fileIcon/pdf_icon.png')
+      case 'txt':
+        return require('@/assets/images/fileIcon/txt_icon.png')
+      default:
+        return require('@/assets/images/fileIcon/file_icon.png')
+    }
+  }
 }
 
 export default new CommonClass()

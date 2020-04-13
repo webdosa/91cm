@@ -10,6 +10,7 @@ import ChannelHeader from '../views/main/ChannelHeader'
 import test from '../views/user/UserInfo'
 import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
+import FormSignUp from "../views/FormSignUp";
 
 Vue.use(VueRouter)
 
@@ -21,15 +22,16 @@ const routes = [
   },
   {
     path: '/about',
-    name: 'About',
+    name: 'TaskBoard',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/ToDoList/TaskBoard')
   },
   {
     path: '*',
     component: NotFound
+    // redirect: '/errorpage' 
   },
   {
     path: '/clock',
@@ -49,23 +51,15 @@ const routes = [
     }
   },
   {
-    path: '/user',
-    component: Main,
-    children: []
-  },
-  {
     path: '/signup',
     component: SignUp
 
+  },
+  {
+    path: '/formSignUp',
+    component: FormSignUp
   }
-  //,
-  // {
-  //   path: '/user/edit',
-  //   component: Main,
-  //   children:[
-  //     { path:'', component: EditProfile},
-  //   ]
-  // }
+
 ]
 
 const router = new VueRouter({

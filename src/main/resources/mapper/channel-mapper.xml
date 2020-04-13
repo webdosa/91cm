@@ -21,4 +21,7 @@
     	insert joininfo (channel_id,member_email)
     		values(#{channel_id},#{member_email})
     </insert>
+    <select id="channelListAll" resultType="com.nineone.nocm.domain.Channel">
+        select * from channel;
+    </select>
 </mapper>
