@@ -1,3 +1,31 @@
+.info-w{
+    height: 100%;
+  background-color: white;
+  border: solid 1px #e6e6e6;
+  flex-direction: column;
+}
+.myfile-upload{
+    position: absolute;
+    z-index: 1;
+    bottom: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+.mytextarea-wrapper{
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    background-color: #fff;
+    padding-bottom: 30px;
+}
+.mytextarea{
+    position: relative;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #ced4da;
+    padding-bottom: 0px;
+}
+
 .addhighlight{
     background-color: #FFFF00;
 }
@@ -58,11 +86,11 @@
   }
   
   .info-wrapper {
-    width: 450px;
-    height: auto;
-    background-color: white;
-    border: solid 1px #e6e6e6;
-    padding: 40px;
+    width: 100%;
+    height: inherit;
+    flex-direction: column;
+    overflow: auto;
+    padding: 0px;
   }
   .cetered-align {
     display: flex;
@@ -445,10 +473,6 @@ ul.CTAs a {
     #c-c-preview.active{
         width: calc(100% - 250px);
     }
-    .info-wrapper {
-        width: 350px;
-        padding: 40px 0;
-      }
     #sidebar {
         margin-left: -250px;
     }

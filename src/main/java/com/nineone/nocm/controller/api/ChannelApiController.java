@@ -43,21 +43,25 @@ public class ChannelApiController {
         return joinInfoService.leaveUser(info);
     }
 
+    @GetMapping("/all")
+    public List<Channel> channelListAll(){
+        return channelService.channelListAll();
+    }
+
     // 사용자의 채널 리스트를 반환
     @GetMapping("/list")
     public List<Channel> channelList(@Socialuser User user) {
-        log.info(user.getName());
         return channelService.channelList(user.getEmail());
     }
 
     @PostMapping("/create")
-    public boolean createChannel(@RequestBody Map<String, String> channelInfo) {
+    public Channel createChannel(@RequestBody Map<String, String> channelInfo) {
         Channel channel = Channel.builder()
                 .name(channelInfo.get("name"))
                 .member_email(channelInfo.get("member_email"))
                 .build();
-        
-        return channelService.createChannel(channel);
+        channelService.createChannel(channel);
+        return channel;
     }
 
     @PostMapping("/update")
@@ -78,10 +82,8 @@ public class ChannelApiController {
     public void updateLastAccessDate(@RequestBody Map<String,Object> map, @Socialuser User user,HttpSession session) {
     	// 채널에서 채널로 이동했을때 실행
     	LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
-    	System.out.println("뭐지 : "+lastAccess.isContentWrapper());
     	lastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
     	session.setAttribute("lastAccess", lastAccess);
-    	System.out.println(map.get("oldChannelId"));
         joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
     }
     

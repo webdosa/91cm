@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/user")
 public class UserApiController {
-	
+
+	@Autowired
+	private SimpMessageSendingOperations messagingTemplate;
 	@Autowired
 	private UserService userService;
 
@@ -56,7 +59,12 @@ public class UserApiController {
     @RequestMapping(value="/signup",method=RequestMethod.POST)
     public boolean signup(@RequestBody User user ,Authentication authentication,HttpSession httpsession) {
     	DefaultOAuth2User oauth2user = (DefaultOAuth2User)authentication.getPrincipal();
-    	return userService.insertUser(user,oauth2user,httpsession);
+    	if (userService.insertUser(user,oauth2user,httpsession)){
+			messagingTemplate.convertAndSend("/sub/sync/info","userList");
+    		return true;
+		}else{
+    		return false;
+		}
     }
     @RequestMapping(value = "/channel/{channel_id}")
 	public List<User> getChannelUserList(@PathVariable int channel_id){

@@ -1,8 +1,10 @@
 <template>
     <div style="position: relative;" v-if="$store.state.isSearchMode">
         <i style="position:absolute;left: 15px;top: calc(50% - 12px);" class="im im-magnifier"></i>
-        <a @click="up"><i style="position: absolute; right: 50px; top: calc(50% - 12px);" class="im im-angle-up"></i></a>
-        <a @click="down"><i style="position: absolute; right: 15px; top: calc(50% - 12px);" class="im im-angle-down"></i></a>
+        <template v-if="searchResultList!=null">
+          <a @click="up"><i style="position: absolute; right: 50px; top: calc(50% - 12px);" class="im im-angle-up"></i></a>
+          <a @click="down"><i style="position: absolute; right: 15px; top: calc(50% - 12px);" class="im im-angle-down"></i></a>
+        </template>
             <b-form-input
             @keydown.esc.exact="toggleSearchMode"
             @keydown.enter.exact="search"
@@ -29,6 +31,14 @@ export default {
       //자식의 mounted가 먼저 실행되기때문에 따로 요소를 다시한번 가져옴
         this.$nextTick(() => {
           this.wrapperEl = document.querySelector('.c-c-wrapper')
+      })
+      this.$store.watch(() => this.$store.getters.getSearchMode,isSearchMode =>{
+        if(!isSearchMode){
+          this.$store.commit('setSearchText','')
+          this.index=0
+          this.oldlength=0  
+          this.searchResultList =null
+        }
       })
     },
     methods:{
@@ -117,6 +127,11 @@ export default {
                 this.searchStart()
             }
         }
-    }
+    },
+    // computed: {
+    //    getSearchMode () {
+    //      return this.$store.getters.getSearchMode
+    //    }
+    // }
 }
 </script>

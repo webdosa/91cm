@@ -25,12 +25,12 @@
           <div>
             <div style="display:flex;">
               <p>Channel Name</p>
-              <template v-if="modalObj.currentChannel.member_email == $store.state.currentUser.email">
-                <a class="verti-align" data-mode="edit" @click="prepareModal">Edit</a>
+              <template v-if="$store.state.currentChannel.member_email == $store.state.currentUser.email">
+                <a class="verti-align" data-mode="edit" @click="useModal('edit')">Edit</a>
                 <a class="verti-align" @click="deleteChannel">Delete</a>
               </template>
             </div>
-            <li class="list-unstyled">{{ modalObj.currentChannel.name }}</li>
+            <li class="list-unstyled">{{ $store.state.currentChannel.name }}</li>
           </div>
           <div style="display:flex; justify-content:flex-start;">
             <b-button variant="primary" @click="leaveChannle">나가기</b-button>
@@ -80,9 +80,12 @@
         this.$http.post('/api/channel/leave', {
           // 모두가 나가면 채널 삭제
           email: this.$store.state.currentUser.email,
-          channel_id: this.modalObj.currentChannel.id
+          channel_id: this.$store.state.currentChannel.id
         }).then(res => {
-          this.$alertModal('alert redirect', this.modalObj.currentChannel.name + ' 채널에서 나갔습니다.')
+          // 유저가 나갔음으로 채널 유저 업데이트
+          this.$store.state.stompClient.send('/pub/chat/room/'+this.$store.state.currentChannel.id,
+            JSON.stringify({'message':'updateChannel', 'error':"null"}))
+          this.$alertModal('alert redirect', this.$store.state.currentChannel.name + ' 채널에서 나갔습니다.')
         }).catch(error => {
           this.$alertModal('error', '나가기에 실패했습니다.')
         })
@@ -90,13 +93,9 @@
       RSidebarClose: function () {
         this.$store.state.isRActive = false
       },
-      prepareModal: function (e) {
-        if (e.target.dataset.mode == 'edit') {
-          this.modalObj.modalTitle = '채널 수정'
-          //Cha1는 나중에 현재 채널 정보에서 가져올 채널 이름값
-          // this.modalObj.channelTitle ='Cha1'
-          this.$emit('passData', this.modalObj)
-          this.$bvModal.show('channelCU')
+      useModal: function (mode) {
+        if (mode == 'edit') {
+          this.$eventBus.$emit('useModal',mode)
         }
       },
       msgBox: async function (content) {
@@ -121,18 +120,17 @@
         if (!this.userSelect) {
           return
         }
-        if (this.modalObj.currentChannel.member_email == user.email) {
-          await this.$http.post('http://localhost:9191/api/channel/delete', this.modalObj.currentChannel
+        if (this.$store.state.currentChannel.member_email == user.email) {
+          await this.$http.post('http://localhost:9191/api/channel/delete', this.$store.state.currentChannel
           ).then(res => {
             console.log(res)
-            this.modalObj.currentChannel = null
-            this.modalObj.modalTitle = null
             this.$router.go('/main')
           }).catch(error => {
             console.log(error)
           })
         }
       }
+
     }
   }
 
