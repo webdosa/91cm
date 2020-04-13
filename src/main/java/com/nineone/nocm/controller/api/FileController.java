@@ -1,31 +1,38 @@
 package com.nineone.nocm.controller.api;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.nineone.nocm.annotation.Socialuser;
-import com.nineone.nocm.domain.ApiResponse;
 import com.nineone.nocm.domain.ContentsFile;
 import com.nineone.nocm.domain.Message;
 import com.nineone.nocm.domain.User;
 import com.nineone.nocm.service.FileStorageService;
 import com.nineone.nocm.service.MessageService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
-import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.*;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.multipart.MultipartFile;
+import com.nineone.nocm.util.DateUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -53,7 +60,7 @@ public class FileController {
                 .sender(sender)
                 .user(user)
                 .build();
-        message.setSend_date(messageService.makeDate());
+        message.setSend_date(DateUtil.makeDate());
         message.setStr_send_date(messageService.makeStrDate(message.getSend_date()));
         messageService.insertMessage(message);
         List<ContentsFile> fileList = new ArrayList<>();

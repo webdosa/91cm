@@ -30,12 +30,6 @@ public class MessageServiceImpl implements MessageService {
 	
 
 	@Override
-	public Date makeDate()  {
-		Calendar time = Calendar.getInstance();
-		return time.getTime();
-	}
-
-	@Override
 	public List<Message> getMessageList(Map<String, Object> map) {
 		List<Message> list = messageRepository.getMessageList(map);
 		for(int i=0; i < list.size(); i++) {
