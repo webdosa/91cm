@@ -24,7 +24,6 @@ public class DataSourceConfig {
 	
 	@Bean
 	public HikariConfig hikariConfig() {
-		System.out.println("아니 왜 안되는거야");
 		HikariConfig config = new HikariConfig();
         config.setMaximumPoolSize(10);
         config.setMinimumIdle(5);

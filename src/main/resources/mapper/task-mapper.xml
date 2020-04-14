@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+        
+<mapper namespace="com.nineone.nocm.mapper.task">
+	<!-- 서브쿼리로 한번 더 감싸는 이유는 mysql 에러가 떠서.. 임시해결로 한번더 감싸주었다. -->	
+	<insert id="insertTask">
+		insert task (tasklist_id,content,position) 
+			values (
+			#{tasklist_id},
+			#{content},
+			(select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a)
+			)
+	</insert>
+	
+	<delete id="deleteTask">
+		delete from task where id = #{id}
+	</delete>
+	
+	<update id="updateTaskContent">
+		update task set content = #{content}, edit_date = #{edit_date} where id = #{id}
+	</update>
+	
+	<update id="updateTaskPosition">
+		update task set 
+			position = (select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a),
+			tasklist_id = #{tasklist_id}
+			where id = #{id}
+	</update>
+</mapper>

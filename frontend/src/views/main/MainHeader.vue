@@ -30,7 +30,7 @@
                   class="im im-check-mark-circle"
                   style="color: #42b983;"></i>
                 </b-button>
-                <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)"><i
+                <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)" style="padding-bottom: 0;"><i
                   class="im im-x-mark-circle"
                   style="color: red;"></i>
                 </b-button>
