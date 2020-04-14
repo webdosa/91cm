@@ -12,6 +12,7 @@ import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
 import FormSignUp from "../views/FormSignUp";
 import CopyRight from "../views/util/CopyRight"
+import Todolist from '../views/TodoList'
 
 Vue.use(VueRouter)
 
@@ -64,6 +65,10 @@ const routes = [
   {
     path: '/test',
     component: CopyRight
+  },
+  {
+    path: '/todo',
+    component: Todolist
   }
 
 ]

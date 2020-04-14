@@ -44,6 +44,7 @@
   import Loading from '../views/main/Loading'
   import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
+  import TodoList from '../views/TodoList'
 
   export default {
     name: 'Main',
@@ -56,7 +57,8 @@
       'UserInfo': UserInfo,
       'EditProfile': EditProfile,
       'NoChannel': NoChannel,
-      'Loading': Loading
+      'Loading': Loading,
+      'TodoList' : TodoList
     },
     data() {
       return {
@@ -79,6 +81,8 @@
             return 'UserInfo'
           case 'edit':
             return 'EditProfile'
+          case 'todoList':
+            return 'TodoList'
           default:
             return 'ContentWrapper'
         }
