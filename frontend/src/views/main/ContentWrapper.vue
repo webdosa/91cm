@@ -47,8 +47,8 @@
         <div style="position: relative;">
            <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
              <label for="file-input" style="display: block;margin-bottom: 0;">
-              </label>
-              <i class="im im-cloud-upload myfile-upload"></i>
+               <i class="im im-cloud-upload myfile-upload"></i>
+            </label>
               <input id="file-input" type="file" ref="fileInput" multiple @change="attachFile" hidden/>
 
             <b-form-textarea
