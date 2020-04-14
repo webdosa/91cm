@@ -1,30 +1,21 @@
 package com.nineone.nocm.controller.websocket;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
-import com.nineone.nocm.domain.ApiResponse;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nineone.nocm.domain.ApiResponse;
 import com.nineone.nocm.domain.Message;
-import com.nineone.nocm.repository.UserRepository;
 import com.nineone.nocm.service.MessageService;
+import com.nineone.nocm.util.DateUtil;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Slf4j
@@ -44,7 +35,7 @@ public class MessageController {
 	@MessageMapping("/chat/message")
 	@Transactional
 	public void message(Message message)throws ParseException {
-		message.setSend_date(messageService.makeDate());
+		message.setSend_date(DateUtil.makeDate());
 		message.setStr_send_date(messageService.makeStrDate(message.getSend_date()));
 		message.setContent(messageService.replacemsg(message.getContent()));
 		if(messageService.insertMessage(message) > 0) {

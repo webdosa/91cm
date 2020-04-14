@@ -21,7 +21,7 @@
                 <b-col v-for="file in msg.files">
                   <a @click="fileDownload(file)">
                     <b-img thumbnail rounded fluid :src="selectImage(file)" alt="이미지를 찾을 수 없습니다."
-                           style="max-width: 200px"></b-img>
+                           style="max-width: 200px" @load="imgLoad"></b-img>
                     <p><b>{{file.original_name}}</b></p>
                     <p>file size : {{(file.file_size / 1024).toLocaleString(undefined,{minimumFractionDigits:2})}}
                       kb</p>
@@ -108,7 +108,7 @@
   import SearchInput from './SearchInput'
 
   export default {
-    props: ['currentChannel', 'stompClient', 'msgArray'],
+    props: ['msgArray'],
     name: 'ContentWrapper',
     components: {
       MsgBox, SearchInput
@@ -162,6 +162,11 @@
       console.log('deactiveed contentwrapper')
     },
     methods: {
+      imgLoad(){
+        if(!this.msgPreviewBool){
+          this.scrollToEnd(true)
+        }
+      },
       dropFile: function (e) {
         this.addFile(e.dataTransfer.files)
         console.log(e)
@@ -209,8 +214,8 @@
           return;
         }
         /////////////////////////////////////
-        formData.append('channel_id', this.currentChannel.id)
-        formData.append('sender', this.message.sender)
+        formData.append('channel_id', this.$store.state.currentChannel.id)
+        formData.append('sender', this.$store.state.currentUser.email)
         this.$http.post('/api/file/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -293,8 +298,8 @@
             this.cursorPoint.first = false
             this.cursorPoint.cursorId = res.data[res.data.length - 1].id
           }
-          console.log(res.data)
           for (let i = 0; i < res.data.length; i++) {
+
             res.data[i].content = CommonClass.replacemsg(res.data[i].content)
           }
           this.msgArray = res.data.reverse().concat(this.msgArray)

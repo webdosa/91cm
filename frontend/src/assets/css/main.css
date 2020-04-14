@@ -176,6 +176,10 @@
     display: flex;
 }
 
+.btn-group>.btn {
+    padding-bottom: 0 !important;
+}
+
 .chat-message .icon {
     padding-right: 10px;
 }

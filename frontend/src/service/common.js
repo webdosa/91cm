@@ -9,7 +9,7 @@ class CommonClass {
     content = content.replace(/&lt;\/p&gt;/gim, '</p>')
     return content
   }
-
+  
   replaceErrorMsg(originContent) {
     let array = originContent.split("\n")
     let content = ''
@@ -49,9 +49,13 @@ class CommonClass {
     let type = file.extension
     type = type.toLowerCase().trim()
     switch (type) {
-      case ('png' || 'jpg' || 'gif'):
+      case ('png'):
+      case ('jpg'):
+      case ('gif'):
         return file.path
-      case ('zip' || '7z' || 'tar'):
+      case ('zip'):
+      case ('7z'):
+      case ('tar'):
         return require('@/assets/images/fileIcon/zip_icon.png')
       case 'pdf':
         return require('@/assets/images/fileIcon/pdf_icon.png')
