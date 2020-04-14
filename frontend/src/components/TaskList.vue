@@ -1,7 +1,13 @@
 <template>
-  <div style="padding: 15px 20px 0px 20px; background-color: gray;">
-      <span class="h3" style="color: white;">{{list.title}}</span>
-        <i class="im im-plus float-right btn" style="color: white;" @click="createTask"></i>
+  <div style="padding: 15px 20px 0px 20px; background-color: gray;" class="col-12">
+    <div v-if="taskList.name != ''"> 
+      <span class="h3" style="color: white;">{{taskList.name}}</span>
+      <i class="im im-plus float-right btn" style="color: white;" @click="createTask"></i>
+    </div>
+    <div v-else>
+      <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus 
+        @keydown.enter.exact="setTaskListName"></b-form-input>
+    </div>
       <br><br>
       <b-list-group style="width: 25vw;">
           <b-list-group-item v-if="create" style="padding: 10px 0px; margin-bottom: 10px;">
@@ -12,7 +18,7 @@
               <b-button size="sm" variant="danger" @click="createTask">Cancel</b-button>
             </div>
           </b-list-group-item>
-          <b-list-group-item v-for="(item,index) in list.taskList" :key="index" style="margin-bottom: 10px;">
+          <!-- <b-list-group-item v-for="(item,index) in list.taskList" style="margin-bottom: 10px;">
             <div>    
                 <b-dropdown no-caret variant="nonoutline" toggle-class="text-decoration-none" 
                 class="float-right" style="padding: 0px;">
@@ -23,7 +29,7 @@
                   <b-dropdown-item @click="deleteTask" variant="danger">Delete</b-dropdown-item>
                 </b-dropdown>
             <br>
-                <p v-if="!item.edit" id="content">{{item.content}}</p>
+                <p v-if="!item.edit" id="content">TEST Content</p>
                 <div v-if="item.edit">
                   <b-form-textarea placeholder="내용을 입력해주세요">
                   </b-form-textarea>
@@ -39,7 +45,7 @@
                 <small class="float-left">created date {{item.register_date}}</small>
             </footer>
             </div>
-          </b-list-group-item>
+          </b-list-group-item> -->
       </b-list-group>
   </div>
 </template>
@@ -47,20 +53,21 @@
 import Task from '../components/Task'
   export default {
     name: 'TaskList',
-    props: ["list"],
+    props: ["taskList"],
     components: {
         Task
     },
     data() {
       return {
+        tasks:[],
         create: false,
         edit: false
       }
     },
     created() {
-      for(task in this.list.taskList){
-        task.edit = false
-      }  
+      for(let i=0;i<3;i++){
+        
+      }
     },
     methods: {
       createTask: function(){
@@ -68,6 +75,9 @@ import Task from '../components/Task'
       },
       editTask: function (index) {
         this.list.taskList[index].edit = !list.taskList[index].edit
+      },
+      setTaskListName: function(){
+        this.taskList.name = this.taskListName
       }
     }
   }

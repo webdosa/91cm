@@ -1,14 +1,14 @@
 <template>
   <div class="scrolling-wrapper">
       <div>
+          <b-button @click="init">Init</b-button>
           <b-list-group horizontal>
-              
-              <b-list-group-item v-for="item in list" :key="item">
-                  <TaskList :list="item"></TaskList>
+              <b-list-group-item v-for="item in getAllTaskList">
+                  <TaskList :taskList="item"></TaskList>
               </b-list-group-item>
               <b-list-group-item>
                   <div>
-                      <b-card class="btn" align="center" style="width: 25vw; border-style: dotted" @click="addTaskList">
+                      <b-card class="btn" align="center" style="width: 25vw; border-style: dotted" @click="addTaskList()">
                           <i class="im im-plus" style="font-size: small"></i>
                           Add New TaskList
                     </b-card>
@@ -25,33 +25,34 @@ import TaskList from "../components/TaskList"
     components: {
         TaskList
     },
+    computed: {
+        getAllTaskList: function(){
+            return this.taskList
+        }
+    },
     data() {
       return {
-          list : [{
-              title:'title 1',
-              taskList:[{
-                 content: 'content one',
-                  register_date: '2018-01-02',
-                  member_email: '이주혁' 
-              },{content: '겁나길게 행ㅈadsaaasdadasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
-                  register_date: '2018-01-03',
-                  member_email: '원주민'}]
-          },{
-              title:'title 2',
-              taskList:[{
-                 content: 'content one',
-                  register_date: '2018-01-02',
-                  member_email: '이주혁' 
-              },{content: 'content two',
-                  register_date: '2018-01-03',
-                  member_email: '원주민'}]
-          }]
+          taskList:[],
+          taskListItem:{
+              name : '',
+              channel_id : '',
+              register_date: '',
+              edit_date: '',
+              position: '',
+          }
       }
     },
     methods: {
         addTaskList: function () {
-            alert('test')
+            this.taskList.push(this.taskListItem)
+        },
+        init: function(){
+             for(let i=0;i<10;i++){
+                this.taskListItem.name = 'test'+i
+                this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
+             }
         }
+        
     }
   }
 </script>
