@@ -13,6 +13,7 @@ public class Task {
 	private String content;
 	private Date register_date;
 	private Date edit_date;
+	private String member_email;
 //	private int state;
 //	private int position;
 }

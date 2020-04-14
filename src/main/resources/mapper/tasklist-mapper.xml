@@ -21,7 +21,7 @@
     </resultMap>
 
 	
-	<insert id="insertTaskList" parameterType="com.nineone.nocm.domain.TaskList">
+	<insert id="insertTaskList" useGeneratedKeys="true" keyProperty="id" parameterType="com.nineone.nocm.domain.TaskList">
 		insert tasklist (name,channel_id,position) 
 			values (
 				#{name},

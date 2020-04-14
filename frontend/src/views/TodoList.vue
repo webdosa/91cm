@@ -1,7 +1,6 @@
 <template>
   <div class="scrolling-wrapper">
       <div>
-          <b-button @click="init">Init</b-button>
           <b-list-group horizontal>
               <b-list-group-item v-for="item in getAllTaskList">
                   <TaskList :taskList="item"></TaskList>
@@ -25,34 +24,49 @@ import TaskList from "../components/TaskList"
     components: {
         TaskList
     },
+    watch:{
+      getCurrentChannel: function () {
+        this.$http.get('/api/tasklist/get/'+this.$store.state.currentChannel.id)
+          .then(res => {
+            this.taskList = res.data
+            console.log(this.taskList)
+          })
+      }
+    },
     computed: {
         getAllTaskList: function(){
+            for(let i=0;i<this.taskList.length;i++){
+              this.taskList[i].position = i;
+            }
             return this.taskList
-        }
+        },
+      getCurrentChannel: function () {
+        return this.$store.state.currentChannel
+      }
+    },
+    created(){
+        this.$http.get('/api/tasklist/get/'+this.$store.state.currentChannel.id)
+        .then(res => {
+            this.taskList = res.data
+            console.log(this.taskList)
+        })
     },
     data() {
       return {
           taskList:[],
           taskListItem:{
+              id: '',
               name : '',
-              channel_id : '',
-              register_date: '',
-              edit_date: '',
+              channel_id : this.$store.state.currentChannel.id,
               position: '',
+              tasks: []
           }
       }
     },
     methods: {
         addTaskList: function () {
-            this.taskList.push(this.taskListItem)
-        },
-        init: function(){
-             for(let i=0;i<10;i++){
-                this.taskListItem.name = 'test'+i
-                this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
-             }
+            this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
         }
-        
     }
   }
 </script>

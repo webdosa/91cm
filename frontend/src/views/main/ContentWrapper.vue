@@ -209,8 +209,8 @@
           return;
         }
         /////////////////////////////////////
-        formData.append('channel_id', this.currentChannel.id)
-        formData.append('sender', this.message.sender)
+        formData.append('channel_id', this.$store.state.currentChannel.id)
+        formData.append('sender', this.$store.state.currentUser.email)
         this.$http.post('/api/file/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'

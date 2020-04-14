@@ -14,7 +14,7 @@ public class TaskList {
 	private int channel_id;
 	private Date register_date;
 	private Date edit_date;
-	//private int position;
+	private int position;
 	private List<Task> tasks;
 
 }

@@ -14,7 +14,8 @@
         <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
         <!-- CjannelHeader -->
         <div v-else>
-          <ChannelHeader v-if="$store.state.selectComponent=='main'"></ChannelHeader>
+<!--          추후에 깔금한 방식으로 변경-->
+          <ChannelHeader v-if="$store.state.selectComponent=='main'||$store.state.selectComponent=='todoList'"></ChannelHeader>
           <keep-alive>
             <component :is="whichComponent"
                        :msgArray="msgArray"
