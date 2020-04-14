@@ -25,10 +25,7 @@
           <div>
             <div style="display:flex;">
               <p>Channel Name</p>
-              <template v-if="$store.state.currentChannel.member_email == $store.state.currentUser.email">
                 <a class="verti-align" data-mode="edit" @click="useModal('edit')">Edit</a>
-                <a class="verti-align" @click="deleteChannel">Delete</a>
-              </template>
             </div>
             <li class="list-unstyled">{{ $store.state.currentChannel.name }}</li>
           </div>
@@ -84,8 +81,9 @@
         }).then(res => {
           // 유저가 나갔음으로 채널 유저 업데이트
           this.$store.state.stompClient.send('/pub/chat/room/'+this.$store.state.currentChannel.id,
-            JSON.stringify({'message':'updateChannel', 'error':"null"}))
+          JSON.stringify({'message':'updateChannel', 'error':"null"}))
           this.$alertModal('alert redirect', this.$store.state.currentChannel.name + ' 채널에서 나갔습니다.')
+          this.$eventBus.$emit('leaveChannelMsg')
         }).catch(error => {
           this.$alertModal('error', '나가기에 실패했습니다.')
         })
@@ -110,27 +108,7 @@
             this.userSelect = value
             return value
           })
-      },
-      deleteChannel: async function () {
-        //current vuex 사용
-        await this.msgBox("정말로 채널을 삭제하시겠습니까?")
-        console.log(this.userSelect)
-        const user = this.$store.state.currentUser
-        console.log(user)
-        if (!this.userSelect) {
-          return
-        }
-        if (this.$store.state.currentChannel.member_email == user.email) {
-          await this.$http.post('http://localhost:9191/api/channel/delete', this.$store.state.currentChannel
-          ).then(res => {
-            console.log(res)
-            this.$router.go('/main')
-          }).catch(error => {
-            console.log(error)
-          })
-        }
       }
-
     }
   }
 
