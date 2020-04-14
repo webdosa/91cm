@@ -144,6 +144,10 @@
     },
     created() {
       this.getMessage()
+      this.$eventBus.$on('leaveChannelMsg', () =>{
+        this.message.content = this.$store.state.currentUser.name + '님이 나가셨습니다.'
+        this.send()
+      })
     },
     mounted() {
       this.$nextTick(() => {
@@ -225,8 +229,7 @@
         }).catch(error => {
           console.log(error)
         })
-      },
-
+      },  
       invite: async function () {
         const userName = this.message.content.split(' ')[0]
         const userEmail = this.message.content.split(' ')[1]
@@ -262,7 +265,6 @@
             this.message.content = ''
             this.scrollToEnd(true)
           } else {
-            console.log('asd')
             this.message.content = CommonClass.replaceErrorMsg(this.message.content)
             this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
             let errormsg = JSON.parse(JSON.stringify(this.message))
