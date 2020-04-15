@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nineone.nocm.domain.Task;
@@ -17,13 +18,10 @@ public class TaskServiceImpl implements TaskService{
 	private TaskRepository taskRepository; 
 	
 	@Override
-	@Transactional
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean insertTask(Task task) {
-		if(taskRepository.updateTaskPositionByInsert(task) > 0) {
-			return (taskRepository.insertTask(task) > 0) ? true : false;
-		}else {
-			return false;
-		}
+		taskRepository.updateTaskPositionByInsert(task);
+		return (taskRepository.insertTask(task) > 0) ? true : false;
 	}
 
 	@Override
