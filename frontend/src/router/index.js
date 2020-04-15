@@ -13,6 +13,7 @@ import SignUp from '../components/SignUp'
 import FormSignUp from "../views/FormSignUp";
 import CopyRight from "../views/util/CopyRight"
 import Todolist from '../views/TodoList'
+import About from "../views/About";
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: About
   },
   {
     path: '*',

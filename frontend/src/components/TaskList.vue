@@ -19,38 +19,43 @@
           <b-button size="sm" variant="danger" @click="createFormToggle">Cancel</b-button>
         </div>
       </b-list-group-item>
-      <b-list-group-item v-for="(task,index) in getTasks" style="margin-bottom: 10px;">
-        <div>
-          <b-dropdown no-caret variant="nonoutline" toggle-class="text-decoration-none"
-                      class="float-right" style="padding: 0px;">
-            <template v-slot:button-content>
-              <i class="im im-menu-dot-h"></i>
-            </template>
-            <b-dropdown-item @click="editFormToggle(index)">Edit</b-dropdown-item>
-            <b-dropdown-item @click="deleteTask(task,index)" variant="danger">Delete</b-dropdown-item>
-          </b-dropdown>
-          <br>
-          <p v-if="index != editSelector" id="content">{{task.content}}</p>
-          <div v-else>
-            <b-form-textarea placeholder="내용을 입력해주세요" v-model="task.content">
-            </b-form-textarea>
-            <div class="float-right">
-              <b-button size="sm" variant="primary" style="margin-right: 5px;" @click="editTask(task)">Edit</b-button>
-              <b-button size="sm" variant="danger" @click="editFormToggle">Cancel</b-button>
-            </div>
-            <br><br>
-          </div>
+      <draggable :list="getTasks">
+        <transition-group name="task-list">
+          <b-list-group-item v-for="(task,index) in getTasks" :key="task" style="margin-bottom: 10px;">
+            <div>
+              <b-dropdown no-caret variant="nonoutline" toggle-class="text-decoration-none"
+                          class="float-right" style="padding: 0px;">
+                <template v-slot:button-content>
+                  <i class="im im-menu-dot-h"></i>
+                </template>
+                <b-dropdown-item @click="editFormToggle(index)">Edit</b-dropdown-item>
+                <b-dropdown-item @click="deleteTask(task,index)" variant="danger">Delete</b-dropdown-item>
+              </b-dropdown>
+              <br>
+              <p v-if="index != editSelector" id="content">{{task.content}}</p>
+              <div v-else>
+                <b-form-textarea placeholder="내용을 입력해주세요" v-model="task.content">
+                </b-form-textarea>
+                <div class="float-right">
+                  <b-button size="sm" variant="primary" style="margin-right: 5px;" @click="editTask(task)">Edit</b-button>
+                  <b-button size="sm" variant="danger" @click="editFormToggle">Cancel</b-button>
+                </div>
+                <br><br>
+              </div>
 
-          <footer>
-            <small class="float-right">created by {{task.member_email}}</small>
-<!--            <small class="float-left">created date {{task.register_date}}</small>-->
-          </footer>
-        </div>
-      </b-list-group-item>
+              <footer>
+                <small class="float-right">created by {{task.member_email}}</small>
+                <!--            <small class="float-left">created date {{task.register_date}}</small>-->
+              </footer>
+            </div>
+          </b-list-group-item>
+        </transition-group>
+      </draggable>
     </b-list-group>
   </div>
 </template>
 <script>
+  import draggable from 'vuedraggable'
   export default {
     name: 'TaskList',
     props: ["taskList"],
@@ -58,6 +63,9 @@
       getTasks: function () {
         return this.taskList.tasks
       }
+    },
+    components:{
+      draggable
     },
     data() {
       return {
@@ -74,7 +82,6 @@
       }
     },
     created() {
-
     },
     methods: {
       editToggle: function(){
@@ -147,6 +154,16 @@
   }
 </script>
 <style scoped>
+  .task-list-enter-active, task-list-leave-active{
+    transition: all 1s;
+  }
+  .task-list-enter, .task-list-leave-to{
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  .task-list-move{
+    transition: transform 1s;
+  }
   i {
     margin-left: 10px;
   }
