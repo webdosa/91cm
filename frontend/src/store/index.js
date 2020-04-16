@@ -6,8 +6,10 @@ import SockJS from "sockjs-client";
 
 Vue.use(Vuex)
 
+// state, mutations, action, getter 등을 파일로 나눌 필요 있음
 export default new Vuex.Store({
   state: {
+    taskBoard: [],
     syncSignal: {
       syncChannel: false,
       syncChannelUser: false,
@@ -59,9 +61,20 @@ export default new Vuex.Store({
     },
     setSearchText: function (state, paylod) {
       state.searchText = paylod
+    },
+    setTaskBoard: function (state,payload) {
+      state.taskBoard = payload
     }
   },
   actions: {
+    updateTaskBoard: function(context){
+      axios.get('/api/tasklist/get/'+context.state.currentChannel.id)
+        .then(res => {
+          context.commit('setTaskBoard',res.data);
+        }).catch(error=>{
+          console.log(error)
+      })
+    },
     userListUpdate: function (context) {
       axios.get('/api/user/list')
         .then(res => {
@@ -101,6 +114,9 @@ export default new Vuex.Store({
         }
       }
     },
-    getUserChannelList: state => state.userChannelList
+    getUserChannelList: state => state.userChannelList,
+    getTaskBoard: state=> state.taskBoard
+
+
   }
 })

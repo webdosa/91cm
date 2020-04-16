@@ -7,14 +7,14 @@
           <b-badge variant="nonoutline" @click="editToggle"><i class="im im-pencil"></i></b-badge>
           <b-badge variant="nonoutline" @click="deleteTaskList"><i class="im im-trash-can"></i></b-badge>
         </span>
-
+        <b-form-input v-else
+                      @keydown.enter.exact="editTaskListName"
+                      @keydown.esc="editToggle"
+                      v-model="taskList.name"
+                      autofocus></b-form-input>
+        <i class="im im-plus float-right btn" style="color: white;" @click="createFormToggle"></i>
       </draggable>
-      <b-form-input v-else
-                    @keydown.enter.exact="editTaskListName"
-                    @keydown.esc="editToggle"
-                    v-model="taskList.name"
-                    autofocus></b-form-input>
-      <i class="im im-plus float-right btn" style="color: white;" @click="createFormToggle"></i>
+
     </div>
     <div v-else>
       <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus
@@ -77,6 +77,14 @@
         return this.taskList.tasks
       }
     },
+    watch:{
+      getTasks: function () {
+        this.taskList.tasks.forEach(task =>{
+          task.position = this.taskList.tasks.indexOf(task)
+        })
+        console.log(this.taskList.tasks)
+      }
+    },
     components: {
       draggable
     },
@@ -98,21 +106,27 @@
     },
     methods: {
       taskEventHandler: function({added, removed, moved}){
+        let oldIndex=-1
+        let newIndex=-1
         if(added){
-          console.log(added.newIndex)
-          console.log(added.element)
+          newIndex = added.newIndex
+          console.log(added)
           added.element.tasklist_id = this.taskList.id
-          added.element.position = added.newIndex
         }
         if (moved){
-          console.log(moved.oldIndex)
-          console.log(moved.newIndex)
-          console.log(moved.element)
+          newIndex = moved.newIndex
+          console.log("moved.newIndex : " + moved.newIndex)
+          oldIndex = moved.oldIndex
+          console.log("moved.oldIndex : " + moved.oldIndex)
         }
         if (removed){
-          console.log(removed.oldIndex)
+          oldIndex = removed.oldIndex
+          newIndex = removed.element.position
           console.log(removed.element)
+          console.log(removed.element.position)
         }
+        console.log(oldIndex +" : "+newIndex)
+
 
       },
       checkTask: function(evt){
@@ -124,7 +138,7 @@
         evt.draggedContext.element.position = evt.draggedContext.index
       },
       deleteTaskList: function () {
-        this.$http.post('/api/tasklist/delete/' + this.taskList.id)
+        this.$http.post('/api/tasklist/delete',this.taskList)
           .then(res => {
             console.log('delete success : ' + res.data)
             this.$eventBus.$emit('deleteTaskList', this.taskList)
@@ -158,7 +172,7 @@
       },
       deleteTask: function (task, index) {
         // 현저 유저와 작성자가 같은지 비교해서 삭제할 수 있도록 변경 필요
-        this.$http.post('/api/task/delete/' + task.id)
+        this.$http.post('/api/task/delete', task)
           .then(res => {
             console.log(res.data)
             this.taskList.tasks.splice(index, 1)
@@ -171,8 +185,9 @@
         this.$http.post('/api/task/insert', this.task)
           .then(res => {
             this.taskContent = ''
-            this.taskList.tasks.push(res.data)
+            this.taskList.tasks.unshift(res.data)
             this.createFormToggle()
+            console.log(this.taskList)
           }).catch(error => {
           console.log(error)
         })

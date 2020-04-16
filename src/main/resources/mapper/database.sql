@@ -117,3 +117,5 @@ delete from sns_info;
 delete from joininfo;
 delete from message;
 delete from file;
+delete from task;
+delete from tasklist;

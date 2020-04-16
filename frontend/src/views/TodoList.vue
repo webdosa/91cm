@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="wrapper">
     <div class="scrolling-wrapper">
       <b-list-group horizontal>
         <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions">
-            <b-list-group-item v-for="item in getAllTaskList" :key="item">
-              <TaskList :taskList="item"></TaskList>
-            </b-list-group-item>
+          <b-list-group-item v-for="item in getAllTaskList" :key="item">
+            <TaskList :taskList="item"></TaskList>
+          </b-list-group-item>
         </draggable>
         <b-list-group-item>
           <div>
@@ -22,10 +22,13 @@
 <script>
   import TaskList from "../components/TaskList"
   import draggable from 'vuedraggable'
+  import Loading from "./main/Loading";
+  import {mapGetters} from "vuex";
 
   export default {
     name: 'Todolist',
     components: {
+      Loading,
       TaskList,
       draggable
     },
@@ -39,6 +42,9 @@
       }
     },
     computed: {
+      ...mapGetters({
+        getTaskBoard: 'getTaskBoard'
+      }),
       getAllTaskList: function () {
         for (let i = 0; i < this.taskList.length; i++) {
           this.taskList[i].position = i;
@@ -48,14 +54,19 @@
       getCurrentChannel: function () {
         return this.$store.state.currentChannel
       },
-      dragOptions(){
-        return{
-          animated: "200",
+      dragOptions() {
+        return {
+          animation: "200",
           group: "todo"
         }
       }
     },
     created() {
+      this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
+          if (res.headers.typename =='test'){
+            console.log("get headers "+ res.headers.typename)
+          }
+      })
       this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
         .then(res => {
           this.taskList = res.data
@@ -67,6 +78,7 @@
     },
     data() {
       return {
+        connetionCheck: false,
         taskList: [],
         taskListItem: {
           id: '',
@@ -101,7 +113,8 @@
   .task-board-move {
     transition: transform 1s;
   }
-  .scrolling-wrapper{
+
+  .scrolling-wrapper {
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
   }
