@@ -41,7 +41,7 @@
               <input id="password" type="password" name="password" placeholder="Password"
                      class="form-control bg-white border-left-0 border-md">
             </div>
-           
+
 
 
             <!-- Submit Button -->
@@ -89,7 +89,7 @@
         const form = new FormData()
         form.append('userid', this.userid)
         form.append('password', this.password)
-        axios.post('http://localhost:9191/', form)
+        axios.post('/', form)
           .then(res => {
             console.log(res)
           }).catch(error => {
@@ -98,7 +98,7 @@
       }
     },
     mounted() {
-      axios.get('http://localhost:9191/api/user/login')
+      axios.get('/api/user/login')
         .then(res => {
           if (res.data) {
             console.log(res.data)
@@ -113,7 +113,7 @@
 <style scoped>
   /* @import "~bootstrap/dist/css/bootstrap.min.css";
   @import '~bootstrap-vue/dist/bootstrap-vue.min.css'; */
-  
+
   .social-logo{
   width: 50px;
   height: 50px;
@@ -130,7 +130,7 @@
   margin: 10px;
 }
 .mycustom{
-   margin-bottom: 0px; 
+   margin-bottom: 0px;
 }
 .margincustom{
   margin-top: 120px;
@@ -182,8 +182,8 @@
     font-weight: bold;
     font-size: 0.9rem;
   }
-  
-  
+
+
   .form-control:focus {
     box-shadow: none;
     color: #495057;
