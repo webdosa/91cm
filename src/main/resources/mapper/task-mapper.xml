@@ -12,7 +12,7 @@
 			#{tasklist_id},
 			#{content},
 			#{member_email},
-			1
+			0
 			)
 	</insert>
 	
