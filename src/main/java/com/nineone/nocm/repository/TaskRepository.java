@@ -8,4 +8,5 @@ public interface TaskRepository {
 	public int deleteTask(int id);
 	public int updateTaskContent(Task task);
 	public int updateTaskPosition(Task task);
+	public int updateTaskPositionByInsert(Task task);
 }

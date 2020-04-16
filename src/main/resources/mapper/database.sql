@@ -8,7 +8,7 @@ email varchar(100) primary key not null,
 password varchar(255),
 name varchar(100) not null,
 phone varchar(20) not null,
-picture varchar(100)
+picture varchar(200)
 );
 
 create table sns_info (
@@ -92,7 +92,7 @@ edit_date  datetime not null default CURRENT_TIMESTAMP,
 member_email varchar(100) not null,
 state boolean,
 position int not null,
-foreign key (tasklist_id) references list(id) on delete cascade on update cascade,
+foreign key (tasklist_id) references tasklist(id) on delete cascade on update cascade,
 foreign key (member_email) references member(email) on update cascade
 );
 

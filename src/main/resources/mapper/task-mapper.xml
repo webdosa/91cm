@@ -7,11 +7,12 @@
 <mapper namespace="com.nineone.nocm.mapper.task">
 	<!-- 서브쿼리로 한번 더 감싸는 이유는 mysql 에러가 떠서.. 임시해결로 한번더 감싸주었다. -->	
 	<insert id="insertTask">
-		insert task (tasklist_id,content,position) 
+		insert task (tasklist_id,content,member_email,position) 
 			values (
 			#{tasklist_id},
 			#{content},
-			(select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a)
+			#{member_email},
+			1
 			)
 	</insert>
 	
@@ -28,5 +29,9 @@
 			position = (select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a),
 			tasklist_id = #{tasklist_id}
 			where id = #{id}
+	</update>
+	
+	<update id="updateTaskPositionByInsert">
+		update task set position = position + 1  where tasklist_id = #{tasklist_id}
 	</update>
 </mapper>
