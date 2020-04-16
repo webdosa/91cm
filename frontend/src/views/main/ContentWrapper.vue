@@ -21,7 +21,7 @@
                 <b-col v-for="file in msg.files">
                   <a @click="fileDownload(file)">
                     <b-img thumbnail rounded fluid :src="selectImage(file)" alt="이미지를 찾을 수 없습니다."
-                           style="max-width: 200px"></b-img>
+                           style="max-width: 200px" @load="imgLoad"></b-img>
                     <p><b>{{file.original_name}}</b></p>
                     <p>file size : {{(file.file_size / 1024).toLocaleString(undefined,{minimumFractionDigits:2})}}
                       kb</p>
@@ -47,8 +47,8 @@
         <div style="position: relative;">
            <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
              <label for="file-input" style="display: block;margin-bottom: 0;">
-              </label>
-              <i class="im im-cloud-upload myfile-upload"></i>
+               <i class="im im-cloud-upload myfile-upload"></i>
+            </label>
               <input id="file-input" type="file" ref="fileInput" multiple @change="attachFile" hidden/>
 
             <b-form-textarea
@@ -108,7 +108,7 @@
   import SearchInput from './SearchInput'
 
   export default {
-    props: ['currentChannel', 'stompClient', 'msgArray'],
+    props: ['msgArray'],
     name: 'ContentWrapper',
     components: {
       MsgBox, SearchInput
@@ -144,6 +144,10 @@
     },
     created() {
       this.getMessage()
+      this.$eventBus.$on('leaveChannelMsg', () =>{
+        this.message.content = this.$store.state.currentUser.name + '님이 나가셨습니다.'
+        this.send()
+      })
     },
     mounted() {
       this.$nextTick(() => {
@@ -162,6 +166,11 @@
       console.log('deactiveed contentwrapper')
     },
     methods: {
+      imgLoad(){
+        if(!this.msgPreviewBool){
+          this.scrollToEnd(true)
+        }
+      },
       dropFile: function (e) {
         this.addFile(e.dataTransfer.files)
         console.log(e)
@@ -220,8 +229,7 @@
         }).catch(error => {
           console.log(error)
         })
-      },
-
+      },  
       invite: async function () {
         const userName = this.message.content.split(' ')[0]
         const userEmail = this.message.content.split(' ')[1]
@@ -257,7 +265,6 @@
             this.message.content = ''
             this.scrollToEnd(true)
           } else {
-            console.log('asd')
             this.message.content = CommonClass.replaceErrorMsg(this.message.content)
             this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
             let errormsg = JSON.parse(JSON.stringify(this.message))
@@ -293,8 +300,8 @@
             this.cursorPoint.first = false
             this.cursorPoint.cursorId = res.data[res.data.length - 1].id
           }
-          console.log(res.data)
           for (let i = 0; i < res.data.length; i++) {
+
             res.data[i].content = CommonClass.replacemsg(res.data[i].content)
           }
           this.msgArray = res.data.reverse().concat(this.msgArray)

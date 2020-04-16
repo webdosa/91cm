@@ -34,4 +34,10 @@ public class TaskRepositoryImpl implements TaskRepository {
 		return sqlSession.update(namespace + ".updateTaskPosition",task);
 	}
 
+	@Override
+	public int updateTaskPositionByInsert(Task task) {
+		return sqlSession.update(namespace + ".updateTaskPositionByInsert",task);
+	}
+	
+
 }

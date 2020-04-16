@@ -11,10 +11,10 @@ class NotificationClass {
     sendNotification (isfocus,data) {
         console.log(isfocus)
         if(!isfocus){
+            let contents = data.content == null ? "첨부파일" : CommonClass.replacemsgForPreview(data.content)
             let options = {
-                body: data.user.name + ' : '+ CommonClass.replacemsgForPreview(data.content)
+                body: data.user.name + ' : '+ contents
             }
-            console.log(options.body)
             let notification = new Notification("91CM 메시지 도착", options);
 
             notification.onclick = function(event) {
@@ -23,7 +23,7 @@ class NotificationClass {
                 // window.focus()
               }
             
-            //알림 후 5초 뒤,
+            //알림 후 4초 뒤,
             setTimeout(function () {
                 //얼람 메시지 닫기
                 notification.close();

@@ -12,6 +12,7 @@ import com.nineone.nocm.domain.Invite;
 import com.nineone.nocm.domain.JoinInfo;
 import com.nineone.nocm.domain.LastAccess;
 import com.nineone.nocm.repository.JoinInfoRepository;
+import com.nineone.nocm.util.DateUtil;
 
 @Service
 public class JoinInfoServiceImpl implements JoinInfoService {
@@ -44,7 +45,7 @@ public class JoinInfoServiceImpl implements JoinInfoService {
 
 	@Override
 	public int updateLastAccessDate(int CurrentChannelId,String email) {
-		Date last_access_date = messageService.makeDate();
+		Date last_access_date = DateUtil.makeDate();
 		JoinInfo joinInfo = JoinInfo.builder()
     			.channel_id(CurrentChannelId)
     			.member_email(email)

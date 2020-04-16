@@ -25,21 +25,25 @@ class AboutChannel{
 
     updateLastAccessDate (currentId,oldId) {
       console.log(oldId)
-      return axios.put('/api/channel/update/lastaccessdate',
+      axios.put('/api/channel/update/lastaccessdate',
       {
         oldChannelId: oldId,
         currentChannelId: currentId
       }
-      )
+      ).catch(error => {
+        console.log(error.response)   
+      })
     }
 
     updateSessionIsCW (bool) {
       console.log(bool)
-      return axios.put("/api/channel/update/sessioniscw",
+      axios.put("/api/channel/update/sessioniscw",
       {
         isContentWrapper: bool
       }
-      )
+      ).catch(error => {
+         console.log(error.response)   
+      })
     }
 
     updateLastAccessStatus (oldVal,newVal) {
@@ -51,30 +55,25 @@ class AboutChannel{
     }
 
     initCurrentChannel (currentChannel){
-      return axios.post("/api/channel/update/sessioncc",
+      axios.post("/api/channel/update/sessioncc",
       {
         currentChannelId: currentChannel
       }
-      )
+      ).catch(error => {
+        console.log(error.response)   
+      })
     }
 
     updateFocus (bool) {
-      return axios.post("/api/channel/update/sessionfocus",
+      axios.post("/api/channel/update/sessionfocus",
       {
         isFocus: bool
       }
-      )
+      ).catch(error => {
+        console.log(error.response)   
+      })
     }
-
-    // insertSessionLA(channel_id){
-    //   return axios.post("http://localhost:9191/api/channel/insert/sessionLA",
-    //   {
-    //     isFocus: true,
-    //     currentChannelId: channel_id,
-    //     isContentWrapper: true
-    //   })
-    // }
-
+    
 }
 
 export default new AboutChannel()

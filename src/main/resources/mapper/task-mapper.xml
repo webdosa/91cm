@@ -12,7 +12,7 @@
 			#{tasklist_id},
 			#{content},
 			#{member_email},
-			(select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a)
+			1
 			)
 	</insert>
 	
@@ -29,5 +29,9 @@
 			position = (select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a),
 			tasklist_id = #{tasklist_id}
 			where id = #{id}
+	</update>
+	
+	<update id="updateTaskPositionByInsert">
+		update task set position = position + 1  where tasklist_id = #{tasklist_id}
 	</update>
 </mapper>
