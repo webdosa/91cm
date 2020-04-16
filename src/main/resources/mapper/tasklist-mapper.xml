@@ -11,12 +11,14 @@
     	<result property="channel_id" column="channel_id"/>
     	<result property="register_date" column="register_date"/>
     	<result property="edit_date" column="edit_date"/>
+    	<result property="position" column="position"/>
 		<collection property="tasks" column="id" javaType="java.util.ArrayList" ofType="com.nineone.nocm.domain.Task" select="getTask">
 			<result property="id" column="id"/>
 			<result property="tasklist_id" column="tasklist_id"/>
 			<result property="content" column="content"/>
 			<result property="register_date" column="register_date"/>
 			<result property="edit_date" column="edit_date"/>
+			<result property="position" column="position"/>
 		</collection>
     </resultMap>
 
@@ -59,9 +61,9 @@
 	<update id="moveTaskListPosition">
 		update tasklist set
 		<choose>
-			<when test="isUp.equals('true')">
+			<when test="isUp">
 				position = (position + 1)
-				where position >= #{tasklistNewIndex}
+				where position <![CDATA[>=]]> #{tasklistNewIndex}
 				and position <![CDATA[<]]> #{tasklistOldIndex}
 			</when>
 			<otherwise>

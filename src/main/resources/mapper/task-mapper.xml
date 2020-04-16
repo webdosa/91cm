@@ -46,7 +46,7 @@
 	<update id="moveTaskPosition">
 		update task set
 		<choose>
-			<when test="isUp.equals('true')">
+			<when test="isUp">
 				position = (position + 1)
 				where position >= #{taskNewIndex}
 				and position <![CDATA[<]]> #{taskOldIndex}
@@ -71,7 +71,7 @@
 				<otherwise>
 				,tasklist_id = #{tasklistNewId}
 				where id = #{taskId} and
-					tasklist_id = #{tasklistNewId}
+					tasklist_id = #{tasklistOldId}
 				</otherwise>
 			</choose>
 			
