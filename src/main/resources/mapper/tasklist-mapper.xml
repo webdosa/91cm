@@ -34,6 +34,10 @@
 		delete from tasklist where id= #{id}
 	</delete>
 	
+	<update id="updateTaskListPositionByDelete">
+		update tasklist set position (position - 1) where position > #{position}
+	</update>
+	
 	<update id="updateTaskListName">
 		update tasklist set name = #{name}, edit_date = #{edit_date} where id = #{id}
 	</update>
@@ -47,6 +51,31 @@
 	<select id="getTask" resultType="com.nineone.nocm.domain.Task">
 		select * from task where tasklist_id = #{id} order by position
 	</select>
+	
+	<!-- <update id="initTaskListPosition">
+		update tasklist set position = 0  where position = #{tasklistOldIndex}
+	</update> -->
+	
+	<update id="moveTaskListPosition">
+		update tasklist set
+		<choose>
+			<when test="isUp.equals('true')">
+				position = (position + 1)
+				where position >= #{tasklistNewIndex}
+				and position <![CDATA[<]]> #{tasklistOldIndex}
+			</when>
+			<otherwise>
+				position = (position - 1)
+				where position > #{tasklistOldIndex}
+				and position <![CDATA[<=]]> #{tasklistNewIndex}
+			</otherwise>
+		</choose>
+	</update>
+	
+	<update id="updateTaskListPosition">
+		update tasklist set position = #{tasklistNewIndex}
+			where id = #{tasklistId} 
+	</update>
 	
 	
 </mapper>

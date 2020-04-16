@@ -1,6 +1,7 @@
 package com.nineone.nocm.service;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,10 @@ public class TaskServiceImpl implements TaskService{
 	}
 
 	@Override
-	public boolean deleteTask(int id) {
-		return (taskRepository.deleteTask(id) > 0 )? true : false;
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
+	public boolean deleteTask(Task task) {
+		taskRepository.updateTaskPositionByDelete(task);
+		return (taskRepository.deleteTask(task.getId()) > 0 )? true : false;
 	}
 
 	@Override
@@ -37,8 +40,24 @@ public class TaskServiceImpl implements TaskService{
 	}
 
 	@Override
-	public boolean updateTaskPosition(Task task) {
-		return (taskRepository.updateTaskPosition(task) > 0 )? true : false;
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
+	public boolean updateTaskPosition(Map<String, Object> map) {
+		if(map.get("tasklistNewId")==null) {
+			boolean isUp = (int)map.get("taskNewIndex") < (int)map.get("taskOldIndex") ? true : false;
+			map.put("isUp", isUp);
+			taskRepository.moveTaskPosition(map);
+			return  (taskRepository.updateTaskPosition(map)> 0)? true : false;
+		}else {
+			taskRepository.moveTaskPositionByDelete(map);
+			taskRepository.moveTaskPositionByinsert(map);
+			return (taskRepository.updateTaskPosition(map) > 0)? true : false;
+		}
+		
 	}
+
+//	@Override
+//	public boolean updateTaskPosition(Task task) {
+//		return (taskRepository.updateTaskPosition(task) > 0 )? true : false;
+//	}
 
 }

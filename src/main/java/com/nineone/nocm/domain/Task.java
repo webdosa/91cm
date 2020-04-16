@@ -15,5 +15,5 @@ public class Task {
 	private Date edit_date;
 	private String member_email;
 //	private int state;
-//	private int position;
+	private int position;
 }

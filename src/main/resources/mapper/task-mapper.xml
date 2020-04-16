@@ -20,18 +20,74 @@
 		delete from task where id = #{id}
 	</delete>
 	
+	<update id="updateTaskPositionByDelete">
+		update task set position = (position - 1 ) where position > #{position} and tasklist_id = #{tasklist_id}
+	</update>
+	
 	<update id="updateTaskContent">
 		update task set content = #{content}, edit_date = #{edit_date} where id = #{id}
 	</update>
 	
-	<update id="updateTaskPosition">
+	<!-- <update id="updateTaskPosition">
 		update task set 
 			position = (select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a),
 			tasklist_id = #{tasklist_id}
 			where id = #{id}
-	</update>
+	</update> -->
 	
 	<update id="updateTaskPositionByInsert">
-		update task set position = position + 1  where tasklist_id = #{tasklist_id}
+		update task set position = (position + 1) where tasklist_id = #{tasklist_id}
 	</update>
+	<!-- ===================================================== -->
+	<!-- <update id="initTaskPosition">
+		update task set position = 0  where position = #{taskOldIndex} and tasklist_id = #{tasklistId}
+	</update> -->
+	
+	<update id="moveTaskPosition">
+		update task set
+		<choose>
+			<when test="isUp.equals('true')">
+				position = (position + 1)
+				where position >= #{taskNewIndex}
+				and position <![CDATA[<]]> #{taskOldIndex}
+				and tasklist_id = #{tasklistId}
+			</when>
+			<otherwise>
+				position = (position - 1)
+				where position > #{taskOldIndex}
+				and position <![CDATA[<=]]> #{taskNewIndex}
+				and tasklist_id = #{tasklistId}
+			</otherwise>
+		</choose> 
+	</update>
+	
+	<update id="updateTaskPosition">
+		update task set position = #{taskNewIndex}
+			<choose>
+				<when test="tasklistNewId == null">
+					where id = #{taskId} and 
+						tasklist_id = #{tasklistId}		
+				</when>
+				<otherwise>
+				,tasklist_id = #{tasklistNewId}
+				where id = #{taskId} and
+					tasklist_id = #{tasklistNewId}
+				</otherwise>
+			</choose>
+			
+	</update>
+	<!-- ==================================================== -->
+	<update id="moveTaskPositionByDelete">
+		update task set position = (position - 1 ) where position >
+				#{taskOldIndex} and tasklist_id = #{tasklistOldId}	
+	</update>
+	
+	<update id="moveTaskPositionByinsert">
+		update task set position = (position + 1) where position >= #{taskNewIndex} and tasklist_id = #{tasklistNewId}
+	</update>
+	
+	<!-- <update id="updateTaskPositionBy">
+		update task set postion = #{taskNewIndex}, tasklist_id = #{tasklistNewId} where id = #{taskId} 
+	</update> -->
+	
 </mapper>
