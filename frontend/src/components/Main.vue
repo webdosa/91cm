@@ -186,6 +186,7 @@
       },
       channelSubscribeCallBack(e, fail) {
         let data = JSON.parse(e.body)
+        console.log(data)
         console.log(this.$store.state.isfocus)
         NotificationClass.sendNotification(this.$store.state.isfocus, data)
         if (data.channel_id == this.$store.state.currentChannel.id && this.$store.state.selectComponent == 'main') {

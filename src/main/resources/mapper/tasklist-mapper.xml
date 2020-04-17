@@ -63,7 +63,7 @@
 		<choose>
 			<when test="isUp">
 				position = (position + 1)
-				where position >= #{tasklistNewIndex}
+				where position <![CDATA[>=]]> #{tasklistNewIndex}
 				and position <![CDATA[<]]> #{tasklistOldIndex}
 			</when>
 			<otherwise>
