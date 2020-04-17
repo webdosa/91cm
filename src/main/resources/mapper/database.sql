@@ -86,8 +86,8 @@ edit_date  datetime not null default CURRENT_TIMESTAMP,
 member_email varchar(100) not null,
 state boolean,
 position int not null,
-start_date datetime not null,
-end_date datetime not null,
+start_date datetime,
+end_date datetime,
 foreign key (tasklist_id) references tasklist(id) on delete cascade on update cascade,
 foreign key (member_email) references member(email) on update cascade
 );
@@ -113,3 +113,5 @@ delete from sns_info;
 delete from joininfo;
 delete from message;
 delete from file;
+delete from task;
+delete from tasklist;
