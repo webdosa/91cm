@@ -3,6 +3,7 @@ package com.nineone.nocm.service;
 import java.util.Date;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -13,6 +14,7 @@ import com.nineone.nocm.repository.TaskRepository;
 import com.nineone.nocm.util.DateUtil;
 
 @Service
+@Slf4j
 public class TaskServiceImpl implements TaskService{
 	
 	@Autowired
@@ -43,8 +45,10 @@ public class TaskServiceImpl implements TaskService{
 	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean updateTaskPosition(Map<String, Object> map) {
 		if(map.get("tasklistNewId")==null) {
+			log.info(map.get("tasklistNewId")+"");
 			boolean isUp = (int)map.get("taskNewIndex") < (int)map.get("taskOldIndex") ? true : false;
 			map.put("isUp", isUp);
+			log.info(isUp+"");
 			taskRepository.moveTaskPosition(map);
 			return  (taskRepository.updateTaskPosition(map)> 0)? true : false;
 		}else {

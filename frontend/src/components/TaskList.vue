@@ -77,9 +77,9 @@
         return this.taskList.tasks
       }
     },
-    watch:{
+    watch: {
       getTasks: function () {
-        this.taskList.tasks.forEach(task =>{
+        this.taskList.tasks.forEach(task => {
           task.position = this.taskList.tasks.indexOf(task)
         })
         console.log(this.taskList.tasks)
@@ -90,6 +90,13 @@
     },
     data() {
       return {
+        updateTask: {
+          taskOldIndex: null,
+          taskNewIndex: null,
+          tasklistOldId: null,
+          tasklistNewId: null,
+          taskId: null
+        },
         editSelector: -1,
         taskContent: '',
         taskListName: '',
@@ -105,40 +112,58 @@
     created() {
     },
     methods: {
-      taskEventHandler: function({added, removed, moved}){
-        let oldIndex=-1
-        let newIndex=-1
-        if(added){
-          newIndex = added.newIndex
-          console.log(added)
+      taskEventHandler: function ({added, moved, removed}) {
+        let oldIndex = -1
+        let newIndex = -1
+        let task
+        let updateTaskItem = {
+          taskOldIndex: null,
+          taskNewIndex: null,
+          tasklistOldId: null,
+          tasklistNewId: null,
+          tasklistId: null,
+          taskId: null
+        }
+        if (added) {
           added.element.tasklist_id = this.taskList.id
         }
-        if (moved){
-          newIndex = moved.newIndex
-          console.log("moved.newIndex : " + moved.newIndex)
-          oldIndex = moved.oldIndex
-          console.log("moved.oldIndex : " + moved.oldIndex)
+        if (moved) {
+          updateTaskItem.taskNewIndex = moved.newIndex
+          updateTaskItem.taskOldIndex = moved.oldIndex
+          updateTaskItem.tasklistId = this.taskList.id
+          updateTaskItem.taskId = moved.element.id
+          this.$http.post('/api/task/update/position', updateTaskItem)
+            .then(res => {
+              console.log("task update ok")
+            }).catch(error => {
+            console.log(error)
+          })
+          console.log(updateTaskItem)
         }
-        if (removed){
-          oldIndex = removed.oldIndex
-          newIndex = removed.element.position
-          console.log(removed.element)
-          console.log(removed.element.position)
+        if (removed) {
+          updateTaskItem.taskOldIndex = removed.oldIndex
+          updateTaskItem.taskNewIndex = removed.element.position
+          updateTaskItem.tasklistOldId = this.taskList.id
+          updateTaskItem.tasklistNewId = removed.element.tasklist_id
+          updateTaskItem.taskId = removed.element.id
+          console.log(updateTaskItem)
+          this.$http.post('/api/task/update/position', updateTaskItem)
+            .then(res => {
+              console.log("task update ok")
+            }).catch(error => {
+            console.log(error)
+          })
         }
-        console.log(oldIndex +" : "+newIndex)
-
+      },
+      updateTask: function (updateTaskItem) {
 
       },
-      checkTask: function(evt){
-        console.log(evt.draggedContext.element)
-        console.log(evt.draggedContext.index)
-        console.log(evt.relatedContext.index)
-        console.log(evt.relatedContext.element)
+      checkTask: function (evt) {
         evt.draggedContext.element.tasklist_id = this.taskList.id
         evt.draggedContext.element.position = evt.draggedContext.index
       },
       deleteTaskList: function () {
-        this.$http.post('/api/tasklist/delete',this.taskList)
+        this.$http.post('/api/tasklist/delete', this.taskList)
           .then(res => {
             console.log('delete success : ' + res.data)
             this.$eventBus.$emit('deleteTaskList', this.taskList)
@@ -220,7 +245,7 @@
 </script>
 <style scoped>
   .task-list-enter-active, .task-list-leave-active {
-    transition: all 1s;
+    transition: all 0.5s;
   }
 
   .task-list-enter, .task-list-leave-to {
@@ -229,7 +254,7 @@
   }
 
   .task-list-move {
-    transition: transform 1s;
+    transition: transform 0.5s;
   }
 
   i {
