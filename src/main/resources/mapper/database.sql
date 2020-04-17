@@ -92,6 +92,8 @@ edit_date  datetime not null default CURRENT_TIMESTAMP,
 member_email varchar(100) not null,
 state boolean,
 position int not null,
+start_date datetime,
+end_date datetime,
 foreign key (tasklist_id) references tasklist(id) on delete cascade on update cascade,
 foreign key (member_email) references member(email) on update cascade
 );
