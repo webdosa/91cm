@@ -11,22 +11,24 @@
     	<result property="channel_id" column="channel_id"/>
     	<result property="register_date" column="register_date"/>
     	<result property="edit_date" column="edit_date"/>
+    	<result property="position" column="position"/>
 		<collection property="tasks" column="id" javaType="java.util.ArrayList" ofType="com.nineone.nocm.domain.Task" select="getTask">
 			<result property="id" column="id"/>
 			<result property="tasklist_id" column="tasklist_id"/>
 			<result property="content" column="content"/>
 			<result property="register_date" column="register_date"/>
 			<result property="edit_date" column="edit_date"/>
+			<result property="position" column="position"/>
 		</collection>
     </resultMap>
 
 	
-	<insert id="insertTaskList" parameterType="com.nineone.nocm.domain.TaskList">
+	<insert id="insertTaskList" useGeneratedKeys="true" keyProperty="id" parameterType="com.nineone.nocm.domain.TaskList">
 		insert tasklist (name,channel_id,position) 
 			values (
 				#{name},
 				#{channel_id},
-				(select * from (select ifnull(max(position)+1 , 1) from tasklist) a)
+				(select * from (select ifnull(max(position)+1 , 0) from tasklist) a)
 				)
 	</insert>
 	
@@ -59,9 +61,9 @@
 	<update id="moveTaskListPosition">
 		update tasklist set
 		<choose>
-			<when test="isUp.equals('true')">
+			<when test="isUp">
 				position = (position + 1)
-				where position >= #{tasklistNewIndex}
+				where position <![CDATA[>=]]> #{tasklistNewIndex}
 				and position <![CDATA[<]]> #{tasklistOldIndex}
 			</when>
 			<otherwise>

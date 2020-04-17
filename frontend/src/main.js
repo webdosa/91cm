@@ -14,6 +14,7 @@ import AlertModal from "./plugins/AlertModal";
 import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
 
 
+
 Vue.use(AlertModal)
 Vue.use(VueSession, { persist: true})
 Vue.prototype.$eventBus = new Vue();

@@ -1,76 +1,83 @@
 <template>
-  <header>
-    <b-navbar toggleable="lg" type="light" variant="white">
-      <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
-        <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" right>
-          <template v-slot:button-content>
-            <i class="im im-bell"></i>
-          </template>
-          <b-dropdown-text v-for="(alarm,index) in alarmList" style="width: 25vw;" class="border">
-            <div>
-              <div class="row float-right">
-                <b-button size="sm" id="esc" variant="nonoutline" @click="alarmList.splice(index,1)"><i
-                  class="im im-x-mark" ></i></b-button>
-              </div>
-              <div class="row">
-                <p>{{alarm.info}}</p>
-              </div>
-              <div class="row float-right">
-                <div >
-                  <b-button variant="nonoutline"><i class="im im-check-mark-circle"
-                                                              style="color: #42b983;"></i>
-                  </b-button>
-                  <b-button variant="nonoutline"><i class="im im-x-mark-circle" style="color: red;"></i>
-                  </b-button>
-                </div>
-              </div>
-            </div>
-          </b-dropdown-text>
-        </b-dropdown>
-        <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
-        <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
-          <!-- Using 'button-content' slot -->
-          <template v-slot:button-content style="padding:0px;">
-          </template>
-          <b-dropdown-item>Profile</b-dropdown-item>
-          <b-dropdown-item>Sign Out</b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </b-navbar>
-  </header>
+  <div>
+    <h1>test</h1>
+    <div class="col-5 float-left">
+      <b-button @click="moveItem">moveTest</b-button>
+      <b-button @click="test" class="float-right">test</b-button>
+      <b-list-group>
+        <draggable :list="list">
+          <transition-group name="list" >
+            <b-list-group-item v-for="item in list" :key="item" class="list-item">
+              {{item.name}}
+            </b-list-group-item>
+          </transition-group>
+        </draggable>
+      </b-list-group>
+    </div>
+    <div class="col-5 float-right">
+      <div v-for="(item,index) in list">
+        <p>{</p>
+          <p>index: {{index}}</p>
+          <p>name : {{item.name}}</p>
+        <p>}</p>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
+  import draggable from 'vuedraggable'
+
   export default {
     name: 'About',
-    data() {
-      return {
-        alarmList: [],
-        alarm: {
-          info: null,
-          state: 'wait',
+    components: {
+      draggable
+    },
+    computed:{
+      dragOptiopns(){
+        return{
+          animation: "200",
+          ghostClass: "ghost",
+          group: "Kanban-board-list-items"
         }
       }
     },
-    created() {
-      for (let i = 0; i < 10; i++) {
-        this.alarm.info = '알림' + i
-        this.alarmList.push(JSON.parse(JSON.stringify(this.alarm)))
+    data() {
+      return {
+        number: 0,
+        list: [{
+          name: 'name1'
+        }]
       }
     },
-    computed: {},
-    updated() {
-    },
-    methods: {}
+    methods: {
+      test: function () {
+        this.list.push({name: 'name'+this.number++})
+      },
+      moveItem: function () {
+        let rows = [this.list[0],this.list[1]]
+        this.list.splice(0,2,rows[1],rows[0])
+      }
+    }
 
   }
 
 </script>
 <style scoped>
-  #esc{
+  .list-enter-active, .list-leave-active{
+    transition: all 1s;
+  }
+  .list-enter, .list-leave-to{
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  .list-move{
+    transition: transform 1s;
+  }
+  #esc {
     color: #7f7f7f;
   }
-  #esc:hover{
+
+  #esc:hover {
     color: black;
   }
 </style>

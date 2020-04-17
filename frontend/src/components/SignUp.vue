@@ -50,7 +50,7 @@
         this.user.phone = this.user.phone.replace(/(^02.{0}|^01.{1}|[0-9]{4})([0-9]+)([0-9]{4})/, "$1-$2-$3");// 휴대폰번호 자동 하이픈 넣어주는 정규식
       },
       getUser() {
-        this.$http.get('http://localhost:9191/api/user/getsession').then(res => {
+        this.$http.get('/api/user/getsession').then(res => {
           this.user.name = res.data.name
           this.user.phone = res.data.phone
           this.user.email = res.data.email
@@ -62,7 +62,7 @@
         this.user.email = this.email
         console.log(this.user)
         let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
-        this.$http.post('http://localhost:9191/api/user/signup', JSON.stringify(this.user), {
+        this.$http.post('/api/user/signup', JSON.stringify(this.user), {
           headers: {
             'X-CSRF-TOKEN': csrfToken[2],
             'Content-Type': 'application/json'

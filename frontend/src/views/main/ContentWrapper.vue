@@ -288,7 +288,7 @@
       getMessage: function (wrapperEl) {
         console.log(this.$store.state.currentChannel)
         this.cursorPoint.channel_id = this.$store.state.currentChannel.id
-        this.$http.post('http://localhost:9191/api/message/getmsg', JSON.stringify(this.cursorPoint), {
+        this.$http.post('/api/message/getmsg', JSON.stringify(this.cursorPoint), {
           headers: {
             'Content-Type': 'application/json'
           }

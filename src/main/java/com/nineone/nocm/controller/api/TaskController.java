@@ -23,8 +23,11 @@ public class TaskController {
 	private TaskService taskService;
 	
 	@RequestMapping(value="/insert",method = RequestMethod.POST)
-	public boolean insertTask(@RequestBody Task task) {
-		return taskService.insertTask(task);
+	public Task insertTask(@RequestBody Task task) {
+		if(taskService.insertTask(task)){
+			return task;
+		}
+		return null;
 	}
 	
 	@RequestMapping(value="/delete",method = RequestMethod.POST)

@@ -43,7 +43,7 @@
       <!-- Users 메뉴 끝 -->
 
       <!-- to do list 메뉴 시작 -->
-      <a class="r-style">
+      <a class="r-style" @click="callComponent('todoList')">
         <i class="im im-task-o"></i>
         <span style="margin-left:20px;">Todo List</span>
       </a>
@@ -73,6 +73,9 @@
       })
     },
     methods: {
+      callComponent: function (componentName) {
+        this.$store.commit('getSelectComponent',componentName)
+      },
       leaveChannle: function () {
         this.$http.post('/api/channel/leave', {
           // 모두가 나가면 채널 삭제

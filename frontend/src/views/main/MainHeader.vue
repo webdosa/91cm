@@ -5,16 +5,16 @@
       <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-dropdown no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" :disabled="getAlarmList.length <= 0">
+        <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" :disabled="getAlarmList.length <= 0">
           <template v-slot:button-content>
-            <div style="position: relative;">
+            <div style="position: relative;" ref="bell">
               <b-badge style="position: absolute; right: -5px;font-size: 10px;" variant="danger" v-show="getAlarmList.length > 0">
                 {{alarmList.length}}
               </b-badge>
               <i class="im im-bell"></i>
             </div>
           </template>
-          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="width: 25vw;"
+          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="width: 25vw;" :key="alarm"
                            class="border">
             <div>
               <div class="row float-right">
@@ -48,15 +48,80 @@
             <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
           </template>
           <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
+          <b-dropdown-item @click="showModal('copyRight-modal')">Opensource license</b-dropdown-item>
           <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-navbar>
+    <!-- 아래 modal은 임시코드 추후에 필히 삭제할것 -->
+    <b-modal id="copyRight-modal" size="lg" scrollable ok-only title="오픈소스 라이센스">
+                <b-button class="button-margin" v-b-toggle.collapse-open variant="outline-dark" block>Animate.css</b-button>
+                <b-collapse id="collapse-open" class="mt-2">
+                    <b-card>
+                        <span>link :</span>
+                        <b-link href="https://github.com/daneden/animate.css" style="color: blue;">https://github.com/daneden/animate.css</b-link>
+                        <p class="card-text" >
+                            The MIT License (MIT)
+                            <br>
+                            Copyright (c) 2019 Daniel Eden
+                            <br>
+                            Permission is hereby granted, free of charge, to any person obtaining a copy
+                            of this software and associated documentation files (the "Software"), to deal
+                            in the Software without restriction, including without limitation the rights
+                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                            copies of the Software, and to permit persons to whom the Software is
+                            furnished to do so, subject to the following conditions:
+                            <br>
+                            The above copyright notice and this permission notice shall be included in all
+                            copies or substantial portions of the Software.
+                            <br>
+                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                            SOFTWARE.
+                        </p>
+                    </b-card>
+                </b-collapse>
+                 <b-button class="button-margin" v-b-toggle.collapse-open2 variant="outline-dark" block>SortableJS/Vue.Draggable</b-button>
+                <b-collapse id="collapse-open2" class="mt-2">
+                    <b-card>
+                        <span>link :</span>
+                        <b-link href="https://github.com/SortableJS/Vue.Draggable" style="color: blue;">https://github.com/SortableJS/Vue.Draggable</b-link>
+                        <p class="card-text" >
+                            The MIT License (MIT)
+                            <br>
+                            Copyright (c) 2016-2019 David Desmaisons
+                            <br>
+                            Permission is hereby granted, free of charge, to any person obtaining a copy
+                            of this software and associated documentation files (the "Software"), to deal
+                            in the Software without restriction, including without limitation the rights
+                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                            copies of the Software, and to permit persons to whom the Software is
+                            furnished to do so, subject to the following conditions:
+                            <br>
+                            The above copyright notice and this permission notice shall be included in all
+                            copies or substantial portions of the Software.
+                            <br>
+                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                            SOFTWARE.
+                        </p>
+                    </b-card>
+                </b-collapse>
+        </b-modal>
   </header>
 </template>
 
 <script>
   import {mapGetters} from "vuex";
+  import CopyRight from '../util/CopyRight'
 
   export default {
     name: 'MainHeader',
@@ -96,7 +161,8 @@
         let invite = JSON.parse(e.body)
         console.log(invite.sender)
         this.alarmList.unshift(invite)
-      })
+        this.shakeAnimation()
+      }),
       this.$http.get('/api/invite/list')
         .then(res => {
           this.alarmList = res.data.reverse()
@@ -110,8 +176,25 @@
 
     },
     methods: {
+      showModal: function(modalId){
+        this.$bvModal.show(modalId)
+      },
+      shakeAnimation: function(){
+        const element = this.$refs.bell;
+        element.classList.add('animated','shake');
+        element.addEventListener('animationend',()=>{
+          console.log("animationend")
+          element.classList.remove('animated','shake')
+        });
+      },
       inviteAccept: function (alarm, index) {
         console.log(alarm)
+        const message = {
+          channel_id: alarm.channel_id,
+          sender: this.$store.state.currentUser.email,
+          content: this.$store.state.currentUser.name+'님이 채널에 초대되었습니다.',
+          user: this.$store.state.currentUser
+        }
         this.$http.post('/api/invite/accept', alarm)
           .then(res => {
             console.log(res)
@@ -119,11 +202,10 @@
             this.alarmList.splice(index, 1);
             this.$store.state.stompClient.send('/pub/chat/room/' + alarm.channel_id,
               JSON.stringify({"message": "updateChannel", "error": "null"}))
-
+            this.$store.state.stompClient.send('/pub/chat/message',JSON.stringify(message))
             this.$store.dispatch('channelList')
               .then(() => {
                 const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
-                console.log(joinChannel)
                 this.$store.commit('setCurrentChannel', joinChannel)
               })
 

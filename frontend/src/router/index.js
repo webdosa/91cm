@@ -11,6 +11,9 @@ import test from '../views/user/UserInfo'
 import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
 import FormSignUp from "../views/FormSignUp";
+import CopyRight from "../views/util/CopyRight"
+import Todolist from '../views/TodoList'
+import About from "../views/About";
 
 Vue.use(VueRouter)
 
@@ -22,16 +25,13 @@ const routes = [
   },
   {
     path: '/about',
-    name: 'TaskBoard',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/ToDoList/TaskBoard')
+    name: 'about',
+    component: About
   },
   {
     path: '*',
     component: NotFound
-    // redirect: '/errorpage' 
+    // redirect: '/errorpage'
   },
   {
     path: '/clock',
@@ -58,6 +58,15 @@ const routes = [
   {
     path: '/formSignUp',
     component: FormSignUp
+  },
+  // 테스트용 path 테스트 후에 삭제
+  {
+    path: '/test',
+    component: CopyRight
+  },
+  {
+    path: '/todo',
+    component: Todolist
   }
 
 ]

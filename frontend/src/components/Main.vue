@@ -14,7 +14,8 @@
         <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
         <!-- CjannelHeader -->
         <div v-else>
-          <ChannelHeader v-if="$store.state.selectComponent=='main'"></ChannelHeader>
+<!--          추후에 깔금한 방식으로 변경-->
+          <ChannelHeader v-if="$store.state.selectComponent=='main'||$store.state.selectComponent=='todoList'"></ChannelHeader>
           <keep-alive>
             <component :is="whichComponent"
                        :msgArray="msgArray"
@@ -44,6 +45,7 @@
   import Loading from '../views/main/Loading'
   import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
+  import TodoList from '../views/TodoList'
 
   export default {
     name: 'Main',
@@ -56,7 +58,8 @@
       'UserInfo': UserInfo,
       'EditProfile': EditProfile,
       'NoChannel': NoChannel,
-      'Loading': Loading
+      'Loading': Loading,
+      'TodoList' : TodoList
     },
     data() {
       return {
@@ -79,6 +82,8 @@
             return 'UserInfo'
           case 'edit':
             return 'EditProfile'
+          case 'todoList':
+            return 'TodoList'
           default:
             return 'ContentWrapper'
         }
@@ -124,7 +129,7 @@
       },
       connect() {
         // 새로고침 했을때 Main의 로직이 실행되지 않는 환경에서는 문제가 생길 수 있음
-        this.$store.state.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
+        this.$store.state.stompClient = Stomp.over(new SockJS('/endpoint/'))
         this.$store.state.stompClient.connect({}, () => {
 
           this.$store.state.userChannelList.forEach(channel => {
@@ -181,6 +186,7 @@
       },
       channelSubscribeCallBack(e, fail) {
         let data = JSON.parse(e.body)
+        console.log(data)
         console.log(this.$store.state.isfocus)
         NotificationClass.sendNotification(this.$store.state.isfocus, data)
         if (data.channel_id == this.$store.state.currentChannel.id && this.$store.state.selectComponent == 'main') {
