@@ -11,7 +11,7 @@
     	<result property="channel_id" column="channel_id"/>
     	<result property="register_date" column="register_date"/>
     	<result property="edit_date" column="edit_date"/>
-    	<result property="position" column="position"/>
+		<result property="position" column="position"/>
 		<collection property="tasks" column="id" javaType="java.util.ArrayList" ofType="com.nineone.nocm.domain.Task" select="getTask">
 			<result property="id" column="id"/>
 			<result property="tasklist_id" column="tasklist_id"/>

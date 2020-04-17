@@ -7,14 +7,14 @@
           <b-badge variant="nonoutline" @click="editToggle"><i class="im im-pencil"></i></b-badge>
           <b-badge variant="nonoutline" @click="deleteTaskList"><i class="im im-trash-can"></i></b-badge>
         </span>
-
+        <b-form-input v-else
+                      @keydown.enter.exact="editTaskListName"
+                      @keydown.esc="editToggle"
+                      v-model="taskList.name"
+                      autofocus></b-form-input>
+        <i class="im im-plus float-right btn" style="color: white;" @click="createFormToggle"></i>
       </draggable>
-      <b-form-input v-else
-                    @keydown.enter.exact="editTaskListName"
-                    @keydown.esc="editToggle"
-                    v-model="taskList.name"
-                    autofocus></b-form-input>
-      <i class="im im-plus float-right btn" style="color: white;" @click="createFormToggle"></i>
+
     </div>
     <div v-else>
       <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus
@@ -77,11 +77,26 @@
         return this.taskList.tasks
       }
     },
+    watch: {
+      getTasks: function () {
+        this.taskList.tasks.forEach(task => {
+          task.position = this.taskList.tasks.indexOf(task)
+        })
+        console.log(this.taskList.tasks)
+      }
+    },
     components: {
       draggable
     },
     data() {
       return {
+        updateTask: {
+          taskOldIndex: null,
+          taskNewIndex: null,
+          tasklistOldId: null,
+          tasklistNewId: null,
+          taskId: null
+        },
         editSelector: -1,
         taskContent: '',
         taskListName: '',
@@ -97,34 +112,58 @@
     created() {
     },
     methods: {
-      taskEventHandler: function({added, removed, moved}){
-        if(added){
-          console.log(added.newIndex)
-          console.log(added.element)
+      taskEventHandler: function ({added, moved, removed}) {
+        let oldIndex = -1
+        let newIndex = -1
+        let task
+        let updateTaskItem = {
+          taskOldIndex: null,
+          taskNewIndex: null,
+          tasklistOldId: null,
+          tasklistNewId: null,
+          tasklistId: null,
+          taskId: null
+        }
+        if (added) {
           added.element.tasklist_id = this.taskList.id
-          added.element.position = added.newIndex
         }
-        if (moved){
-          console.log(moved.oldIndex)
-          console.log(moved.newIndex)
-          console.log(moved.element)
+        if (moved) {
+          updateTaskItem.taskNewIndex = moved.newIndex
+          updateTaskItem.taskOldIndex = moved.oldIndex
+          updateTaskItem.tasklistId = this.taskList.id
+          updateTaskItem.taskId = moved.element.id
+          this.$http.post('/api/task/update/position', updateTaskItem)
+            .then(res => {
+              console.log("task update ok")
+            }).catch(error => {
+            console.log(error)
+          })
+          console.log(updateTaskItem)
         }
-        if (removed){
-          console.log(removed.oldIndex)
-          console.log(removed.element)
+        if (removed) {
+          updateTaskItem.taskOldIndex = removed.oldIndex
+          updateTaskItem.taskNewIndex = removed.element.position
+          updateTaskItem.tasklistOldId = this.taskList.id
+          updateTaskItem.tasklistNewId = removed.element.tasklist_id
+          updateTaskItem.taskId = removed.element.id
+          console.log(updateTaskItem)
+          this.$http.post('/api/task/update/position', updateTaskItem)
+            .then(res => {
+              console.log("task update ok")
+            }).catch(error => {
+            console.log(error)
+          })
         }
+      },
+      updateTask: function (updateTaskItem) {
 
       },
-      checkTask: function(evt){
-        console.log(evt.draggedContext.element)
-        console.log(evt.draggedContext.index)
-        console.log(evt.relatedContext.index)
-        console.log(evt.relatedContext.element)
+      checkTask: function (evt) {
         evt.draggedContext.element.tasklist_id = this.taskList.id
         evt.draggedContext.element.position = evt.draggedContext.index
       },
       deleteTaskList: function () {
-        this.$http.post('/api/tasklist/delete/' + this.taskList.id)
+        this.$http.post('/api/tasklist/delete', this.taskList)
           .then(res => {
             console.log('delete success : ' + res.data)
             this.$eventBus.$emit('deleteTaskList', this.taskList)
@@ -158,7 +197,7 @@
       },
       deleteTask: function (task, index) {
         // 현저 유저와 작성자가 같은지 비교해서 삭제할 수 있도록 변경 필요
-        this.$http.post('/api/task/delete/' + task.id)
+        this.$http.post('/api/task/delete', task)
           .then(res => {
             console.log(res.data)
             this.taskList.tasks.splice(index, 1)
@@ -171,8 +210,9 @@
         this.$http.post('/api/task/insert', this.task)
           .then(res => {
             this.taskContent = ''
-            this.taskList.tasks.push(res.data)
+            this.taskList.tasks.unshift(res.data)
             this.createFormToggle()
+            console.log(this.taskList)
           }).catch(error => {
           console.log(error)
         })
@@ -205,7 +245,7 @@
 </script>
 <style scoped>
   .task-list-enter-active, .task-list-leave-active {
-    transition: all 1s;
+    transition: all 0.5s;
   }
 
   .task-list-enter, .task-list-leave-to {
@@ -214,7 +254,7 @@
   }
 
   .task-list-move {
-    transition: transform 1s;
+    transition: transform 0.5s;
   }
 
   i {
