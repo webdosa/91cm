@@ -37,7 +37,7 @@
 	</delete>
 	
 	<update id="updateTaskListPositionByDelete">
-		update tasklist set position (position - 1) where position > #{position}
+		update tasklist set position = (position - 1) where position > #{position}
 	</update>
 	
 	<update id="updateTaskListName">

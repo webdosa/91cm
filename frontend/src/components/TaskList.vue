@@ -2,7 +2,7 @@
   <div style="padding: 15px 20px 0px 20px; background-color: gray;" class="col-12">
 
     <div v-if="taskList.name != ''">
-      <draggable :list="getTasks" :group="'tasks'">
+      <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler">
         <span class="h3" style="color: white;" v-if="!edit" slot="header">{{taskList.name}}
           <b-badge variant="nonoutline" @click="editToggle"><i class="im im-pencil"></i></b-badge>
           <b-badge variant="nonoutline" @click="deleteTaskList"><i class="im im-trash-can"></i></b-badge>
@@ -163,7 +163,11 @@
         evt.draggedContext.element.position = evt.draggedContext.index
       },
       deleteTaskList: function () {
-        this.$http.post('/api/tasklist/delete', this.taskList)
+        console.log(this.taskList)
+        this.$http.post('/api/tasklist/delete', {
+          id: this.taskList.id,
+          position: this.taskList.position
+        })
           .then(res => {
             console.log('delete success : ' + res.data)
             this.$eventBus.$emit('deleteTaskList', this.taskList)

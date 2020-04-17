@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="scrolling-wrapper">
       <b-list-group horizontal>
-        <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions">
+        <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
           <b-list-group-item v-for="item in getAllTaskList" :key="item">
             <TaskList :taskList="item"></TaskList>
           </b-list-group-item>
@@ -92,6 +92,19 @@
     methods: {
       addTaskList: function () {
         this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
+      },
+      tasklistEventHandler: function ({added, moved, removed}) {
+        if (moved){
+          this.$http.post('/api/tasklist/update/position',{
+            tasklistOldIndex: moved.oldIndex,
+            tasklistNewIndex: moved.newIndex,
+            tasklistId: moved.element.id
+          }).then(res=>{
+            console.log("tasklist update ok")
+          }).catch(error =>{
+            console.log(error)
+          })
+        }
       }
     }
   }
