@@ -12,8 +12,9 @@ import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
 import FormSignUp from "../views/FormSignUp";
 import CopyRight from "../views/util/CopyRight"
-import Todolist from '../views/TodoList'
+import Todolist from '../views/todolist/TodoList'
 import About from "../views/About";
+import Calendar from "../views/calendar/Calendar";
 
 Vue.use(VueRouter)
 
@@ -62,7 +63,7 @@ const routes = [
   // 테스트용 path 테스트 후에 삭제
   {
     path: '/test',
-    component: CopyRight
+    component: Calendar
   },
   {
     path: '/todo',

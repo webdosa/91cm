@@ -54,77 +54,17 @@
       </b-navbar-nav>
     </b-navbar>
     <!-- 아래 modal은 임시코드 추후에 필히 삭제할것 -->
-    <b-modal id="copyRight-modal" size="lg" scrollable ok-only title="오픈소스 라이센스">
-                <b-button class="button-margin" v-b-toggle.collapse-open variant="outline-dark" block>Animate.css</b-button>
-                <b-collapse id="collapse-open" class="mt-2">
-                    <b-card>
-                        <span>link :</span>
-                        <b-link href="https://github.com/daneden/animate.css" style="color: blue;">https://github.com/daneden/animate.css</b-link>
-                        <p class="card-text" >
-                            The MIT License (MIT)
-                            <br>
-                            Copyright (c) 2019 Daniel Eden
-                            <br>
-                            Permission is hereby granted, free of charge, to any person obtaining a copy
-                            of this software and associated documentation files (the "Software"), to deal
-                            in the Software without restriction, including without limitation the rights
-                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-                            copies of the Software, and to permit persons to whom the Software is
-                            furnished to do so, subject to the following conditions:
-                            <br>
-                            The above copyright notice and this permission notice shall be included in all
-                            copies or substantial portions of the Software.
-                            <br>
-                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-                            SOFTWARE.
-                        </p>
-                    </b-card>
-                </b-collapse>
-                 <b-button class="button-margin" v-b-toggle.collapse-open2 variant="outline-dark" block>SortableJS/Vue.Draggable</b-button>
-                <b-collapse id="collapse-open2" class="mt-2">
-                    <b-card>
-                        <span>link :</span>
-                        <b-link href="https://github.com/SortableJS/Vue.Draggable" style="color: blue;">https://github.com/SortableJS/Vue.Draggable</b-link>
-                        <p class="card-text" >
-                            The MIT License (MIT)
-                            <br>
-                            Copyright (c) 2016-2019 David Desmaisons
-                            <br>
-                            Permission is hereby granted, free of charge, to any person obtaining a copy
-                            of this software and associated documentation files (the "Software"), to deal
-                            in the Software without restriction, including without limitation the rights
-                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-                            copies of the Software, and to permit persons to whom the Software is
-                            furnished to do so, subject to the following conditions:
-                            <br>
-                            The above copyright notice and this permission notice shall be included in all
-                            copies or substantial portions of the Software.
-                            <br>
-                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-                            SOFTWARE.
-                        </p>
-                    </b-card>
-                </b-collapse>
-        </b-modal>
+    <CopyRight></CopyRight>
   </header>
 </template>
 
 <script>
   import {mapGetters} from "vuex";
-  import CopyRight from '../util/CopyRight'
+  import CopyRight from "../util/CopyRight";
 
   export default {
     name: 'MainHeader',
+    components: {CopyRight},
     data() {
       return {
         alarmList: [],

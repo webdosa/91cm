@@ -1,18 +1,19 @@
 <template>
-  <div style="padding: 15px 20px 0px 20px; background-color: gray;" class="col-12">
-
+  <div style="padding: 15px 20px 0px 20px;" class="col-12 rounded-lg bg-light">
     <div v-if="taskList.name != ''">
-      <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler">
-        <span class="h3" style="color: white;" v-if="!edit" slot="header">{{taskList.name}}
+      <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">
+        <div class="rounded-lg bg-secondary" style="height: 10vh; padding-top: 10px; padding-left: 10px;">
+          <span class="h3" style="color: white;" v-if="!edit" slot="header">{{taskList.name}}
           <b-badge variant="nonoutline" @click="editToggle"><i class="im im-pencil"></i></b-badge>
           <b-badge variant="nonoutline" @click="deleteTaskList"><i class="im im-trash-can"></i></b-badge>
         </span>
-        <b-form-input v-else
-                      @keydown.enter.exact="editTaskListName"
-                      @keydown.esc="editToggle"
-                      v-model="taskList.name"
-                      autofocus></b-form-input>
-        <i class="im im-plus float-right btn" style="color: white;" @click="createFormToggle"></i>
+          <b-form-input v-else
+                        @keydown.enter.exact="editTaskListName"
+                        @keydown.esc="editToggle"
+                        v-model="taskList.name"
+                        autofocus></b-form-input>
+          <i class="im im-plus float-right btn" style="color: white;" @click="createFormToggle"></i>
+        </div>
       </draggable>
 
     </div>
@@ -30,9 +31,9 @@
           <b-button size="sm" variant="danger" @click="createFormToggle">Cancel</b-button>
         </div>
       </b-list-group-item>
-      <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler">
+      <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">
         <transition-group name="task-list">
-          <b-list-group-item v-for="(task,index) in getTasks" :key="task" style="margin-bottom: 10px;">
+          <b-list-group-item v-for="(task,index) in getTasks" :key="task" style="margin-bottom: 10px;" class="item">
             <div>
               <b-dropdown no-caret variant="nonoutline" toggle-class="text-decoration-none"
                           class="float-right" style="padding: 0px;">
@@ -78,7 +79,10 @@
       }
     },
     watch: {
-      getTasks: function () {
+      getTasks: function (newVal, oldVal) {
+        const set=new Set()
+        console.log(newVal)
+        console.log(oldVal)
         this.taskList.tasks.forEach(task => {
           task.position = this.taskList.tasks.indexOf(task)
         })
@@ -251,7 +255,8 @@
           .catch(error => {
             console.log(error)
           })
-      }
+      },
+
     }
   }
 </script>

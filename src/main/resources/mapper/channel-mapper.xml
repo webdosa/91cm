@@ -5,8 +5,8 @@
 
 <mapper namespace="com.nineone.nocm.mapper.channel">
     <insert id="insertChannel" useGeneratedKeys="true" keyProperty="id">
-    	insert channel (name)
-    		values(#{name})
+    	insert channel (name, member_email)
+    		values(#{name}, #{member_email})
     </insert>
     <update id="updateChannel">
         update channel set name = #{name} where id = #{id}

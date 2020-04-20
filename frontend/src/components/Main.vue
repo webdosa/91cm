@@ -15,7 +15,7 @@
         <!-- CjannelHeader -->
         <div v-else>
 <!--          추후에 깔금한 방식으로 변경-->
-          <ChannelHeader v-if="$store.state.selectComponent=='main'||$store.state.selectComponent=='todoList'"></ChannelHeader>
+          <ChannelHeader v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit'"></ChannelHeader>
           <keep-alive>
             <component :is="whichComponent"
                        :msgArray="msgArray"
@@ -45,7 +45,8 @@
   import Loading from '../views/main/Loading'
   import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
-  import TodoList from '../views/TodoList'
+  import TodoList from '../views/todolist/TodoList'
+  import Calendar from "../views/calendar/Calendar";
 
   export default {
     name: 'Main',
@@ -59,7 +60,8 @@
       'EditProfile': EditProfile,
       'NoChannel': NoChannel,
       'Loading': Loading,
-      'TodoList' : TodoList
+      'TodoList' : TodoList,
+      'Calendar' : Calendar
     },
     data() {
       return {
@@ -84,6 +86,8 @@
             return 'EditProfile'
           case 'todoList':
             return 'TodoList'
+          case 'calendar':
+            return 'Calendar'
           default:
             return 'ContentWrapper'
         }

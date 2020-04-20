@@ -49,7 +49,7 @@
       </a>
       <!-- to do list 메뉴 끝 -->
       <!-- calender 메뉴 시작 -->
-      <a class="r-style">
+      <a class="r-style"  @click="callComponent('calendar')">
         <i class="im im-calendar"></i>
         <span style="margin-left:20px;">Calendar</span>
       </a>

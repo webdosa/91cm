@@ -87,6 +87,7 @@
         if (this.$store.state.syncSignal.syncChannelUser){
           return this.$store.state.currentChannel
         }
+        this.channelTitle = this.$store.state.currentChannel.name
         return this.$store.state.currentChannel
       },
     },
@@ -181,7 +182,6 @@
         }
       },
       updateChannel: function () {
-        console.log(this.$store.state.currentChannel)
         AboutChannel.updateChannelAPI(this.$store.state.currentChannel)
           .then(res => {
             console.log(res)
@@ -191,6 +191,7 @@
       },
       createChannel: function () {
         // vuex에서 currentUser 객체 사용
+        console.log(this.$store.state.currentUser.email)
         AboutChannel.createChannel(this.channelTitle, this.$store.state.currentUser.email)
           .then(res => {
             //res.data = 새로 생성된 channel 인스턴스
