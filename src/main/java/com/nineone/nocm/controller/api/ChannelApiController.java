@@ -66,11 +66,8 @@ public class ChannelApiController {
 
     @PostMapping("/update")
     public boolean updateChannel(@RequestBody Channel channel, @Socialuser User user) {
-        if (channel.getMember_email().equals(user.getEmail())){
-            channelService.updateChannel(channel);
-            return true;
-        }
-        return false;
+        
+         return channelService.updateChannel(channel);
     }
 
     @PostMapping("/delete")

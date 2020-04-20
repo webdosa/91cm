@@ -33,8 +33,9 @@ public class TaskListController {
 	}
 	
 	// PathVariable을 Post 방식에서 사용하는것이 괜찮은지 알아봐야 할듯
-	@RequestMapping(value="/delete/{id}", method=RequestMethod.POST)
+	@RequestMapping(value="/delete", method=RequestMethod.POST)
 	public boolean deleteTaskList(@RequestBody TaskList taskList) {
+		log.info(taskList.getId()+"");
 		return taskListService.deleteTaskList(taskList);
 	}
 	

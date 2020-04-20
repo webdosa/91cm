@@ -191,8 +191,9 @@
         console.log(alarm)
         const message = {
           channel_id: alarm.channel_id,
-          sender: alarm.sender,
-          content: this.$store.state.currentUser.name+'님이 채널에 초대되었습니다.'
+          sender: this.$store.state.currentUser.email,
+          content: this.$store.state.currentUser.name+'님이 채널에 초대되었습니다.',
+          user: this.$store.state.currentUser
         }
         this.$http.post('/api/invite/accept', alarm)
           .then(res => {

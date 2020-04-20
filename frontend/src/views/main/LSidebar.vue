@@ -1,6 +1,11 @@
 <template>
   <nav id="sidebar" class="myflex-column" v-bind:class="{active: $store.state.isLActive}">
     <div class="sidebar-header">
+      <div class="menulist-header-icon">
+        <a @click="LSidebarToggle" v-if="isSamllWidth">
+          <i class="im im-x-mark" style="color:white;margin-bottom: 15px;"></i>
+        </a>
+        </div>
       <a href="/main">
         <img style="width: 100%;" src="../../assets/images/nineone.png">
       </a>
@@ -83,7 +88,7 @@
           return this.$store.state.currentChannel
         }
         return this.$store.state.currentChannel
-      }
+      },
     },
     name: 'LSidebar',
     data() {
@@ -92,11 +97,14 @@
         nameState: null,
         channelmode: '',
         channelTitle: '',
-        channelUsers: []
+        channelUsers: [],
+        isSamllWidth:false
       }
     },
     created() {
       console.log("LSidebar created")
+      this.widthCheck()
+      window.addEventListener('resize', this.widthCheck);
       this.$http.get('/api/user/channel/' + this.$store.state.currentChannel.id)
         .then(res => {
           this.channelUsers = res.data
@@ -114,7 +122,16 @@
       console.log("LSidebar updated")
     },
     methods: {
+      widthCheck(){
+        this.isSamllWidth = (window.innerWidth < 500) ? true : false;
+      },
+      LSidebarToggle: function () {
+        this.$store.state.isLActive = !this.$store.state.isLActive
+      },
       sendSelectChannel: function (index) {
+        if(window.innerWidth<500){
+          this.LSidebarToggle()
+        }
         this.$store.commit('getSelectComponent', 'main')
         this.$store.commit('setCurrentChannel',this.$store.state.userChannelList[index])
         this.$emit('sendTitle', this.$store.state.userChannelList[index])   // 나중에 변경

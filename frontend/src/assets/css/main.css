@@ -203,7 +203,8 @@ MainContents
 
 /*chat contents wrapper*/
 .c-c-wrapper {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x:hidden;
     height: calc(100% - 141px);
     padding: 20px 25px 0px 25px !important;
     margin-bottom: 0px;    
@@ -495,4 +496,26 @@ ul.CTAs a {
     .useridsty {
         display: none;
     }
+}
+
+@media (max-width: 500px) {
+    #sidebar {
+     margin-left: -100%;
+     width: 100%;
+     
+   }
+   #sidebar.active {
+    margin-left: 0;
+    
+    }
+   #r-sidebar{
+    width: 100%;
+    right: -100%;
+  }
+  #m-wrapper{
+      display:block;
+  }
+  #m-wrapper.active{
+      display: none;
+  }
 }

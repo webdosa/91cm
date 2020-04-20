@@ -50,12 +50,13 @@ public class TaskListRepositoryImpl implements TaskListRepository{
 
 	@Override
 	public int moveTaskListPosition(Map<String, Object> map) {
+		System.out.println(map.get("isUp"));
 		return sqlSession.update(namespace + ".moveTaskListPosition",map);
 	}
 
 	@Override
-	public int updateTaskPositionByDelete(int position) {
-		return sqlSession.update(namespace + ".updateTaskPositionByDelete",position);
+	public int updateTaskListPositionByDelete(int position) {
+		return sqlSession.update(namespace + ".updateTaskListPositionByDelete",position);
 	}
 
 }

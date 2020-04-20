@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="wrapper">
     <div class="scrolling-wrapper">
       <b-list-group horizontal>
-        <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions">
-            <b-list-group-item v-for="item in getAllTaskList" :key="item">
-              <TaskList :taskList="item"></TaskList>
-            </b-list-group-item>
+        <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
+          <b-list-group-item v-for="item in getAllTaskList" :key="item">
+            <TaskList :taskList="item"></TaskList>
+          </b-list-group-item>
         </draggable>
         <b-list-group-item>
           <div>
@@ -22,10 +22,13 @@
 <script>
   import TaskList from "../components/TaskList"
   import draggable from 'vuedraggable'
+  import Loading from "./main/Loading";
+  import {mapGetters} from "vuex";
 
   export default {
     name: 'Todolist',
     components: {
+      Loading,
       TaskList,
       draggable
     },
@@ -36,9 +39,15 @@
             this.taskList = res.data
             console.log(this.taskList)
           })
+      },
+      getTaskBoard: function () {
+        this.taskList = this.$store.state.taskBoard
       }
     },
     computed: {
+      ...mapGetters({
+        getTaskBoard: 'getTaskBoard'
+      }),
       getAllTaskList: function () {
         for (let i = 0; i < this.taskList.length; i++) {
           this.taskList[i].position = i;
@@ -48,14 +57,19 @@
       getCurrentChannel: function () {
         return this.$store.state.currentChannel
       },
-      dragOptions(){
-        return{
-          animated: "200",
+      dragOptions() {
+        return {
+          animation: "200",
           group: "todo"
         }
       }
     },
     created() {
+      this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
+          if (res.headers.typename =='taskUpdate'){
+            this.$store.dispatch('updateTaskBoard')
+          }
+      })
       this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
         .then(res => {
           this.taskList = res.data
@@ -67,6 +81,7 @@
     },
     data() {
       return {
+        connetionCheck: false,
         taskList: [],
         taskListItem: {
           id: '',
@@ -80,6 +95,20 @@
     methods: {
       addTaskList: function () {
         this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
+      },
+      tasklistEventHandler: function ({added, moved, removed}) {
+        if (moved){
+          this.$http.post('/api/tasklist/update/position',{
+            tasklistOldIndex: moved.oldIndex,
+            tasklistNewIndex: moved.newIndex,
+            tasklistId: moved.element.id
+          }).then(res=>{
+            console.log("tasklist update ok")
+            this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
+          }).catch(error =>{
+            console.log(error)
+          })
+        }
       }
     }
   }
@@ -101,7 +130,8 @@
   .task-board-move {
     transition: transform 1s;
   }
-  .scrolling-wrapper{
+
+  .scrolling-wrapper {
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
   }
