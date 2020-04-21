@@ -7,12 +7,17 @@
 <mapper namespace="com.nineone.nocm.mapper.task">
 	<!-- 서브쿼리로 한번 더 감싸는 이유는 mysql 에러가 떠서.. 임시해결로 한번더 감싸주었다. -->	
 	<insert id="insertTask" useGeneratedKeys="true" keyProperty="id">
-		insert task (tasklist_id,content,member_email,position)
+		insert task (tasklist_id,content,member_email,position,state,start_date, end_date,color,title)
 			values (
 			#{tasklist_id},
 			#{content},
 			#{member_email},
-			0
+			0,
+			#{state},
+			#{start_date},
+			#{end_date},
+			#{color},
+			#{title}
 			)
 	</insert>
 	

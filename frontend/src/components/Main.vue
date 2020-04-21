@@ -14,8 +14,9 @@
         <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
         <!-- CjannelHeader -->
         <div v-else>
-<!--          추후에 깔금한 방식으로 변경-->
-          <ChannelHeader v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit'"></ChannelHeader>
+          <!--          추후에 깔금한 방식으로 변경-->
+          <ChannelHeader
+            v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit'"></ChannelHeader>
           <keep-alive>
             <component :is="whichComponent"
                        :msgArray="msgArray"
@@ -47,6 +48,7 @@
   import SockJS from "sockjs-client";
   import TodoList from '../views/todolist/TodoList'
   import Calendar from "../views/calendar/Calendar";
+  import {mapGetters} from "vuex";
 
   export default {
     name: 'Main',
@@ -60,8 +62,8 @@
       'EditProfile': EditProfile,
       'NoChannel': NoChannel,
       'Loading': Loading,
-      'TodoList' : TodoList,
-      'Calendar' : Calendar
+      'TodoList': TodoList,
+      'Calendar': Calendar
     },
     data() {
       return {
@@ -73,7 +75,30 @@
         modalObj: {modalTitle: '', currentChannel: null},
       }
     },
+    watch:{
+      userChannelList: function (newChannelList, oldChannelList) {
+        let num = newChannelList.length - oldChannelList.length
+        for (let i = num; i > 0; i--) {
+          let idx = newChannelList.length - i
+          this.msgCountObj[newChannelList[idx].id] = 0
+          this.$store.state.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
+            console.log(e.body);
+            let data = JSON.parse(e.body)
+            if (data.message == 'updateChannel') {
+              this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
+              return;
+            } else {
+              this.channelSubscribeCallBack(e);
+              return;
+            }
+          })
+        }
+      }
+    },
     computed: {
+      ...mapGetters({
+        userChannelList: 'getUserChannelList'
+      }),
       whichComponent() {
         console.log(this.$store.state.oldComponent)
         AboutChannel.updateLastAccessStatus(this.$store.state.oldComponent, this.$store.state.selectComponent)
@@ -105,7 +130,8 @@
       // 적용은 mounted 이후에 가능한 것으로 보임...
       await this.$store.dispatch('userListUpdate')
       await this.$store.dispatch('channelList') // 설정되는 값은 userChannelList
-      await this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[0])
+      this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[0])
+      console.log("main created")
       const currentChannel = this.$store.state.currentChannel
       console.log(currentChannel)
       if (currentChannel != null) {
@@ -182,8 +208,6 @@
           })
         }
         this.$store.commit('setChannelList', newChannelList)
-
-
       },
       msgArrayUpdate(newmsgArray) {
         this.msgArray = newmsgArray

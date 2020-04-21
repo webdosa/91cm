@@ -115,8 +115,8 @@ export default new Vuex.Store({
       }
     },
     getUserChannelList: state => state.userChannelList,
-    getTaskBoard: state=> state.taskBoard
-
-
+    getTaskBoard: state=> state.taskBoard,
+    getCurrentChannel: state => state.currentChannel,
+    getSyncChannelUser: state => state.syncSignal.syncChannelUser,
   }
 })

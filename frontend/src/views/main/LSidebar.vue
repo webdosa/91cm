@@ -69,27 +69,30 @@
   export default {
     props: ['modalObj', 'msgCountObj'],
     watch: {
-      getCurrentChannel(newCurrentChannel, oldCurrentChannle) {
+      currentChannel(newCurrentChannel, oldCurrentChannle) {
         console.log("getCurrentChannel Watch...")
-        this.$http.get('/api/user/channel/' + newCurrentChannel.id)
-          .then(res => {
-            this.channelUsers = res.data
-            this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
-          })
+        console.log(newCurrentChannel)
+        this.updateUserList(newCurrentChannel)
+      },
+      syncChannelUser(){
+        this.updateUserList(this.$store.state.currentChannel)
       }
     },
     computed: {
       ...mapGetters({
-        userChannelList: 'getUserChannelList'
+        userChannelList: 'getUserChannelList',
+        currentChannel: 'getCurrentChannel',
+        syncChannelUser: 'getSyncChannelUser'
       }),
       // 유저 초대 및 처음 채널 생성 시 동기화
-      getCurrentChannel: function () {
-        if (this.$store.state.syncSignal.syncChannelUser){
-          return this.$store.state.currentChannel
-        }
-        this.channelTitle = this.$store.state.currentChannel.name
-        return this.$store.state.currentChannel
-      },
+      // getCurrentChannel: function (newCurrentChannel) {
+      //   console.log(newCurrentChannel)
+      //   if (this.$store.state.syncSignal.syncChannelUser){
+      //     return this.$store.state.currentChannel
+      //   }
+      //   this.channelTitle = this.$store.state.currentChannel.name
+      //   return this.$store.state.currentChannel
+      // },
     },
     name: 'LSidebar',
     data() {
@@ -103,26 +106,26 @@
       }
     },
     created() {
-      console.log("LSidebar created")
       this.widthCheck()
       window.addEventListener('resize', this.widthCheck);
-      this.$http.get('/api/user/channel/' + this.$store.state.currentChannel.id)
-        .then(res => {
-          this.channelUsers = res.data
-          this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
-        })
+      this.updateUserList(this.currentChannel)
     },
     mounted() {
-      console.log("LSidebar mounted")
       this.$eventBus.$on('useModal', res =>{
         this.prepareModal(res)
       })
       // this.getUserList()
     },
     updated() {
-      console.log("LSidebar updated")
     },
     methods: {
+      updateUserList: function(currentChannel){
+        this.$http.get('/api/user/channel/' + currentChannel.id)
+          .then(res => {
+            this.channelUsers = res.data
+            this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
+          })
+      },
       widthCheck(){
         this.isSamllWidth = (window.innerWidth < 500) ? true : false;
       },
@@ -191,9 +194,9 @@
       },
       createChannel: function () {
         // vuex에서 currentUser 객체 사용
-        console.log(this.$store.state.currentUser.email)
         AboutChannel.createChannel(this.channelTitle, this.$store.state.currentUser.email)
           .then(res => {
+            this.$store.commit('setCurrentChannel',res.data)
             //res.data = 새로 생성된 channel 인스턴스
             if(this.$store.state.currentChannel != null){
               AboutChannel.updateLastAccessDate(res.data.id, this.$store.state.currentChannel.id)

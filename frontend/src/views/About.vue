@@ -1,32 +1,9 @@
 <template>
   <div>
-    <h1>test</h1>
-    <div class="col-5 float-left">
-      <b-button @click="moveItem">moveTest</b-button>
-      <b-button @click="test" class="float-right">test</b-button>
-      <b-list-group>
-        <draggable :list="list">
-          <transition-group name="list" >
-            <b-list-group-item v-for="item in list" :key="item" class="list-item">
-              {{item.name}}
-            </b-list-group-item>
-          </transition-group>
-        </draggable>
-      </b-list-group>
-    </div>
-    <div class="col-5 float-right">
-      <div v-for="(item,index) in list">
-        <p>{</p>
-          <p>index: {{index}}</p>
-          <p>name : {{item.name}}</p>
-        <p>}</p>
-      </div>
-    </div>
   </div>
 </template>
 <script>
   import draggable from 'vuedraggable'
-
   export default {
     name: 'About',
     components: {
@@ -44,6 +21,14 @@
     data() {
       return {
         number: 0,
+        datePickerConfig:{
+          night: '일',
+          nights: '일',
+          'day-names':['일','월','화','수','목','금','토'],
+          'check-in': 'start',
+          'check-out': 'end',
+          'month-names': ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월',]
+        },
         list: [{
           name: 'name1'
         }]

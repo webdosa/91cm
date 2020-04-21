@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 15px 20px 0px 20px;" class="col-12 rounded-lg bg-light">
-    <div v-if="taskList.name != ''">
+    <div v-if="taskList.name != ''" style="margin-bottom: 10px;">
       <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">
         <div class="rounded-lg bg-secondary" style="height: 10vh; padding-top: 10px; padding-left: 10px;">
           <span class="h3" style="color: white;" v-if="!edit" slot="header">{{taskList.name}}
@@ -21,11 +21,13 @@
       <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus
                     @keydown.enter.exact="setTaskListName"></b-form-input>
     </div>
-    <br><br>
     <b-list-group style="width: 25vw; height: 75vh; overflow-y: scroll;"> <!-- 임시로 정해주 높이 값 정확한 반응형 높이가 아님 -->
       <b-list-group-item v-if="create" style="padding: 10px 0px; margin-bottom: 10px;">
+        <v-swatches v-model="color" popover-x="right"></v-swatches>
         <b-form-textarea placeholder="내용을 입력해주세요" v-model="taskContent" @keydown.enter.exact="addTask">
         </b-form-textarea>
+        <date-picker v-model="date" type="date" range placeholder="날짜를 입력해주세요"></date-picker>
+<!--        <i class="im im-calendar float-left" @click="$bvModal.show('date-picker')"></i>-->
         <div class="float-right">
           <b-button size="sm" variant="primary" style="margin-right: 5px;" @click="addTask">Save</b-button>
           <b-button size="sm" variant="danger" @click="createFormToggle">Cancel</b-button>
@@ -69,7 +71,10 @@
 </template>
 <script>
   import draggable from 'vuedraggable'
-
+  import DatePicker from 'vue2-datepicker'
+  import 'vue2-datepicker/index.css'
+  import VSwatches from 'vue-swatches'
+  import 'vue-swatches/dist/vue-swatches.css'
   export default {
     name: 'TaskList',
     props: ["taskList"],
@@ -80,9 +85,6 @@
     },
     watch: {
       getTasks: function (newVal, oldVal) {
-        const set=new Set()
-        console.log(newVal)
-        console.log(oldVal)
         this.taskList.tasks.forEach(task => {
           task.position = this.taskList.tasks.indexOf(task)
         })
@@ -90,10 +92,14 @@
       }
     },
     components: {
-      draggable
+      draggable,
+      DatePicker,
+      VSwatches
     },
     data() {
       return {
+        color:'',
+        date: [],
         updateTask: {
           taskOldIndex: null,
           taskNewIndex: null,
@@ -109,11 +115,18 @@
         task: {
           tasklist_id: this.taskList.id,
           content: '',
-          member_email: this.$store.state.currentUser.email
+          member_email: this.$store.state.currentUser.email,
+          start_date: null,
+          end_date: null,
+          state: true,
+          color: ''
         }
       }
     },
     created() {
+    },
+    updated() {
+      console.log(this.date)
     },
     methods: {
       taskEventHandler: function ({added, moved, removed}) {
@@ -221,6 +234,9 @@
       },
       addTask: function () {
         this.task.content = this.taskContent
+        this.task.start_date = this.date[0]
+        this.task.end_date = this.date[1]
+        this.task.color = this.color
         this.$http.post('/api/task/insert', this.task)
           .then(res => {
             this.taskContent = ''

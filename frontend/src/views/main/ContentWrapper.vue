@@ -229,7 +229,7 @@
         }).catch(error => {
           console.log(error)
         })
-      },  
+      },
       invite: async function () {
         const userName = this.message.content.split(' ')[0]
         const userEmail = this.message.content.split(' ')[1]

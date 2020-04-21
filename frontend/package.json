@@ -13,7 +13,7 @@
     "axios": "^0.19.2",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.11.0",
+    "bootstrap-vue": "^2.12.0",
     "core-js": "^3.6.5",
     "jquery": "^3.5.0",
     "moment": "^2.24.0",
@@ -25,8 +25,10 @@
     "vue-full-calendar": "^2.7.0",
     "vue-router": "^3.1.5",
     "vue-session": "^1.0.0",
+    "vue-swatches": "^2.0.1",
+    "vue2-datepicker": "^3.4.1",
     "vuedraggable": "^2.23.2",
-    "vuex": "^3.1.2",
+    "vuex": "^3.2.0",
     "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
