@@ -152,6 +152,7 @@
     mounted() {
       this.$nextTick(() => {
         this.wrapperEl = document.querySelector('.c-c-wrapper')
+        window.addEventListener('resize', this.widthCheck);
       })
     },
     updated() {
@@ -166,6 +167,9 @@
       console.log('deactiveed contentwrapper')
     },
     methods: {
+      widthCheck(){
+        this.oldScrollHeight = this.wrapperEl.scrollHeight
+      },
       imgLoad(){
         if(!this.msgPreviewBool){
           this.scrollToEnd(true)
@@ -286,7 +290,6 @@
       },
 
       getMessage: function (wrapperEl) {
-        console.log(this.$store.state.currentChannel)
         this.cursorPoint.channel_id = this.$store.state.currentChannel.id
         this.$http.post('/api/message/getmsg', JSON.stringify(this.cursorPoint), {
           headers: {
@@ -330,7 +333,7 @@
         })
       },
       isScrollAtEnd(wrapperEl) {
-        if (Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight) {
+        if (Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight ||Math.round(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight ) {
           return true
         } else {
           return false
