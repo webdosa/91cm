@@ -142,6 +142,7 @@
           this.channelmode = '채널 생성'
         } else if(mode == 'edit'){
           this.channelmode = '채널 수정'
+          this.channelTitle = this.$store.state.currentChannel.name
         }
         this.$bvModal.show('channelCU')
       },

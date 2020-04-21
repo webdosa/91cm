@@ -3,7 +3,7 @@
 
     <div v-if="taskList.name != ''">
       <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler">
-        <span class="h3" style="color: white;" v-if="!edit" slot="header">{{taskList.name}}
+        <span class="h3" style="color: white;" v-if="!edit" slot="header">{{ taskList.name }}
           <b-badge variant="nonoutline" @click="editToggle"><i class="im im-pencil"></i></b-badge>
           <b-badge variant="nonoutline" @click="deleteTaskList"><i class="im im-trash-can"></i></b-badge>
         </span>
