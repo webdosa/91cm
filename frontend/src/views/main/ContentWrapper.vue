@@ -144,15 +144,15 @@
     },
     created() {
       this.getMessage()
-      this.$eventBus.$on('leaveChannelMsg', () =>{
-        this.message.content = this.$store.state.currentUser.name + '님이 나가셨습니다.'
-        this.send()
-      })
     },
     mounted() {
       this.$nextTick(() => {
         this.wrapperEl = document.querySelector('.c-c-wrapper')
         window.addEventListener('resize', this.widthCheck);
+      })
+      this.$eventBus.$on('leaveChannelMsg', () =>{
+        this.message.content = this.$store.state.currentUser.name + '님이 나가셨습니다.'
+        this.send()
       })
     },
     updated() {
