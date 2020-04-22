@@ -23,11 +23,12 @@
     </div>
     <b-list-group style="width: 25vw; height: 75vh; overflow-y: scroll;"> <!-- 임시로 정해주 높이 값 정확한 반응형 높이가 아님 -->
       <b-list-group-item v-if="create" style="padding: 10px 0px; margin-bottom: 10px;">
-        <v-swatches v-model="color" popover-x="right"></v-swatches>
+        <i class="im im-calendar float-left">
+          <date-picker v-model="date" type="date" range placeholder="날짜를 입력해주세요" style="margin-left: 5px; width: auto;"></date-picker>
+        </i>
+        <v-swatches v-model="color" popover-x="left" class="float-right" show-fallback></v-swatches>
         <b-form-textarea placeholder="내용을 입력해주세요" v-model="taskContent" @keydown.enter.exact="addTask">
         </b-form-textarea>
-        <date-picker v-model="date" type="date" range placeholder="날짜를 입력해주세요"></date-picker>
-<!--        <i class="im im-calendar float-left" @click="$bvModal.show('date-picker')"></i>-->
         <div class="float-right">
           <b-button size="sm" variant="primary" style="margin-right: 5px;" @click="addTask">Save</b-button>
           <b-button size="sm" variant="danger" @click="createFormToggle">Cancel</b-button>
@@ -60,7 +61,6 @@
 
               <footer>
                 <small class="float-right">created by {{task.member_email}}</small>
-                <!--            <small class="float-left">created date {{task.register_date}}</small>-->
               </footer>
             </div>
           </b-list-group-item>
@@ -98,7 +98,7 @@
     },
     data() {
       return {
-        color:'',
+        color:'#A463BF',
         date: [],
         updateTask: {
           taskOldIndex: null,
@@ -236,6 +236,8 @@
         this.task.content = this.taskContent
         this.task.start_date = this.date[0]
         this.task.end_date = this.date[1]
+        console.log(this.date)
+        console.log(new Date(this.date[0]))
         this.task.color = this.color
         this.$http.post('/api/task/insert', this.task)
           .then(res => {
