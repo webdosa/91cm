@@ -3,14 +3,11 @@ package com.nineone.nocm.service;
 import java.util.Date;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nineone.nocm.domain.Invite;
 import com.nineone.nocm.domain.JoinInfo;
-import com.nineone.nocm.domain.LastAccess;
 import com.nineone.nocm.repository.JoinInfoRepository;
 import com.nineone.nocm.util.DateUtil;
 
@@ -22,6 +19,7 @@ public class JoinInfoServiceImpl implements JoinInfoService {
 	
     @Autowired
     private JoinInfoRepository joinInfoRepository;
+    
 
     @Override
     public boolean leaveUser(Map<String, Object> info) {
@@ -30,7 +28,7 @@ public class JoinInfoServiceImpl implements JoinInfoService {
 
     @Override
     public boolean isExistUser(Invite invite) {
-        return joinInfoRepository.isExistUser(invite);
+    	return 	joinInfoRepository.isExistUser(invite);
     }
 
     @Override

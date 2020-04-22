@@ -63,7 +63,8 @@ sender varchar(100) not null,
 recipient varchar(100) not null,
 send_date datetime not null default CURRENT_TIMESTAMP,
 invite_state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ) default 'STAND_BY',
-foreign key (channel_id) references channel(id) on delete cascade on update cascade
+foreign key (channel_id) references channel(id) on delete cascade on update cascade,
+foreign key(recipient) references member(email) on update cascade
 );
 
 create table tasklist(
@@ -84,10 +85,13 @@ content text,
 register_date  datetime not null default CURRENT_TIMESTAMP,
 edit_date  datetime not null default CURRENT_TIMESTAMP,
 member_email varchar(100) not null,
-state boolean,
+state tinyint,
 position int not null,
 start_date datetime,
 end_date datetime,
+allday tinyint,
+color varchar(20),
+title varchar(45),
 foreign key (tasklist_id) references tasklist(id) on delete cascade on update cascade,
 foreign key (member_email) references member(email) on update cascade
 );

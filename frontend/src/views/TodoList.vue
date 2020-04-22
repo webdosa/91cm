@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
     <div class="scrolling-wrapper">
-      <b-list-group horizontal>
-        <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions">
+      <b-list-group horizontal style="overflow-x:auto;">
+        <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
           <b-list-group-item v-for="item in getAllTaskList" :key="item">
             <TaskList :taskList="item"></TaskList>
           </b-list-group-item>
@@ -39,6 +39,9 @@
             this.taskList = res.data
             console.log(this.taskList)
           })
+      },
+      getTaskBoard: function () {
+        this.taskList = this.$store.state.taskBoard
       }
     },
     computed: {
@@ -63,8 +66,8 @@
     },
     created() {
       this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
-          if (res.headers.typename =='test'){
-            console.log("get headers "+ res.headers.typename)
+          if (res.headers.typename =='taskUpdate'){
+            this.$store.dispatch('updateTaskBoard')
           }
       })
       this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
@@ -92,6 +95,20 @@
     methods: {
       addTaskList: function () {
         this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
+      },
+      tasklistEventHandler: function ({added, moved, removed}) {
+        if (moved){
+          this.$http.post('/api/tasklist/update/position',{
+            tasklistOldIndex: moved.oldIndex,
+            tasklistNewIndex: moved.newIndex,
+            tasklistId: moved.element.id
+          }).then(res=>{
+            console.log("tasklist update ok")
+            this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
+          }).catch(error =>{
+            console.log(error)
+          })
+        }
       }
     }
   }

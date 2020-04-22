@@ -25,8 +25,8 @@ const routes = [
   },
   {
     path: '/about',
-    name: 'main',
-    component: Main
+    name: 'ContentWrapper',
+    component: ContentWrapper
   },
   {
     path: '*',
