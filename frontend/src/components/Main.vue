@@ -198,6 +198,8 @@
       msgCountUpdate(id,counting){
         // commit 을 안해도 객체 내부의 내용은 변경이 되는지 확인 필요 확인 후 해당 주석 제거
         for (let i = 0; i < this.$store.state.userChannelList.length; i++) {
+          console.log('msgCountUpdate id: ' + id)
+          console.log('msgCountUpdate current id: ' + this.$store.state.userChannelList[i].id)
           if (id == this.$store.state.userChannelList[i].id) {
              if(counting){
                this.msgCounting(i)
