@@ -75,6 +75,7 @@
               style="height: 80px;padding-left: 50px;"
               v-model="message.content"
               autofocus
+              @change="splitData"
             ></b-form-input>
             <datalist id="user-info-list">
               <option v-for="user in $store.state.userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
@@ -115,6 +116,7 @@
     },
     data() {
       return {
+        // userlist:[{name:'정나영',email:'skdud5606@naver.com'},{name:'qq',email:'sads@naver.com'}],
         tempImg: '',
         stringByteLength: 0,
         previewObj: {
@@ -139,7 +141,7 @@
         wrapperEl: null,
         msgPreviewBool: false,
         getmsgBool: false,
-
+        selectedUserEmail: ''
       }
     },
     created() {
@@ -169,6 +171,10 @@
     methods: {
       widthCheck(){
         this.oldScrollHeight = this.wrapperEl.scrollHeight
+      },
+      splitData(data){
+        this.message.content = data.split(" ")[0]
+        this.selectedUserEmail = data.split(" ")[1]
       },
       imgLoad(){
         if(!this.msgPreviewBool){
@@ -235,8 +241,9 @@
         })
       },  
       invite: async function () {
-        const userName = this.message.content.split(' ')[0]
-        const userEmail = this.message.content.split(' ')[1]
+        const userName = this.message.content
+        const userEmail = this.selectedUserEmail
+        this.selectedUserEmail = null
         await InviteService.invite(this.$store.state.currentUser.email, this.$store.state.currentChannel.id, userEmail)
           .then(res => {
             // 모두가 초대 메시지를 보게 할 것인지 아닌지
