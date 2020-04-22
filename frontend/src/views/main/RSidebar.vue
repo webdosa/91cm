@@ -86,6 +86,7 @@
           this.$store.state.stompClient.send('/pub/chat/room/'+this.$store.state.currentChannel.id,
           JSON.stringify({'message':'updateChannel', 'error':"null"}))
           this.$alertModal('alert redirect', this.$store.state.currentChannel.name + ' 채널에서 나갔습니다.')
+          console.log('leave sssss')
           this.$eventBus.$emit('leaveChannelMsg')
         }).catch(error => {
           this.$alertModal('error', '나가기에 실패했습니다.')

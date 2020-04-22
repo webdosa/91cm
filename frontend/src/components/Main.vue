@@ -9,7 +9,7 @@
         @sendTitle="sendTitle"></LSidebar>
       <!-- Page Content  -->
       <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
-        <MainHeader></MainHeader>
+        <MainHeader> </MainHeader>
         <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
         <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
         <!-- CjannelHeader -->
@@ -178,8 +178,6 @@
           })
         }
         this.$store.commit('setChannelList', newChannelList)
-
-
       },
       msgArrayUpdate(newmsgArray) {
         this.msgArray = newmsgArray
