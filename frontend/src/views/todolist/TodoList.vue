@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="scrolling-wrapper">
-      <b-list-group horizontal>
+      <b-list-group horizontal style="overflow-x:auto;">
         <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
           <b-list-group-item v-for="item in getAllTaskList" :key="item">
             <TaskList :taskList="item"></TaskList>

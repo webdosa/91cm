@@ -37,4 +37,5 @@
     <select id="getAllUserList" resultType="com.nineone.nocm.domain.User">
         select * from member
     </select>
+    
     </mapper>

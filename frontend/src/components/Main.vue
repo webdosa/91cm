@@ -9,7 +9,7 @@
         @sendTitle="sendTitle"></LSidebar>
       <!-- Page Content  -->
       <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
-        <MainHeader></MainHeader>
+        <MainHeader @channelUpdate="channelUpdate"></MainHeader>
         <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
         <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
         <!-- CjannelHeader -->
@@ -75,30 +75,7 @@
         modalObj: {modalTitle: '', currentChannel: null},
       }
     },
-    watch:{
-      userChannelList: function (newChannelList, oldChannelList) {
-        let num = newChannelList.length - oldChannelList.length
-        for (let i = num; i > 0; i--) {
-          let idx = newChannelList.length - i
-          this.msgCountObj[newChannelList[idx].id] = 0
-          this.$store.state.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
-            console.log(e.body);
-            let data = JSON.parse(e.body)
-            if (data.message == 'updateChannel') {
-              this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
-              return;
-            } else {
-              this.channelSubscribeCallBack(e);
-              return;
-            }
-          })
-        }
-      }
-    },
     computed: {
-      ...mapGetters({
-        userChannelList: 'getUserChannelList'
-      }),
       whichComponent() {
         console.log(this.$store.state.oldComponent)
         AboutChannel.updateLastAccessStatus(this.$store.state.oldComponent, this.$store.state.selectComponent)
@@ -190,12 +167,8 @@
           window.location.href = "/"
         })
       },
-      channelUpdate(newChannelList) {
-        let num = newChannelList.length - this.$store.state.userChannelList.length
-        for (let i = num; i > 0; i--) {
-          let idx = newChannelList.length - i
-          this.msgCountObj[newChannelList[idx].id] = 0
-          this.$store.state.stompClient.subscribe("/sub/chat/room/" + newChannelList[idx].id, (e) => {
+      channelUpdate() {
+          this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.$store.state.currentChannel.id, (e) => {
             console.log(e.body);
             let data = JSON.parse(e.body)
             if (data.message == 'updateChannel') {
@@ -206,16 +179,15 @@
               return;
             }
           })
-        }
-        this.$store.commit('setChannelList', newChannelList)
+        // this.$store.commit('setChannelList', newChannelList)
       },
       msgArrayUpdate(newmsgArray) {
         this.msgArray = newmsgArray
       },
       channelSubscribeCallBack(e, fail) {
         let data = JSON.parse(e.body)
-        console.log(data)
-        console.log(this.$store.state.isfocus)
+        // console.log(data)
+        // console.log(this.$store.state.isfocus)
         NotificationClass.sendNotification(this.$store.state.isfocus, data)
         if (data.channel_id == this.$store.state.currentChannel.id && this.$store.state.selectComponent == 'main') {
           data.content = CommonClass.replacemsg(data.content)
@@ -224,21 +196,34 @@
           }
           this.msgArray.push(data)
           if (!this.$store.state.isfocus) {
-            this.msgCounting(data)
+            this.msgCountUpdate(data.channel_id,true)
           }
         } else {
-          this.msgCounting(data)
+          this.msgCountUpdate(data.channel_id,true)
         }
       },
-      msgCounting(data) {
+      msgCountUpdate(id,counting){
         // commit 을 안해도 객체 내부의 내용은 변경이 되는지 확인 필요 확인 후 해당 주석 제거
         for (let i = 0; i < this.$store.state.userChannelList.length; i++) {
-          if (data.channel_id == this.$store.state.userChannelList[i].id) {
-            this.$store.state.userChannelList[i].count += 1
-            break
+          console.log('msgCountUpdate id: ' + id)
+          console.log('msgCountUpdate current id: ' + this.$store.state.userChannelList[i].id)
+          if (id == this.$store.state.userChannelList[i].id) {
+             if(counting){
+               this.msgCounting(i)
+               break
+             } else{
+               this.msgCountReset(i)
+               break
+             }
           }
         }
       },
+      msgCounting(i) {
+        this.$store.state.userChannelList[i].count += 1
+      },
+      msgCountReset(i){
+        this.$store.state.userChannelList[i].count = 0 
+      }
 
     }
 

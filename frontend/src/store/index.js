@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import CommonClass from '../service/common'
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 
@@ -70,6 +71,8 @@ export default new Vuex.Store({
     updateTaskBoard: function(context){
       axios.get('/api/tasklist/get/'+context.state.currentChannel.id)
         .then(res => {
+          // CommonClass.replaceText(res.data)
+          console.log(res.data)
           context.commit('setTaskBoard',res.data);
         }).catch(error=>{
           console.log(error)

@@ -75,6 +75,7 @@
               style="height: 80px;padding-left: 50px;"
               v-model="message.content"
               autofocus
+              @change="splitData"
             ></b-form-input>
             <datalist id="user-info-list">
               <option v-for="user in $store.state.userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
@@ -115,6 +116,7 @@
     },
     data() {
       return {
+        // userlist:[{name:'정나영',email:'skdud5606@naver.com'},{name:'qq',email:'sads@naver.com'}],
         tempImg: '',
         stringByteLength: 0,
         previewObj: {
@@ -139,19 +141,20 @@
         wrapperEl: null,
         msgPreviewBool: false,
         getmsgBool: false,
-
+        selectedUserEmail: ''
       }
     },
     created() {
       this.getMessage()
-      this.$eventBus.$on('leaveChannelMsg', () =>{
-        this.message.content = this.$store.state.currentUser.name + '님이 나가셨습니다.'
-        this.send()
-      })
     },
     mounted() {
       this.$nextTick(() => {
         this.wrapperEl = document.querySelector('.c-c-wrapper')
+        window.addEventListener('resize', this.widthCheck);
+      })
+      this.$eventBus.$on('leaveChannelMsg', () =>{
+        this.message.content = this.$store.state.currentUser.name + '님이 나가셨습니다.'
+        this.send()
       })
     },
     updated() {
@@ -166,6 +169,13 @@
       console.log('deactiveed contentwrapper')
     },
     methods: {
+      widthCheck(){
+        this.oldScrollHeight = this.wrapperEl.scrollHeight
+      },
+      splitData(data){
+        this.message.content = data.split(" ")[0]
+        this.selectedUserEmail = data.split(" ")[1]
+      },
       imgLoad(){
         if(!this.msgPreviewBool){
           this.scrollToEnd(true)
@@ -231,8 +241,9 @@
         })
       },
       invite: async function () {
-        const userName = this.message.content.split(' ')[0]
-        const userEmail = this.message.content.split(' ')[1]
+        const userName = this.message.content
+        const userEmail = this.selectedUserEmail
+        this.selectedUserEmail = null
         await InviteService.invite(this.$store.state.currentUser.email, this.$store.state.currentChannel.id, userEmail)
           .then(res => {
             // 모두가 초대 메시지를 보게 할 것인지 아닌지
@@ -286,7 +297,6 @@
       },
 
       getMessage: function (wrapperEl) {
-        console.log(this.$store.state.currentChannel)
         this.cursorPoint.channel_id = this.$store.state.currentChannel.id
         this.$http.post('/api/message/getmsg', JSON.stringify(this.cursorPoint), {
           headers: {
@@ -330,7 +340,7 @@
         })
       },
       isScrollAtEnd(wrapperEl) {
-        if (Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight) {
+        if (Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight ||Math.round(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight ) {
           return true
         } else {
           return false
