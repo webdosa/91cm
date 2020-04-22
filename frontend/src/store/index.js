@@ -10,6 +10,7 @@ Vue.use(Vuex)
 // state, mutations, action, getter 등을 파일로 나눌 필요 있음
 export default new Vuex.Store({
   state: {
+    channelUsers: [],
     taskBoard: [],
     syncSignal: {
       syncChannel: false,
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     searchText: ''
   },
   mutations: {
+    setChannelUsers: function(state,payload){
+      state.channelUsers = payload
+    },
     setCurrentChannel: function (state, payload) {
       state.currentChannel = payload
     },
@@ -121,5 +125,6 @@ export default new Vuex.Store({
     getTaskBoard: state=> state.taskBoard,
     getCurrentChannel: state => state.currentChannel,
     getSyncChannelUser: state => state.syncSignal.syncChannelUser,
+    getChannelUsers: state => state.channelUsers,
   }
 })

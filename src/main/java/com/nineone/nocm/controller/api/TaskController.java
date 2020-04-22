@@ -3,11 +3,7 @@ package com.nineone.nocm.controller.api;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.nineone.nocm.domain.Task;
 import com.nineone.nocm.service.TaskService;
@@ -34,7 +30,7 @@ public class TaskController {
 	public boolean deleteTask(@RequestBody Task task) {
 		return taskService.deleteTask(task);
 	}
-	
+
 	@RequestMapping(value="/update/content",method = RequestMethod.POST)
 	public boolean updateTaskContent(@RequestBody Task task) {
 		return taskService.updateTaskContent(task);

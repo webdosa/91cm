@@ -114,7 +114,6 @@
       this.$eventBus.$on('useModal', res =>{
         this.prepareModal(res)
       })
-      // this.getUserList()
     },
     updated() {
     },
@@ -123,7 +122,7 @@
         this.$http.get('/api/user/channel/' + currentChannel.id)
           .then(res => {
             this.channelUsers = res.data
-            this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
+            this.$store.commit('setChannelUsers',res.data)
           })
       },
       widthCheck(){

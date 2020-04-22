@@ -58,10 +58,4 @@ public class TaskServiceImpl implements TaskService{
 		}
 		
 	}
-
-//	@Override
-//	public boolean updateTaskPosition(Task task) {
-//		return (taskRepository.updateTaskPosition(task) > 0 )? true : false;
-//	}
-
 }
