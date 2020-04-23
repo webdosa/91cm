@@ -107,6 +107,7 @@
   import InviteService from '../../service/inviteService'
   import CommonClass from '../../service/common'
   import SearchInput from './SearchInput'
+  import AboutChannel from '../../service/aboutchannel'
 
   export default {
     props: ['msgArray'],
@@ -388,6 +389,11 @@
         this.initData()
         this.getMessage()
         this.scrollToEnd()
+        if (this.$store.state.oldComponent == 'main') {
+          AboutChannel.updateLastAccessDate(newv.id, oldv.id)
+          console.log(oldChannel.id)
+        }
+        
       },
       msgArray: function () {
         // 스크롤을 최상단으로 올려 메시지를 가져올 때 실행되는 것을 막기 위한 if문

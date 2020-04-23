@@ -144,6 +144,10 @@
             this.$store.state.stompClient.send('/pub/chat/message',JSON.stringify(message))
             await this.$store.dispatch('channelList')
             const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
+            // 나중에 처리해야할 코드
+            const index = this.$store.state.userChannelList.findIndex(channel => channel.id == alarm.channel_id)
+            this.$store.state.userChannelList[index].count = 0
+            //
             this.$store.commit('setCurrentChannel', joinChannel)
             this.$emit('channelUpdate')
           })
