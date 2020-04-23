@@ -103,6 +103,9 @@
   }
 </script>
 
-<style scoped>
-
+<style>
+  .vue-swatches__container:not(.vue-swatches--inline) {
+    top: 42px !important;
+    bottom: auto !important;
+  }
 </style>

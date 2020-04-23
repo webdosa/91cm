@@ -30,6 +30,7 @@
         <transition-group name="task-list">
           <b-list-group-item v-for="(task,index) in getTasks" :key="task" style="margin-bottom: 10px;" class="item">
             <div v-if="index != editSelector">
+              <span class="small text-muted" v-if="task.start_date">{{getDateFormat(task.start_date)}} ~ {{getDateFormat(task.end_date)}}</span>
               <b-dropdown no-caret variant="nonoutline" toggle-class="text-decoration-none"
                           class="float-right" style="padding: 0px;">
                 <template v-slot:button-content>
@@ -79,8 +80,6 @@
     },
     watch: {
       getTasks: function (newVal, oldVal) {
-        console.log("watch task")
-        this.$eventBus.$emit('newTask',newVal)
         this.taskList.tasks.forEach(task => {
           task.position = this.taskList.tasks.indexOf(task)
         })
@@ -231,6 +230,12 @@
             console.log(error)
           })
       },
+      getDateFormat: function(dateData){
+        const date = new Date(dateData)
+        let dateToString = ''
+        dateToString = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()
+        return dateToString
+      }
 
     }
   }

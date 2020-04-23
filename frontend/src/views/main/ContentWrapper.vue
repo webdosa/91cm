@@ -216,6 +216,7 @@
         let formData = new FormData();
         // formData에 multi로 파일을 담는 방법에 대해 추후 확인
         let files = [];
+        // 코
         ([...uploadFiles]).forEach(f => {
           files.push(f)
         });
@@ -230,6 +231,8 @@
         /////////////////////////////////////
         formData.append('channel_id', this.$store.state.currentChannel.id)
         formData.append('sender', this.$store.state.currentUser.email)
+        console.log(this.$store.state.currentUser.email)
+        console.log(formData)
         this.$http.post('/api/file/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'

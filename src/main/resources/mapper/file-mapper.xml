@@ -5,7 +5,7 @@
 
 <mapper namespace="com.nineone.nocm.mapper.file">
     <insert id="saveFile">
-        insert file(original_name, server_name, path, extension, message_id,file_size)
-            values (#{original_name}, #{server_name}, #{path}, #{extension}, #{message_id}, #{file_size})
+        insert file(original_name, server_name, path, extension, message_id,file_size, sender)
+            values (#{original_name}, #{server_name}, #{path}, #{extension}, #{message_id}, #{file_size}, #{sender})
     </insert>
 </mapper>

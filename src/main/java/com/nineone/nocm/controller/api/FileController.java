@@ -55,7 +55,7 @@ public class FileController {
     public ResponseEntity<?> uploadFile(@RequestParam("files") MultipartFile[] files,
                                         @RequestParam("channel_id") int channel_id,
                                         @RequestParam("sender") String sender, @Socialuser User user) {
-
+        log.info(sender);
         Message message = Message.builder().channel_id(channel_id)
                 .sender(sender)
                 .user(user)

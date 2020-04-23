@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="copyRight-modal" size="lg" scrollable ok-only>
+  <b-modal id="copyRight-modal" size="lg" scrollable ok-only title="오픈소스 라이센스">
     <b-button class="button-margin" v-b-toggle.collapse-open1 variant="outline-dark" block>Animate.css</b-button>
     <b-collapse id="collapse-open1" class="mt-2">
       <b-card>

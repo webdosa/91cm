@@ -28,14 +28,34 @@
       VSwatches
     },
     watch: {
-      getTaskBoard: function (newTaskBoard) {
-        console.log(newTaskBoard)
-        console.log("Calendar getTaskBoard Watch")
+      taskBoard: function (newTaskBoard, oldTaskBoard) {
+        this.events = []
+        newTaskBoard.forEach(taskList => {
+          taskList.tasks.forEach(task => {
+            console.log(task)
+            if (task.start_date && task.state) {
+              let title = '제목 없음'
+              if (task.title == null || task.title == '') {
+                title = task.content
+              } else {
+                title = task.title
+              }
+              this.events.push({
+                title: title,
+                start: new Date(task.start_date),
+                end: new Date(task.end_date).addDays(1),
+                color: task.color,
+                taskid: task.id
+              })
+            }
+          })
+        })
       }
     },
     computed: {
       ...mapGetters({
-        taskBoard: 'getTaskBoard'
+        taskBoard: 'getTaskBoard',
+        selectComponent: 'getSelectComponent'
       })
     },
     data() {
@@ -53,28 +73,6 @@
       }
     },
     created() {
-      this.$eventBus.$on('newTask',data=>{
-        console.log("eventBus")
-        this.events=this.events.concat(data)
-        this.getUniqueObjectArray(data)
-        data.forEach(task =>{
-          if (task.start_date && task.state) {
-            let title = '제목 없음'
-            if (task.title == null || task.title == '') {
-              title = task.content
-            } else {
-              title = task.title
-            }
-            this.events.push({
-              title: title,
-              start: new Date(task.start_date),
-              end: new Date(task.end_date).addDays(1),
-              color: task.color,
-              taskid: task.id
-            })
-          }
-        })
-      })
       this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
         .then(res => {
           const taskBoard = res.data
@@ -154,7 +152,9 @@
     -1px 1px 0 #2d2d2d,
     1px 1px 0 #2d2d2d;
   }
-
+  .fc-time{
+    display: none;
+  }
   .fc-content {
     text-align: center;
   }
