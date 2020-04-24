@@ -392,10 +392,13 @@
         this.initData()
         this.getMessage()
         this.scrollToEnd()
-        if (this.$store.state.oldComponent == 'main') {
+        if(oldv == null){
+          console.log('null?')
+          AboutChannel.updateLastAccessDate(newv.id, null)
+        }else{
+          console.log('null?!')
           AboutChannel.updateLastAccessDate(newv.id, oldv.id)
         }
-
       },
       msgArray: function () {
         // 스크롤을 최상단으로 올려 메시지를 가져올 때 실행되는 것을 막기 위한 if문
