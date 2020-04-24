@@ -126,6 +126,7 @@ export default new Vuex.Store({
     getCurrentChannel: state => state.currentChannel,
     getSyncChannelUser: state => state.syncSignal.syncChannelUser,
     getChannelUsers: state => state.channelUsers,
-    getSelectComponent: state => state.selectComponent
+    getSelectComponent: state => state.selectComponent,
+    getUserList: state => state.userList
   }
 })

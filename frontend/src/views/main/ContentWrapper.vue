@@ -68,6 +68,7 @@
           <div style="position: relative" v-if="$store.state.isInviteMode">
             <i style="position:absolute;left: 15px;top: calc(50% - 12px);" class="im im-user-circle"></i>
             <b-form-input
+              autocomplete="off"
               @keydown.enter.exact="invite"
               @keydown.esc.exact="inviteToggle"
               list="user-info-list"
@@ -78,7 +79,7 @@
               @change="splitData"
             ></b-form-input>
             <datalist id="user-info-list">
-              <option v-for="user in $store.state.userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
+              <option v-for="user in userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
             </datalist>
           </div>
           <SearchInput
@@ -108,6 +109,7 @@
   import CommonClass from '../../service/common'
   import SearchInput from './SearchInput'
   import AboutChannel from '../../service/aboutchannel'
+  import {mapGetters} from "vuex";
 
   export default {
     props: ['msgArray'],
@@ -380,7 +382,10 @@
     computed:{
       getCurrentChannel: function(){
         return this.$store.state.currentChannel
-      }
+      },
+      ...mapGetters({
+        userList: 'getUserList'
+      })
     },
     watch: {
       getCurrentChannel: function (newv, oldv) {
@@ -389,7 +394,6 @@
         this.scrollToEnd()
         if (this.$store.state.oldComponent == 'main') {
           AboutChannel.updateLastAccessDate(newv.id, oldv.id)
-          console.log(oldChannel.id)
         }
 
       },

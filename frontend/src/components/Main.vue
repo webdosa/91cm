@@ -48,7 +48,6 @@
   import SockJS from "sockjs-client";
   import TodoList from '../views/todolist/TodoList'
   import Calendar from "../views/calendar/Calendar";
-  import {mapGetters} from "vuex";
 
   export default {
     name: 'Main',
@@ -108,9 +107,7 @@
       await this.$store.dispatch('userListUpdate')
       await this.$store.dispatch('channelList') // 설정되는 값은 userChannelList
       this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[0])
-      console.log("main created")
       const currentChannel = this.$store.state.currentChannel
-      console.log(currentChannel)
       if (currentChannel != null) {
         currentChannel.count = 0
         await AboutChannel.initCurrentChannel(currentChannel.id)
@@ -153,10 +150,7 @@
             })
           })
           this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
-            console.log(res.body)
-            if (res.body == 'true') {
-              this.storeUpdate()
-            } else if (res.body == 'userList') {
+            if (res.body == '"userList"') {
               this.$store.dispatch('userListUpdate')
             }
           })
@@ -169,17 +163,17 @@
         })
       },
       channelUpdate() {
-          this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.$store.state.currentChannel.id, (e) => {
-            console.log(e.body);
-            let data = JSON.parse(e.body)
-            if (data.message == 'updateChannel') {
-              this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
-              return;
-            } else {
-              this.channelSubscribeCallBack(e);
-              return;
-            }
-          })
+        this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.$store.state.currentChannel.id, (e) => {
+          console.log(e.body);
+          let data = JSON.parse(e.body)
+          if (data.message == 'updateChannel') {
+            this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
+            return;
+          } else {
+            this.channelSubscribeCallBack(e);
+            return;
+          }
+        })
         // this.$store.commit('setChannelList', newChannelList)
       },
       msgArrayUpdate(newmsgArray) {
@@ -197,32 +191,32 @@
           }
           this.msgArray.push(data)
           if (!this.$store.state.isfocus) {
-            this.msgCountUpdate(data.channel_id,true)
+            this.msgCountUpdate(data.channel_id, true)
           }
         } else {
-          this.msgCountUpdate(data.channel_id,true)
+          this.msgCountUpdate(data.channel_id, true)
         }
       },
-      msgCountUpdate(id,counting){
+      msgCountUpdate(id, counting) {
         // commit 을 안해도 객체 내부의 내용은 변경이 되는지 확인 필요 확인 후 해당 주석 제거
         for (let i = 0; i < this.$store.state.userChannelList.length; i++) {
           console.log('msgCountUpdate id: ' + id)
           console.log('msgCountUpdate current id: ' + this.$store.state.userChannelList[i].id)
           if (id == this.$store.state.userChannelList[i].id) {
-             if(counting){
-               this.msgCounting(i)
-               break
-             } else{
-               this.msgCountReset(i)
-               break
-             }
+            if (counting) {
+              this.msgCounting(i)
+              break
+            } else {
+              this.msgCountReset(i)
+              break
+            }
           }
         }
       },
       msgCounting(i) {
         this.$store.state.userChannelList[i].count += 1
       },
-      msgCountReset(i){
+      msgCountReset(i) {
         this.$store.state.userChannelList[i].count = 0
       }
 
