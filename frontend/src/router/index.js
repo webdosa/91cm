@@ -5,13 +5,8 @@ import Home from '../components/Home.vue'
 import NotFound from '../views/NotFound.vue'
 import Clock from '../views/Clock'
 import Main from '../components/Main'
-import ContentWrapper from '../views/main/ContentWrapper'
-import ChannelHeader from '../views/main/ChannelHeader'
-import test from '../views/user/UserInfo'
-import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
 import FormSignUp from "../views/FormSignUp";
-import CopyRight from "../views/util/CopyRight"
 import Todolist from '../views/todolist/TodoList'
 import About from "../views/About";
 import Calendar from "../views/calendar/Calendar";
@@ -32,7 +27,6 @@ const routes = [
   {
     path: '*',
     component: NotFound
-    // redirect: '/errorpage'
   },
   {
     path: '/clock',

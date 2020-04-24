@@ -212,19 +212,17 @@
       addFile: function (uploadFiles) {
         const maxUploadSize = 100 * 1024 * 1024;
         let fileSize = 0;
-        console.log(uploadFiles)
         if (!uploadFiles) return;
         let formData = new FormData();
         // formData에 multi로 파일을 담는 방법에 대해 추후 확인
         let files = [];
-        // 코
-        ([...uploadFiles]).forEach(f => {
-          files.push(f)
-        });
-        files.forEach(file => {
+        ([...uploadFiles]).forEach(file => {
           formData.append("files", file)
           fileSize += file.size
         });
+        // files.forEach(file => {
+        //
+        // });
         if (fileSize >= maxUploadSize) {
           this.$alertModal('alert', '한번에 보낼 수 있는 파일 용량은 100MB 입니다.')
           return;
@@ -241,7 +239,7 @@
         }).then(res => {
           console.log(res)
         }).catch(error => {
-          console.log(error)
+          this.$alertModal('error','폴더는 업로드 할 수 없습니다.')
         })
       },
       invite: async function () {
@@ -393,7 +391,7 @@
           AboutChannel.updateLastAccessDate(newv.id, oldv.id)
           console.log(oldChannel.id)
         }
-        
+
       },
       msgArray: function () {
         // 스크롤을 최상단으로 올려 메시지를 가져올 때 실행되는 것을 막기 위한 if문

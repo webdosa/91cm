@@ -153,6 +153,7 @@
             })
           })
           this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
+            console.log(res.body)
             if (res.body == 'true') {
               this.storeUpdate()
             } else if (res.body == 'userList') {
@@ -222,7 +223,7 @@
         this.$store.state.userChannelList[i].count += 1
       },
       msgCountReset(i){
-        this.$store.state.userChannelList[i].count = 0 
+        this.$store.state.userChannelList[i].count = 0
       }
 
     }

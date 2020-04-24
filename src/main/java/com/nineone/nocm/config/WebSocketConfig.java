@@ -29,6 +29,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		config.setApplicationDestinationPrefixes("/pub/");
 	}
 
+	// WebSocketConfig.java
 	@Override
 	public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
 		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();

@@ -60,7 +60,9 @@
       },
       insertUser() {
         this.user.email = this.email
-        console.log(this.user)
+        if (!this.valueCheck(this.user.email, this.user.name, this.user.phone)) {
+          return;
+        }
         let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
         this.$http.post('/api/user/signup', JSON.stringify(this.user), {
           headers: {
@@ -74,6 +76,26 @@
             this.$alertModal('error', '회원가입 실패')
           }
         })
+      },
+      valueCheck: function (email, name, phone) {
+        const phoneRegex = '^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$'
+        if (email == null || email == '') {
+          this.$alertModal('error', '이메일을 입력해주세요')
+          return false
+        }
+        if (name == null || name == '') {
+          this.$alertModal('error', '이름을 입력해주세요')
+          return false
+        }
+        if (phone == null || phone == '') {
+          this.$alertModal('error', '핸드폰 번호를 입력해주세요')
+          return false
+        }
+        if (!phone.match(phoneRegex)){
+          this.$alertModal('error','핸드폰 번호가 형식에 맞지 않습니다')
+          return false
+        }
+          return true
       }
     }
   }
