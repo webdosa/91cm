@@ -44,6 +44,11 @@ public class ChannelRepositoryImpl implements ChannelRepository{
 	public int joinInfo(JoinInfo joinInfo) {
 		return sqlSession.insert(namespace + ".insertJoinInfo", joinInfo);
 	}
-    
-    
+
+    @Override
+    public Channel getCurrentChannel(Channel channel) {
+        return sqlSession.selectOne(namespace + ".getCurrentChannel", channel);
+    }
+
+
 }

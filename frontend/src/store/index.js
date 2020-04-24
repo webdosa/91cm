@@ -106,6 +106,15 @@ export default new Vuex.Store({
     },
     resetCurrentUser: function (context) {
       context.commit('resetCurrentUser')
+    },
+    updateCurrentChannel: function (context) {
+      axios.post('/api/channel/current',{id: context.state.currentChannel.id})
+        .then(res =>{
+          context.commit('setCurrentChannel',res.data)
+          const channel = context.state.userChannelList
+            .find(channel => channel.id == context.state.currentChannel.id)
+          channel.name = context.state.currentChannel.name
+        })
     }
   },
   modules: {

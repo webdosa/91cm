@@ -143,7 +143,12 @@
               if (data.message == 'updateChannel') {
                 this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
                 return;
-              } else {
+              }
+              else if(data.message == 'updateCurrentChannel'){
+                this.$store.dispatch('updateCurrentChannel')
+                return;
+              }
+              else{
                 this.channelSubscribeCallBack(e);
                 return;
               }

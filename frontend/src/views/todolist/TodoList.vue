@@ -37,7 +37,7 @@
         this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
           .then(res => {
             this.taskList = res.data
-            this.$store.commit('setTaskBoard',this.taskList)
+            this.$store.commit('setTaskBoard', this.taskList)
             console.log(this.taskList)
           })
       },
@@ -65,12 +65,19 @@
         }
       }
     },
-    created() {
-      this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
+    activated() {
+      this.taskSubscribe=this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
         if (res.headers.typename == 'taskUpdate') {
+          console.log("taskUpdate")
           this.$store.dispatch('updateTaskBoard')
         }
       })
+    },
+    deactivated() {
+      this.taskSubscribe.unsubscribe()
+      this.taskSubscribe = null
+    },
+    created() {
       this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
         .then(res => {
           this.taskList = res.data
@@ -82,6 +89,7 @@
     },
     data() {
       return {
+        taskSubscribe: null,
         connetionCheck: false,
         taskList: [],
         taskListItem: {

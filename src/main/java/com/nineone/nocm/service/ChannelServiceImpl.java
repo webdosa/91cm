@@ -58,4 +58,9 @@ public class ChannelServiceImpl implements ChannelService{
     public List<Channel> channelListAll() {
         return channelRepository.channelListAll();
     }
+
+    @Override
+    public Channel getCurrentChannel(Channel channel) {
+        return channelRepository.getCurrentChannel(channel);
+    }
 }

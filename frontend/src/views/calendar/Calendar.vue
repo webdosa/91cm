@@ -1,15 +1,23 @@
 <template>
   <div class="container">
     <full-calendar ref="calendar" :config="config" :events="events" @event-selected="selectEvent"></full-calendar>
-    <b-modal id="change-event" @ok="handleOk" title="일정 수정" @cancel="resetData">
+    <b-modal id="change-event" @ok="handleOk" title="일정 수정" @cancel="resetData" @hide="resetData">
       <v-swatches class="float-right" v-model="eventColor" popover-x="right"
                   show-fallback placeholder="제목을 입력해주세요."></v-swatches>
       <b-form-group
         label="일정 이름"
-        label-for="input-title"
-      >
-        <b-form-input id="input-title" v-model="eventTitle" title="일정 수정" style="margin-right: 15px;" class="float-left"></b-form-input>
+        label-for="input-title">
+        <b-form-input id="input-title" v-model="eventTitle" title="일정 수정" placeholder="캘린더 이벤트 제목"
+                      style="margin-right: 15px;" class="float-left"></b-form-input>
       </b-form-group>
+      <b-form-group
+      label="일정 내용"
+      label-for="textarea-content" >
+        <b-textarea id="textarea-content" v-model="taskContent">
+
+        </b-textarea>
+      </b-form-group>
+
 
     </b-modal>
   </div>
@@ -45,7 +53,7 @@
                 start: new Date(task.start_date),
                 end: new Date(task.end_date).addDays(1),
                 color: task.color,
-                taskid: task.id
+                task: task
               })
             }
           })
@@ -60,8 +68,9 @@
     },
     data() {
       return {
+        taskContent: '',
         events: [],
-        selectEventItem: {},
+        selectTask: {},
         eventTitle: null,
         eventColor: null,
         config: {
@@ -93,7 +102,7 @@
                   start: new Date(task.start_date),
                   end: new Date(task.end_date).addDays(1),
                   color: task.color,
-                  taskid: task.id
+                  task: task
                 })
               }
             })
@@ -106,31 +115,32 @@
       console.log("calendar mounted")
     },
     methods: {
-      getUniqueObjectArray: function(array){
-        array.filter((item, i)=>{
-          return array.findIndex((item2, j) =>{
+      getUniqueObjectArray: function (array) {
+        array.filter((item, i) => {
+          return array.findIndex((item2, j) => {
             return item.id == item2.id
           }) === 1
         })
       },
-      resetData: function(){
+      resetData: function () {
         this.eventColor = null
         this.eventTitle = null
+        this.taskContent = null
       },
       selectEvent: function (event) {
-        this.selectEventItem = event
-        this.eventTitle = event.title
+        this.selectTask = event.task
+        this.eventTitle = event.task.title
+        this.taskContent = event.task.content
+        this.eventColor = event.task.color
         this.$bvModal.show('change-event')
       },
       handleOk: function () {
-        const eventIndex = this.events.findIndex(event => event.taskid == this.selectEventItem.taskid)
-        console.log(this.events[eventIndex])
-        this.events[eventIndex].title = this.eventTitle
-        this.eventTitle = null
-        if (this.eventColor != null) {
-          this.events[eventIndex].color = this.eventColor
-          this.eventColor = null
-        }
+        this.selectTask.title = this.eventTitle
+        this.selectTask.content = this.taskContent
+        this.selectTask.color = this.eventColor
+        this.$http.post('/api/task/update/content', this.selectTask)
+        this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id
+          , null, {typename: 'taskUpdate'})
         //엑시오스로 db 업데이트 및 실시간 처리
       },
 
@@ -152,9 +162,11 @@
     -1px 1px 0 #2d2d2d,
     1px 1px 0 #2d2d2d;
   }
-  .fc-time{
+
+  .fc-time {
     display: none;
   }
+
   .fc-content {
     text-align: center;
   }

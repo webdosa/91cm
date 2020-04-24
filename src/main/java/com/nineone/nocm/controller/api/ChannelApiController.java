@@ -37,6 +37,11 @@ public class ChannelApiController {
     private JoinInfoService joinInfoService;
     
 
+    @PostMapping("/current")
+    public Channel getCurrentChannel(@RequestBody Channel channel){
+        return channelService.getCurrentChannel(channel);
+    }
+
     @PostMapping("/leave")
     public boolean leaveChannel(@RequestBody Map<String, Object> info){
         // info에는 해당 유저의 email 값과 채널 id값이 들어 있음 -> key : (email , channel_id)

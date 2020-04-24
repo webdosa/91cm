@@ -84,15 +84,6 @@
         currentChannel: 'getCurrentChannel',
         syncChannelUser: 'getSyncChannelUser'
       }),
-      // 유저 초대 및 처음 채널 생성 시 동기화
-      // getCurrentChannel: function (newCurrentChannel) {
-      //   console.log(newCurrentChannel)
-      //   if (this.$store.state.syncSignal.syncChannelUser){
-      //     return this.$store.state.currentChannel
-      //   }
-      //   this.channelTitle = this.$store.state.currentChannel.name
-      //   return this.$store.state.currentChannel
-      // },
     },
     name: 'LSidebar',
     data() {
@@ -187,7 +178,8 @@
       updateChannel: function () {
         AboutChannel.updateChannelAPI(this.$store.state.currentChannel)
           .then(res => {
-            console.log(res)
+            this.$store.state.stompClient.send("/sub/chat/room/"+this.$store.state.currentChannel.id,
+              JSON.stringify({'message':'updateCurrentChannel', 'error':"null"}))
           }).catch(error => {
           console.log(error)
         })

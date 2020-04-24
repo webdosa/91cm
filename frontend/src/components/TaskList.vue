@@ -5,7 +5,7 @@
         <div class="rounded-lg bg-secondary" style="height: 10vh; padding-top: 10px; padding-left: 10px;">
           <span class="h3" style="color: white;" v-if="!edit" slot="header">{{taskList.name}}
           <b-badge variant="nonoutline" @click="editToggle"><i class="im im-pencil"></i></b-badge>
-          <b-badge variant="nonoutline" @click="deleteTaskList"><i class="im im-trash-can"></i></b-badge>
+          <b-badge variant="nonoutline" @click="msgBox"><i class="im im-trash-can"></i></b-badge>
         </span>
           <b-form-input v-else
                         @keydown.enter.exact="editTaskListName"
@@ -157,7 +157,6 @@
         evt.draggedContext.element.position = evt.draggedContext.index
       },
       deleteTaskList: function () {
-        console.log(this.taskList)
         this.$http.post('/api/tasklist/delete', {
           id: this.taskList.id,
           position: this.taskList.position
@@ -235,6 +234,20 @@
         let dateToString = ''
         dateToString = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()
         return dateToString
+      },
+      msgBox: async function () {
+        await this.$bvModal.msgBoxConfirm("정말로 이 TaskList를 삭제하시겠습니끼?", {
+          title: '확인',
+          okTitle: '확인',
+          okVariant: 'danger',
+          buttonSize: 'sm',
+          cancelTitle: '취소'
+        })
+          .then(value => {
+            if (value){
+              this.deleteTaskList()
+            }
+          })
       }
 
     }
