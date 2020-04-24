@@ -25,11 +25,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker("/sub", "/queue");
+		config.enableSimpleBroker("/sub");
 		config.setApplicationDestinationPrefixes("/pub/");
 	}
 
-	// WebSocketConfig.java
 	@Override
 	public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
 		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();

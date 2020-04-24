@@ -87,7 +87,11 @@ public class ChannelApiController {
     	LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
     	lastAccess.setCurrentChannelId((int)map.get("currentChannelId"));
     	session.setAttribute("lastAccess", lastAccess);
-        joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
+    	if(map.get("oldChannelId")==null) {
+    		joinInfoService.updateLastAccessDate((int)map.get("currentChannelId"),user.getEmail());
+    	}else {
+    		joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
+    	}
     }
     
     // 채팅화면에서 채팅화면이 아닌 곳으로 이동했을 때 session값 갱신해주기 위함
