@@ -2,8 +2,8 @@
   <div class="wrapper">
     <div class="scrolling-wrapper">
       <b-list-group horizontal style="overflow-x:auto;">
-        <draggable :list="getAllTaskList" class="row flex-nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
-          <b-list-group-item v-for="item in getAllTaskList" :key="item">
+        <draggable :list="getTaskBoard" class="row flex-nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
+          <b-list-group-item v-for="item in getTaskBoard" :key="item">
             <TaskList :taskList="item"></TaskList>
           </b-list-group-item>
         </draggable>
@@ -81,6 +81,7 @@
       this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
         .then(res => {
           this.taskList = res.data
+          this.$store.commit('setTaskBoard',this.taskList)
           console.log(this.taskList)
         })
       this.$eventBus.$on('deleteTaskList', data => {

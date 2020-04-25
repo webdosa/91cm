@@ -11,34 +11,99 @@
                       style="margin-right: 15px;" class="float-left"></b-form-input>
       </b-form-group>
       <b-form-group
-      label="일정 내용"
-      label-for="textarea-content" >
+        label="일정 내용"
+        label-for="textarea-content">
         <b-textarea id="textarea-content" v-model="taskContent">
 
         </b-textarea>
       </b-form-group>
-
 
     </b-modal>
   </div>
 </template>
 
 <script>
-  import {FullCalendar} from 'vue-full-calendar'
-  import VSwatches from 'vue-swatches'
-  import 'vue-swatches/dist/vue-swatches.css'
-  import {mapGetters} from "vuex";
-  // Date 유틸을 만들어서 import 하면 현재 선언된 main의 Date의 prototype이 가능한지
-  export default {
-    name: "Calendar",
-    components: {
-      FullCalendar,
-      VSwatches
-    },
-    watch: {
-      taskBoard: function (newTaskBoard, oldTaskBoard) {
-        this.events = []
-        newTaskBoard.forEach(taskList => {
+import { FullCalendar } from 'vue-full-calendar'
+import VSwatches from 'vue-swatches'
+import 'vue-swatches/dist/vue-swatches.css'
+import { mapGetters } from 'vuex'
+// Date 유틸을 만들어서 import 하면 현재 선언된 main의 Date의 prototype이 가능한지
+export default {
+  name: 'Calendar',
+  components: {
+    FullCalendar,
+    VSwatches
+  },
+  watch: {
+    taskBoard: function (newTaskBoard, oldTaskBoard) {
+      this.events = []
+      newTaskBoard.forEach(taskList => {
+        taskList.tasks.forEach(task => {
+          console.log(task)
+          if (task.start_date && task.state) {
+            let title = '제목 없음'
+            // eslint-disable-next-line eqeqeq
+            if (task.title == null || task.title == '') {
+              title = task.content
+            } else {
+              title = task.title
+            }
+            this.events.push({
+              title: title,
+              start: new Date(task.start_date),
+              end: new Date(task.end_date).addDays(1),
+              color: task.color,
+              task: task
+            })
+          }
+        })
+      })
+    }
+  },
+  computed: {
+    ...mapGetters({
+      taskBoard: 'getTaskBoard',
+      selectComponent: 'getSelectComponent'
+    }),
+    gettasks: function () {
+      return this.taskList[0].tasks
+    }
+  },
+  activated() {
+    this.taskSubscribe=this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
+      if (res.headers.typename == 'taskUpdate') {
+        console.log("taskUpdate")
+        this.$store.dispatch('updateTaskBoard')
+      }
+    })
+  },
+  deactivated() {
+    this.taskSubscribe.unsubscribe()
+    this.taskSubscribe = null
+  },
+  data () {
+    return {
+      taskSubscribe: null,
+      taskContent: '',
+      events: [],
+      selectTask: {},
+      eventTitle: null,
+      eventColor: null,
+      config: {
+        editable: false,
+        defaultView: 'month',
+        selectHelper: false,
+        locale: 'ko'
+      }
+    }
+  },
+  created () {
+    this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
+      .then(res => {
+        const taskBoard = res.data
+        this.$store.commit('setTaskBoard', taskBoard)
+        console.log(taskBoard)
+        taskBoard.forEach(taskList => {
           taskList.tasks.forEach(task => {
             console.log(task)
             if (task.start_date && task.state) {
@@ -58,94 +123,49 @@
             }
           })
         })
-      }
-    },
-    computed: {
-      ...mapGetters({
-        taskBoard: 'getTaskBoard',
-        selectComponent: 'getSelectComponent'
+      })
+    console.log(this.$store.state.taskBoard)
+  },
+  mounted () {
+    console.log('calendar mounted')
+  },
+  methods: {
+    getUniqueObjectArray: function (array) {
+      array.filter((item, i) => {
+        return array.findIndex((item2, j) => {
+          return item.id == item2.id
+        }) === 1
       })
     },
-    data() {
-      return {
-        taskContent: '',
-        events: [],
-        selectTask: {},
-        eventTitle: null,
-        eventColor: null,
-        config: {
-          editable: false,
-          defaultView: 'month',
-          selectHelper: false,
-          locale: 'ko'
-        }
-      }
+    resetData: function () {
+      this.eventColor = null
+      this.eventTitle = null
+      this.taskContent = null
     },
-    created() {
-      this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
-        .then(res => {
-          const taskBoard = res.data
-          this.$store.commit('setTaskBoard', taskBoard)
-          console.log(taskBoard)
-          taskBoard.forEach(taskList => {
-            taskList.tasks.forEach(task => {
-              console.log(task)
-              if (task.start_date && task.state) {
-                let title = '제목 없음'
-                if (task.title == null || task.title == '') {
-                  title = task.content
-                } else {
-                  title = task.title
-                }
-                this.events.push({
-                  title: title,
-                  start: new Date(task.start_date),
-                  end: new Date(task.end_date).addDays(1),
-                  color: task.color,
-                  task: task
-                })
-              }
-            })
-          })
+    selectEvent: function (event) {
+      this.selectTask = event.task
+      this.eventTitle = event.task.title
+      this.taskContent = event.task.content
+      this.eventColor = event.task.color
+      this.$bvModal.show('change-event')
+    },
+    handleOk: function () {
+      this.selectTask.title = this.eventTitle
+      this.selectTask.content = this.taskContent
+      this.selectTask.color = this.eventColor
+      // this.taskUpdate()
+      this.$http.post('/api/task/update/content', this.selectTask)
+      this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
 
-        })
-      console.log(this.$store.state.taskBoard)
+      // 엑시오스로 db 업데이트 및 실시간 처리
     },
-    mounted() {
-      console.log("calendar mounted")
-    },
-    methods: {
-      getUniqueObjectArray: function (array) {
-        array.filter((item, i) => {
-          return array.findIndex((item2, j) => {
-            return item.id == item2.id
-          }) === 1
-        })
-      },
-      resetData: function () {
-        this.eventColor = null
-        this.eventTitle = null
-        this.taskContent = null
-      },
-      selectEvent: function (event) {
-        this.selectTask = event.task
-        this.eventTitle = event.task.title
-        this.taskContent = event.task.content
-        this.eventColor = event.task.color
-        this.$bvModal.show('change-event')
-      },
-      handleOk: function () {
-        this.selectTask.title = this.eventTitle
-        this.selectTask.content = this.taskContent
-        this.selectTask.color = this.eventColor
-        this.$http.post('/api/task/update/content', this.selectTask)
-        this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id
-          , null, {typename: 'taskUpdate'})
-        //엑시오스로 db 업데이트 및 실시간 처리
-      },
-
+    taskUpdate: function () {
+      const taskList = this.taskBoard.find(taskList => taskList.id == this.selectTask.tasklist_id)
+      taskList.tasks[this.selectTask.position] = this.selectTask
     }
+
   }
+}
 </script>
 
 <style>
