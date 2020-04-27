@@ -130,12 +130,12 @@
         this.$http.post('/api/invite/accept', alarm)
           .then(async (res)=>{
             // 현재 채널을 변경하는 로직을 구현해야할듯
+            this.$store.state.stompClient.send('/pub/chat/message',JSON.stringify(message))
             this.alarmList.splice(index, 1);
             this.$store.state.stompClient.send('/pub/chat/room/' + alarm.channel_id,
               JSON.stringify({"message": "updateChannel", "error": "null"}))
             await this.$store.dispatch('channelList')
             const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
-            this.$store.state.stompClient.send('/pub/chat/message',JSON.stringify(message))
             this.$store.commit('setCurrentChannel', joinChannel)
             this.$emit('channelUpdate')
           })

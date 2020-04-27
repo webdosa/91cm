@@ -66,11 +66,11 @@
     },
     activated() {
       this.taskSubscribe=this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
-        const task = JSON.parse(res.body)
         if (res.headers.typename == 'taskUpdate') {
           this.$store.dispatch('updateTaskBoard')
         }
-        if(task != null){
+        if(res.body != null){
+          const task = JSON.parse(res.body)
           const taskList = this.getTaskBoard.find(taskList => taskList.id == task.tasklist_id)
           taskList.tasks[task.position] = task
           // this.$store.commit('setTaskBoard',this.getTaskBoard)

@@ -55,6 +55,9 @@
       }
     },
     created() {
+      if (this.index != null){
+        this.color = this.tasks[this.index].color
+      }
     },
     mounted() {
       if (this.index != null){
