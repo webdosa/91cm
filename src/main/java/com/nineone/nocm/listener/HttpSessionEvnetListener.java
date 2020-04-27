@@ -20,22 +20,16 @@ public class HttpSessionEvnetListener implements HttpSessionListener{
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
-		System.out.println(se.getSession().getId());
 		HttpSessionListener.super.sessionCreated(se);
 	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
 		HttpSession session = se.getSession();
-		System.out.println(session.getId());
 		if(session.getAttribute("lastAccess")!=null) {
 			LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
-			System.out.println(((User)session.getAttribute("user")).getEmail());
-			System.out.println(lastAccess.isContentWrapper());
-			System.out.println(lastAccess.isFocus());
 			if(lastAccess.isContentWrapper()) {
 				if(lastAccess.isFocus()) {
-					System.out.println("실행");
 					User user = (User)session.getAttribute("user");
 					joinInfoService.updateLastAccessDate(lastAccess.getCurrentChannelId(),user.getEmail());
 				}

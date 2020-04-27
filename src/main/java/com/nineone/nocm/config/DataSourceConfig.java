@@ -37,7 +37,6 @@ public class DataSourceConfig {
 	@Bean 
 	public DataSource dataSource() {
 		DataSource dataSource = new HikariDataSource(hikariConfig());
-		logger.info("datasource : {}", dataSource);
 		return dataSource;
 	}
 	

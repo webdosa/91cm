@@ -28,7 +28,6 @@ public class ChannelServiceImpl implements ChannelService{
     			.channel_id(channel.getId())
     			.member_email(channel.getMember_email())
     			.build();
-    	System.out.println(joinInfo.getChannel_id());
         return (channelRepository.joinInfo(joinInfo) > 0 ) ? true : false;
     }
 
