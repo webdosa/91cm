@@ -46,10 +46,8 @@
   export default {
     name: 'UserInfo',
     created() {
-      console.log(this.$store.state.currentUser)
     },
     deactivated(){
-      console.log('deactiveed user')
     },
     methods: {
       callComponent: function () {

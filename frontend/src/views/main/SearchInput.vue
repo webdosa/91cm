@@ -36,7 +36,7 @@ export default {
         if(!isSearchMode){
           this.$store.commit('setSearchText','')
           this.index=0
-          this.oldlength=0  
+          this.oldlength=0
           this.searchResultList =null
         }
       })
@@ -56,7 +56,6 @@ export default {
         }
       },
       toggleSearchMode (e) {
-        console.log('searchmode close')
         // searchText값이 바뀌면 contentWrapper에 있는 필터가 실행되는데 (msgarray가 바뀌어도 실행됨)
         // 실행되면 span태그가 추가된것들이 초기화되고 다시 filter를 진행한다.
         this.$store.commit('setSearchText','')
@@ -69,7 +68,7 @@ export default {
                 this.index -= 1;
                 this.scrollToSearchEl( this.index + 1 ,this.index)
            }else{
-              this.GetMsg('up')         
+              this.GetMsg('up')
            }
       },
       down() {
@@ -90,7 +89,6 @@ export default {
         }
       },
       searchStart () {
-        console.log(document.querySelectorAll(".highlight"))
         this.searchResultList = document.querySelectorAll(".highlight")
         //첫번째 블록(처음 가져온 12개의 메시지) 중에 검색결과가 없다면
         if(this.searchResultList.length === 0){
@@ -122,7 +120,6 @@ export default {
     watch: {
         msgArray:function(){
             if(this.$store.state.isSearchMode && this.isGetMsgByUp){
-                console.log('변경됨')
                 this.isGetMsgByUp = false
                 this.searchStart()
             }

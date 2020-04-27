@@ -112,9 +112,7 @@
       edit: function () {
         this.$http.post('/api/user/update', this.user)
           .then(res => {
-            console.log(this.user)
             if (res.data) {
-              console.log(res.data)
               this.$store.state.stompClient.send('/pub/sync/info',null,{})
               this.$store.dispatch('initCurrentUser')
               this.$store.commit('getSelectComponent', 'user')

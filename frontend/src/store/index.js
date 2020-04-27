@@ -43,10 +43,7 @@ export default new Vuex.Store({
       state.userChannelList = payload
     },
     getSelectComponent: function (state, payload) {
-      console.log(state.selectComponent)
-      console.log('index.js')
       state.oldComponent = state.selectComponent
-      console.log(state.oldComponent)
       state.selectComponent = payload
     },
     getUserList: function (state, payload) {
@@ -76,10 +73,9 @@ export default new Vuex.Store({
       axios.get('/api/tasklist/get/'+context.state.currentChannel.id)
         .then(res => {
           // CommonClass.replaceText(res.data)
-          console.log(res.data)
           context.commit('setTaskBoard',res.data);
         }).catch(error=>{
-          console.log(error)
+          console.error(error)
       })
     },
     userListUpdate: function (context) {
@@ -87,7 +83,7 @@ export default new Vuex.Store({
         .then(res => {
           context.commit('getUserList', res.data);
         }).catch(error => {
-        console.log(error);
+        console.error(error);
       })
     },
     channelList: async function (context) {
@@ -100,7 +96,6 @@ export default new Vuex.Store({
     initCurrentUser: async function (context) {
       await axios.get('/api/user/info')
         .then(res => {
-          console.log(res.data)
           context.commit('setCurrentUser', res.data)
         })
     },

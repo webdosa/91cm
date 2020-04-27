@@ -83,7 +83,7 @@ public class FileController {
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException ex) {
-            log.info("알 수 없는 파일");
+            log.error("unknown file extension");
         }
         if (contentType == null) {
             contentType = "application/octet-stream";

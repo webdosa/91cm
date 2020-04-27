@@ -47,7 +47,6 @@ public class InviteApiController {
             }
             if (joinInfoService.AuthorityCheck(invite)) {
                 inviteService.saveInvite(invite);
-                log.info(invite.getRecipient());
                 messagingTemplate.convertAndSend("/sub/alarm/" + invite.getRecipient(), invite);
                 return new ResponseEntity<>("{}", HttpStatus.OK);
             } else {
@@ -68,7 +67,6 @@ public class InviteApiController {
 
     @PostMapping("/accept")
     public ResponseEntity<?> acceptUser(@RequestBody Invite invite) throws RuntimeException {
-        log.info("invite id :"+invite.getId()+"");
         if (joinInfoService.isExistUser(invite)){
             invite.setInvite_state(InviteState.ACCEPT);
             inviteService.updateInvite(invite);
@@ -79,14 +77,12 @@ public class InviteApiController {
                 .member_email(invite.getRecipient())
                 .build());
         invite.setInvite_state(InviteState.ACCEPT);
-        log.info("invite accept");
         inviteService.updateInvite(invite);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
     @PostMapping("/refuse")
     public ResponseEntity<?> refuseUser(@RequestBody Invite invite) throws RuntimeException{
         // 거절 내용을 채널에 보내는 로직을 구현해야함
-        log.info("refuse");
         invite.setInvite_state(InviteState.REFUSE);
         inviteService.updateInvite(invite);
         return new ResponseEntity<>("{}", HttpStatus.OK);

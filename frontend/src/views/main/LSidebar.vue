@@ -70,8 +70,6 @@
     props: ['modalObj', 'msgCountObj'],
     watch: {
       currentChannel(newCurrentChannel, oldCurrentChannle) {
-        console.log("getCurrentChannel Watch...")
-        console.log(newCurrentChannel)
         this.updateUserList(newCurrentChannel)
       },
       syncChannelUser(){
@@ -131,7 +129,6 @@
         this.$emit('sendTitle', this.$store.state.userChannelList[index])   // 나중에 변경
       },
       prepareModal: function (mode) {
-        console.log(mode)
         if (mode == 'create') {
           this.channelmode = '채널 생성'
         } else if(mode == 'edit'){
@@ -181,7 +178,7 @@
             this.$store.state.stompClient.send("/sub/chat/room/"+this.$store.state.currentChannel.id,
               JSON.stringify({'message':'updateCurrentChannel', 'error':"null"}))
           }).catch(error => {
-          console.log(error)
+          console.error(error)
         })
       },
       createChannel: function () {

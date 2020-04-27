@@ -39,7 +39,6 @@ export default {
       this.events = []
       newTaskBoard.forEach(taskList => {
         taskList.tasks.forEach(task => {
-          console.log(task)
           if (task.start_date && task.state) {
             let title = '제목 없음'
             // eslint-disable-next-line eqeqeq
@@ -69,7 +68,6 @@ export default {
   activated() {
     this.taskSubscribe=this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
       if (res.headers.typename == 'taskUpdate') {
-        console.log("taskUpdate")
         this.$store.dispatch('updateTaskBoard')
       }
     })
@@ -77,10 +75,8 @@ export default {
       .then(res => {
         const taskBoard = res.data
         this.$store.commit('setTaskBoard', taskBoard)
-        console.log(taskBoard)
         taskBoard.forEach(taskList => {
           taskList.tasks.forEach(task => {
-            console.log(task)
             if (task.start_date && task.state) {
               let title = '제목 없음'
               if (task.title == null || task.title == '') {
@@ -123,10 +119,8 @@ export default {
   },
   created () {
 
-    console.log(this.$store.state.taskBoard)
   },
   mounted () {
-    console.log('calendar mounted')
   },
   methods: {
     getUniqueObjectArray: function (array) {

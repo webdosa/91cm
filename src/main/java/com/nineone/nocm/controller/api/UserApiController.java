@@ -42,7 +42,6 @@ public class UserApiController {
     }
     @PostMapping("/update")
 	public boolean userInfoUpdate(@RequestBody User user){
-		log.info(user.getName());
 		return userService.userinfoUpdate(user);
 	}
 	

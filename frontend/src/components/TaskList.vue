@@ -83,7 +83,6 @@
         this.taskList.tasks.forEach(task => {
           task.position = this.taskList.tasks.indexOf(task)
         })
-        console.log(this.taskList.tasks)
       }
     },
     components: {
@@ -131,10 +130,9 @@
           updateTaskItem.taskId = moved.element.id
           this.$http.post('/api/task/update/position', updateTaskItem)
             .then(res => {
-              console.log("task update ok")
               this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
             }).catch(error => {
-            console.log(error)
+            console.error(error)
           })
         }
         if (removed) {
@@ -145,10 +143,9 @@
           updateTaskItem.taskId = removed.element.id
           this.$http.post('/api/task/update/position', updateTaskItem)
             .then(res => {
-              console.log("task update ok")
               this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
             }).catch(error => {
-            console.log(error)
+            console.error(error)
           })
         }
       },
@@ -162,7 +159,6 @@
           position: this.taskList.position
         })
           .then(res => {
-            console.log('delete success : ' + res.data)
             this.$eventBus.$emit('deleteTaskList', this.taskList)
             this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
           })
@@ -178,11 +174,10 @@
           id: this.taskList.id,
           name: this.taskList.name
         }).then(res => {
-          console.log(res.data)
           this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
           this.editToggle()
         }).catch(error => {
-          console.log(error)
+          console.error(error)
         })
       },
       editTask: function (task,state) {
@@ -191,7 +186,7 @@
           .then(res => {
             this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
           }).catch(error => {
-          console.log(error)
+          console.error(error)
         })
       },
       deleteTask: function (task, index) {
@@ -199,10 +194,9 @@
         this.$http.post('/api/task/delete', task)
           .then(res => {
             this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
-            console.log(res.data)
             this.taskList.tasks.splice(index, 1)
           }).catch(error => {
-          console.log(error)
+          console.error(error)
         })
       },
       createFormToggle: function () {
@@ -214,7 +208,6 @@
       },
       setTaskListName: function () {
         this.taskList.name = this.taskListName
-        console.log(this.taskList)
         this.$http.post('/api/tasklist/insert', JSON.stringify(this.taskList), {
           headers: {
             'Content-Type': 'application/json'
@@ -226,7 +219,7 @@
             this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
           })
           .catch(error => {
-            console.log(error)
+            console.error(error)
           })
       },
       getDateFormat: function(dateData){

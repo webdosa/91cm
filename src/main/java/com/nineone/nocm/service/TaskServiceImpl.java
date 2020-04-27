@@ -45,10 +45,8 @@ public class TaskServiceImpl implements TaskService{
 	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean updateTaskPosition(Map<String, Object> map) {
 		if(map.get("tasklistNewId")==null) {
-			log.info(map.get("tasklistNewId")+"");
 			boolean isUp = (int)map.get("taskNewIndex") < (int)map.get("taskOldIndex") ? true : false;
 			map.put("isUp", isUp);
-			log.info(isUp+"");
 			taskRepository.moveTaskPosition(map);
 			return  (taskRepository.updateTaskPosition(map)> 0)? true : false;
 		}else {

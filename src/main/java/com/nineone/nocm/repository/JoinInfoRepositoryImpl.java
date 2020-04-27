@@ -21,9 +21,6 @@ public class JoinInfoRepositoryImpl implements JoinInfoRepository {
 
     @Override
     public boolean leaveUser(Map<String, Object> info) {
-        for (String key : info.keySet()){
-            log.info(info.get(key)+"");
-        }
         return (sqlSession.delete(namespace + ".leaveUser", info) > 0);
     }
 

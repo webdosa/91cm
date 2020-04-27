@@ -199,14 +199,12 @@
       },
       shakeTest: function () {
         this.check = true
-        console.log("test")
         this.checkmakeFalse()
       },
       checkmakeFalse: function () {
         const v = this
         setTimeout(() => {
           v.check = false
-          console.log("callback test")
         }, 1000);
       },
       sleep(delay) {

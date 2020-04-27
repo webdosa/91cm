@@ -96,9 +96,8 @@
         form.append('password', this.password)
         axios.post('/', form)
           .then(res => {
-            console.log(res)
           }).catch(error => {
-          console.log(error)
+          console.error(error)
         })
       }
     },
@@ -106,11 +105,10 @@
       axios.get('/api/user/login')
         .then(res => {
           if (res.data) {
-            console.log(res.data)
             router.replace('/main')
           }
         }).catch(error => {
-        console.log(error)
+        console.error(error)
       })
     }
   }

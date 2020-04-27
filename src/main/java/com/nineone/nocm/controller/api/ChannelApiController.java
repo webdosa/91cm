@@ -61,7 +61,6 @@ public class ChannelApiController {
 
     @PostMapping("/create")
     public Channel createChannel(@RequestBody Map<String, String> channelInfo) {
-        log.info(channelInfo.get("member_email"));
         Channel channel = Channel.builder()
                 .name(channelInfo.get("name"))
                 .member_email(channelInfo.get("member_email"))
@@ -72,7 +71,6 @@ public class ChannelApiController {
 
     @PostMapping("/update")
     public boolean updateChannel(@RequestBody Channel channel, @Socialuser User user) {
-        
          return channelService.updateChannel(channel);
     }
 

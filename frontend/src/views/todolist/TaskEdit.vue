@@ -55,10 +55,8 @@
       }
     },
     created() {
-      console.log("taskEdit create")
     },
     mounted() {
-      console.log("taskEdit mounted")
       if (this.index != null){
         this.taskContent = this.tasks[this.index].content
       }
@@ -75,9 +73,8 @@
             this.tasks.unshift(res.data)
             this.$emit('createFormToggle')
             this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
-            console.log(this.taskList)
           }).catch(error => {
-          console.log(error)
+          console.error(error)
         })
       },
       editTask: function (index) {
@@ -93,10 +90,9 @@
         this.$http.post('/api/task/update/content', task)
           .then(res => {
             this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
-            console.log(res.data)
             this.$emit('editFormToggle',-1)
           }).catch(error => {
-          console.log(error)
+          console.error(error)
         })
       },
     }

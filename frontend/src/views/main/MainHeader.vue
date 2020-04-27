@@ -76,9 +76,7 @@
     //   StompClient: function (newVal, oldVal) {
     //     if(newVal.connected){
     //       newVal.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
-    //         console.log("get callback")
     //         let invite = JSON.parse(e.body)
-    //         console.log(invite.sender)
     //         this.alarmList.unshift(invite)
     //       })
     //     }
@@ -97,19 +95,15 @@
     },
     created() {
       this.$store.state.stompClient.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
-        console.log("get callback")
         let invite = JSON.parse(e.body)
-        console.log(invite.sender)
         this.alarmList.unshift(invite)
         this.shakeAnimation()
       }),
       this.$http.get('/api/invite/list')
         .then(res => {
           this.alarmList = res.data.reverse()
-          console.log(this.alarmList)
         })
         .catch(error => {
-          console.log(error)
         })
     },
     mounted() {
@@ -123,12 +117,10 @@
         const element = this.$refs.bell;
         element.classList.add('animated','shake');
         element.addEventListener('animationend',()=>{
-          console.log("animationend")
           element.classList.remove('animated','shake')
         });
       },
       inviteAccept: function (alarm, index) {
-        console.log(alarm)
         const message = {
           channel_id: alarm.channel_id,
           sender: this.$store.state.currentUser.email,
@@ -148,7 +140,7 @@
             this.$emit('channelUpdate')
           })
           .catch(error => {
-            console.log(error)
+            console.error(error)
           })
       }
       ,
@@ -160,7 +152,7 @@
             this.alarmList.splice(index, 1);
           })
           .catch(error => {
-            console.log(error)
+            console.error(error)
           })
       }
       ,

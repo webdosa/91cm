@@ -38,7 +38,6 @@
           .then(res => {
             this.taskList = res.data
             this.$store.commit('setTaskBoard', this.taskList)
-            console.log(this.taskList)
           })
       },
       getTaskBoard: function () {
@@ -67,14 +66,11 @@
     },
     activated() {
       this.taskSubscribe=this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
-        console.log(res.body)
         const task = JSON.parse(res.body)
         if (res.headers.typename == 'taskUpdate') {
-          console.log("taskUpdate")
           this.$store.dispatch('updateTaskBoard')
         }
         if(task != null){
-          console.log("task update")
           const taskList = this.getTaskBoard.find(taskList => taskList.id == task.tasklist_id)
           taskList.tasks[task.position] = task
           // this.$store.commit('setTaskBoard',this.getTaskBoard)
@@ -90,7 +86,6 @@
         .then(res => {
           this.taskList = res.data
           this.$store.commit('setTaskBoard',this.taskList)
-          console.log(this.taskList)
         })
       this.$eventBus.$on('deleteTaskList', data => {
         this.taskList.splice(this.taskList.indexOf(data), 1)
@@ -121,10 +116,9 @@
             tasklistNewIndex: moved.newIndex,
             tasklistId: moved.element.id
           }).then(res => {
-            console.log("tasklist update ok")
             this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
           }).catch(error => {
-            console.log(error)
+            console.error(error)
           })
         }
       }

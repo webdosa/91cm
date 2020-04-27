@@ -169,7 +169,6 @@
       }
     },
     deactivated() {
-      console.log('deactiveed contentwrapper')
     },
     methods: {
       widthCheck(){
@@ -186,10 +185,8 @@
       },
       dropFile: function (e) {
         this.addFile(e.dataTransfer.files)
-        console.log(e)
       },
       attachFile: function (e) {
-        console.log(e)
         this.addFile(e.target.files)
         this.$refs.fileInput.value = null
       },
@@ -232,14 +229,11 @@
         /////////////////////////////////////
         formData.append('channel_id', this.$store.state.currentChannel.id)
         formData.append('sender', this.$store.state.currentUser.email)
-        console.log(this.$store.state.currentUser.email)
-        console.log(formData)
         this.$http.post('/api/file/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }).then(res => {
-          console.log(res)
         }).catch(error => {
           this.$alertModal('error','폴더는 업로드 할 수 없습니다.')
         })
@@ -267,7 +261,6 @@
         this.$store.state.isInviteMode = !this.$store.state.isInviteMode
       },
       send: async function (e) {
-        console.log(e)
         if (e != null) {
           e.preventDefault()
         }
@@ -307,7 +300,6 @@
             'Content-Type': 'application/json'
           }
         }).then(res => {
-          console.log(res.data);
           if (res.data.length == 0) {
             this.cursorPoint.empty = true
           } else {
@@ -393,10 +385,8 @@
         this.getMessage()
         this.scrollToEnd()
         if(oldv == null){
-          console.log('null?')
           AboutChannel.updateLastAccessDate(newv.id, null)
         }else{
-          console.log('null?!')
           AboutChannel.updateLastAccessDate(newv.id, oldv.id)
         }
       },
