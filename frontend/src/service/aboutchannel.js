@@ -25,14 +25,12 @@ class AboutChannel{
 
     updateLastAccessDate (currentId,oldId) {
       console.log(oldId)
-      axios.put('/api/channel/update/lastaccessdate',
+      return axios.put('/api/channel/update/lastaccessdate',
       {
         oldChannelId: oldId,
         currentChannelId: currentId
       }
-      ).catch(error => {
-        console.log(error.response)   
-      })
+      )
     }
 
     updateSessionIsCW (bool) {
@@ -42,7 +40,7 @@ class AboutChannel{
         isContentWrapper: bool
       }
       ).catch(error => {
-         console.log(error.response)   
+         console.log(error.response)
       })
     }
 
@@ -60,7 +58,7 @@ class AboutChannel{
         currentChannelId: currentChannel
       }
       ).catch(error => {
-        console.log(error.response)   
+        console.log(error.response)
       })
     }
 
@@ -70,10 +68,10 @@ class AboutChannel{
         isFocus: bool
       }
       ).catch(error => {
-        console.log(error.response)   
+        console.log(error.response)
       })
     }
-    
+
 }
 
 export default new AboutChannel()

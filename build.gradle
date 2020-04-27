@@ -5,7 +5,6 @@ plugins {
     id 'java'
 }
 node {
-    download= true
     version = '12.15.0'
     npmVersion = '6.13.4'
     workDir = file("./frontend")
