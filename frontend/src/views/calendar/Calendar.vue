@@ -64,10 +64,7 @@ export default {
     ...mapGetters({
       taskBoard: 'getTaskBoard',
       selectComponent: 'getSelectComponent'
-    }),
-    gettasks: function () {
-      return this.taskList[0].tasks
-    }
+    })
   },
   activated() {
     this.taskSubscribe=this.$store.state.stompClient.subscribe('/sub/todo/' + this.$store.state.currentChannel.id, (res) => {
@@ -76,28 +73,6 @@ export default {
         this.$store.dispatch('updateTaskBoard')
       }
     })
-  },
-  deactivated() {
-    this.taskSubscribe.unsubscribe()
-    this.taskSubscribe = null
-  },
-  data () {
-    return {
-      taskSubscribe: null,
-      taskContent: '',
-      events: [],
-      selectTask: {},
-      eventTitle: null,
-      eventColor: null,
-      config: {
-        editable: false,
-        defaultView: 'month',
-        selectHelper: false,
-        locale: 'ko'
-      }
-    }
-  },
-  created () {
     this.$http.get('/api/tasklist/get/' + this.$store.state.currentChannel.id)
       .then(res => {
         const taskBoard = res.data
@@ -124,6 +99,30 @@ export default {
           })
         })
       })
+  },
+  deactivated() {
+    this.taskSubscribe.unsubscribe()
+    this.taskSubscribe = null
+    this.events = null
+  },
+  data () {
+    return {
+      taskSubscribe: null,
+      taskContent: '',
+      events: [],
+      selectTask: {},
+      eventTitle: null,
+      eventColor: null,
+      config: {
+        editable: false,
+        defaultView: 'month',
+        selectHelper: false,
+        locale: 'ko'
+      }
+    }
+  },
+  created () {
+
     console.log(this.$store.state.taskBoard)
   },
   mounted () {
@@ -155,7 +154,12 @@ export default {
       this.selectTask.color = this.eventColor
       // this.taskUpdate()
       this.$http.post('/api/task/update/content', this.selectTask)
-      this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+        .then(res =>{
+          this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id,
+            JSON.stringify(this.selectTask), {typename: 'taskUpdate'})
+        })
+
+
 
       // 엑시오스로 db 업데이트 및 실시간 처리
     },
