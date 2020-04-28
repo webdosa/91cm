@@ -211,17 +211,15 @@
       addFile: function (uploadFiles) {
         const maxUploadSize = 100 * 1024 * 1024;
         let fileSize = 0;
-        if (!uploadFiles) return;
+        if (uploadFiles[0] == null) {
+          return;
+        }
         let formData = new FormData();
         // formData에 multi로 파일을 담는 방법에 대해 추후 확인
-        let files = [];
         ([...uploadFiles]).forEach(file => {
           formData.append("files", file)
           fileSize += file.size
         });
-        // files.forEach(file => {
-        //
-        // });
         if (fileSize >= maxUploadSize) {
           this.$alertModal('alert', '한번에 보낼 수 있는 파일 용량은 100MB 입니다.')
           return;
