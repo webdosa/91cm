@@ -87,18 +87,12 @@
             :cursorPoint="cursorPoint"
             :wrapperEl="wrapperEl"
             @getMessage="getMessage"></SearchInput>
-
         </div>
           <div style="display: flex;flex-grow: 1;">
             <span class="ml-auto"> {{ stringByteLength }} / 30000Byte</span>
           </div>
-
         </div>
-        <b-button v-if="!$store.state.isInviteMode && !$store.state.isSearchMode" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
-        </b-button>
-        <!--        <b-button v-if="$store.state.isInviteMode" @click="invite" style="height: 57px; width: 70px; margin-left:20px;"-->
-        <!--                  variant="primary">전송-->
-        <!--        </b-button>-->
+        <b-button v-if="!$store.state.isInviteMode && !$store.state.isSearchMode" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송</b-button>
       </div>
     </div>
   </main>
@@ -119,7 +113,6 @@
     },
     data() {
       return {
-        // userlist:[{name:'정나영',email:'skdud5606@naver.com'},{name:'qq',email:'sads@naver.com'}],
         tempImg: '',
         stringByteLength: 0,
         previewObj: {

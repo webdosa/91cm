@@ -172,54 +172,10 @@
     data() {
       return {}
     },
-    created: {},
-    methods: {
-      testBtn: function () {
-        const element = this.$refs.testBtn
-        element.classList.add("animated", "shake")
-        element.addEventListener("animationend", () => {
-          element.classList.remove("animated", "shake")
-        })
-      },
-      testAni: function () {
-        const node = this.$refs.swings
-        node.classList.add("animated", "shake")
-
-        function handleAnimationEnd() {
-          node.classList.remove("animated", "shake")
-          node.removeEventListener("animationend", handleAnimationEnd)
-          if (typeof callback === 'function')
-            callback()
-        }
-
-        node.addEventListener("animationend", handleAnimationEnd)
-      },
-      test: function () {
-        this.$bvModal.show("copyRight-modal")
-      },
-      shakeTest: function () {
-        this.check = true
-        this.checkmakeFalse()
-      },
-      checkmakeFalse: function () {
-        const v = this
-        setTimeout(() => {
-          v.check = false
-        }, 1000);
-      },
-      sleep(delay) {
-        let start = new Date().getTime()
-        while (new Date().getTime() < start + delay) ;
-      }
-    }
-
   }
 </script>
 <style scope>
-  @import "../../assets/css/animate.css";
-
   .button-margin {
     margin-bottom: 10px;
-
   }
 </style>
