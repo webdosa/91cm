@@ -16,7 +16,6 @@
             <!-- #으로 단축해서 사용 -->
             <div v-if="msg.files == null || msg.content" v-html="TextbyFilter(msg.content)"
                  class="mychat-content"></div>
-
             <b-container fluid v-else-if="msg.files.length > 0" class="p-4 bg-white">
               <b-row>
                 <b-col v-for="file in msg.files">
@@ -59,12 +58,12 @@
                 rows="2"
                 no-resize
                 v-model="message.content"
+                @keydown.ctrl.shift.70="toggleSearchMode"
                 @keydown.enter.exact="send"
                 @keyup="byteCheck"
                 @keydown.shift.50='inviteToggle'
               ></b-form-textarea>
             </div>
-
             <div style="position: relative" v-if="$store.state.isInviteMode">
               <i style="position:absolute;left: 15px;top: calc(50% - 12px);" class="im im-user-circle"></i>
               <b-form-input
@@ -164,6 +163,10 @@
       }
     },
     methods: {
+      toggleSearchMode: function () {
+        this.$store.state.isSearchMode = !this.$store.state.isSearchMode
+        this.$store.state.isInviteMode = false
+      },
       widthCheck() {
         this.oldScrollHeight = this.wrapperEl.scrollHeight
       },
