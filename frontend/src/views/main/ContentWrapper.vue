@@ -14,7 +14,8 @@
           </template>
           <template #m-content>
             <!-- #으로 단축해서 사용 -->
-            <div v-if="msg.files == null || msg.content" v-html="TextbyFilter(msg.content)" class="mychat-content"></div>
+            <div v-if="msg.files == null || msg.content" v-html="TextbyFilter(msg.content)"
+                 class="mychat-content"></div>
 
             <b-container fluid v-else-if="msg.files.length > 0" class="p-4 bg-white">
               <b-row>
@@ -41,58 +42,59 @@
         </div>
       </a>
       <div class="c-i-wrapper">
-
         <!-- 더 뭔가 추가할 거 같아서 div로 감싸놓음 -->
         <div style="flex-grow:1;" class="myflex-column">
-        <div style="position: relative;">
-           <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
-             <label for="file-input" style="display: block;margin-bottom: 0;">
-               <i class="im im-cloud-upload myfile-upload"></i>
-            </label>
+          <div style="position: relative;">
+            <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
+              <label for="file-input" style="display: block;margin-bottom: 0;">
+                <i class="im im-cloud-upload myfile-upload"></i>
+              </label>
               <input id="file-input" type="file" ref="fileInput" multiple @change="attachFile" hidden/>
 
-            <b-form-textarea
-              class="mytextarea"
-              autofocus
-              id="textarea-no-resize"
-              placeholder="Enter chat message"
-              rows="2"
-              no-resize
-              v-model="message.content"
-              @keydown.enter.exact="send"
-              @keyup="byteCheck"
-              @keydown.shift.50='inviteToggle'
-            ></b-form-textarea>
-           </div>
+              <b-form-textarea
+                class="mytextarea"
+                autofocus
+                id="textarea-no-resize"
+                placeholder="Enter chat message"
+                rows="2"
+                no-resize
+                v-model="message.content"
+                @keydown.enter.exact="send"
+                @keyup="byteCheck"
+                @keydown.shift.50='inviteToggle'
+              ></b-form-textarea>
+            </div>
 
-          <div style="position: relative" v-if="$store.state.isInviteMode">
-            <i style="position:absolute;left: 15px;top: calc(50% - 12px);" class="im im-user-circle"></i>
-            <b-form-input
-              autocomplete="off"
-              @keydown.enter.exact="invite"
-              @keydown.esc.exact="inviteToggle"
-              list="user-info-list"
-              placeholder="invite user"
-              style="height: 80px;padding-left: 50px;"
-              v-model="message.content"
-              autofocus
-              @change="splitData"
-            ></b-form-input>
-            <datalist id="user-info-list">
-              <option v-for="user in userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
-            </datalist>
+            <div style="position: relative" v-if="$store.state.isInviteMode">
+              <i style="position:absolute;left: 15px;top: calc(50% - 12px);" class="im im-user-circle"></i>
+              <b-form-input
+                autocomplete="off"
+                @keydown.enter.exact="invite"
+                @keydown.esc.exact="inviteToggle"
+                list="user-info-list"
+                placeholder="invite user"
+                style="height: 80px;padding-left: 50px;"
+                v-model="message.content"
+                autofocus
+                @change="splitData"
+              ></b-form-input>
+              <datalist id="user-info-list">
+                <option v-for="user in userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
+              </datalist>
+            </div>
+            <SearchInput
+              :msgArray="msgArray"
+              :cursorPoint="cursorPoint"
+              :wrapperEl="wrapperEl"
+              @getMessage="getMessage"></SearchInput>
           </div>
-          <SearchInput
-            :msgArray="msgArray"
-            :cursorPoint="cursorPoint"
-            :wrapperEl="wrapperEl"
-            @getMessage="getMessage"></SearchInput>
-        </div>
           <div style="display: flex;flex-grow: 1;">
             <span class="ml-auto"> {{ stringByteLength }} / 30000Byte</span>
           </div>
         </div>
-        <b-button v-if="!$store.state.isInviteMode && !$store.state.isSearchMode" @click="send" style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송</b-button>
+        <b-button v-if="!$store.state.isInviteMode && !$store.state.isSearchMode" @click="send"
+                  style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
+        </b-button>
       </div>
     </div>
   </main>
@@ -148,7 +150,7 @@
         this.wrapperEl = document.querySelector('.c-c-wrapper')
         window.addEventListener('resize', this.widthCheck);
       })
-      this.$eventBus.$on('leaveChannelMsg', () =>{
+      this.$eventBus.$on('leaveChannelMsg', () => {
         this.message.content = this.$store.state.currentUser.name + '님이 나가셨습니다.'
         this.send()
       })
@@ -161,18 +163,16 @@
         this.scrollToEnd(true)
       }
     },
-    deactivated() {
-    },
     methods: {
-      widthCheck(){
+      widthCheck() {
         this.oldScrollHeight = this.wrapperEl.scrollHeight
       },
-      splitData(data){
+      splitData(data) {
         this.message.content = data.split(" ")[0]
         this.selectedUserEmail = data.split(" ")[1]
       },
-      imgLoad(){
-        if(!this.msgPreviewBool){
+      imgLoad() {
+        if (!this.msgPreviewBool) {
           this.scrollToEnd(true)
         }
       },
@@ -226,7 +226,7 @@
           }
         }).then(res => {
         }).catch(error => {
-          this.$alertModal('error','폴더는 업로드 할 수 없습니다.')
+          this.$alertModal('error', '폴더는 업로드 할 수 없습니다.')
         })
       },
       invite: async function () {
@@ -327,7 +327,7 @@
         })
       },
       isScrollAtEnd(wrapperEl) {
-        if (Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight ||Math.round(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight ) {
+        if (Math.floor(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight || Math.round(wrapperEl.scrollTop + wrapperEl.clientHeight) == this.oldScrollHeight) {
           return true
         } else {
           return false
@@ -362,8 +362,8 @@
         return this.$options.filters.highlight(content, this.$store.state.searchText);
       }
     },
-    computed:{
-      getCurrentChannel: function(){
+    computed: {
+      getCurrentChannel: function () {
         return this.$store.state.currentChannel
       },
       ...mapGetters({

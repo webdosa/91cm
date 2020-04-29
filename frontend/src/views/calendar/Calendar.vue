@@ -117,11 +117,6 @@ export default {
       }
     }
   },
-  created () {
-
-  },
-  mounted () {
-  },
   methods: {
     getUniqueObjectArray: function (array) {
       array.filter((item, i) => {
@@ -146,29 +141,18 @@ export default {
       this.selectTask.title = this.eventTitle
       this.selectTask.content = this.taskContent
       this.selectTask.color = this.eventColor
-      // this.taskUpdate()
       this.$http.post('/api/task/update/content', this.selectTask)
         .then(res =>{
           this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id,
             JSON.stringify(this.selectTask), {typename: 'taskUpdate'})
         })
-
-
-
-      // 엑시오스로 db 업데이트 및 실시간 처리
-    },
-    taskUpdate: function () {
-      const taskList = this.taskBoard.find(taskList => taskList.id == this.selectTask.tasklist_id)
-      taskList.tasks[this.selectTask.position] = this.selectTask
     }
-
   }
 }
 </script>
 
 <style>
   @import "~fullcalendar/dist/fullcalendar.min.css";
-
   .fc-title {
     text-align: center;
     color: white;
