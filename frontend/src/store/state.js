@@ -19,5 +19,6 @@ export default {
   isLogout: false,
   isSearchMode: false,
   isInviteMode: false,
-  searchText: ''
+  searchText: '',
+  isSmallWidth:false
 }
