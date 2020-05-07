@@ -21,7 +21,6 @@
         </b-button>
         <b-button size="sm" variant="danger" @click="$emit('editFormToggle')">Cancel</b-button>
       </div>
-      <!--                <br><br>-->
     </div>
   </div>
 </template>
@@ -51,7 +50,6 @@
           color: ''
         },
         taskContent: '',
-
       }
     },
     created() {

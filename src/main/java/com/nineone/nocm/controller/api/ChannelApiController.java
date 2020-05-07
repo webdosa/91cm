@@ -91,7 +91,6 @@ public class ChannelApiController {
     		joinInfoService.updateLastAccessDate((int)map.get("oldChannelId"),user.getEmail());
     	}
     }
-    
     // 채팅화면에서 채팅화면이 아닌 곳으로 이동했을 때 session값 갱신해주기 위함
     // 세션값을 갱신해주는 이유는 세션타임아웃시 마지막접속시간을 조건부 아래 갱신시켜주기 위함
     @RequestMapping(value ="/update/sessioniscw", method=RequestMethod.PUT)
@@ -109,7 +108,6 @@ public class ChannelApiController {
         	session.setAttribute("lastAccess", originLastAccess);
     	}
     }
-
     //현재 채널 초기화
     @RequestMapping(value ="/update/sessioncc", method=RequestMethod.POST)
     public void initCurrentChannel(@RequestBody Map<String,Object> map, HttpSession session) {

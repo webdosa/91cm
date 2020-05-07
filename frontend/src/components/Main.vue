@@ -10,7 +10,6 @@
       <!-- Page Content  -->
       <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
         <MainHeader @channelUpdate="channelUpdate"></MainHeader>
-        <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
         <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
         <!-- CjannelHeader -->
         <div v-else>
@@ -101,7 +100,6 @@
     deactivated() {
     },
     async created() {
-      // 적용은 mounted 이후에 가능한 것으로 보임...
       await this.$store.dispatch('userListUpdate')
       await this.$store.dispatch('channelList') // 설정되는 값은 userChannelList
       this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[0])
@@ -141,12 +139,10 @@
               if (data.message == 'updateChannel') {
                 this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
                 return;
-              }
-              else if(data.message == 'updateCurrentChannel'){
+              } else if (data.message == 'updateCurrentChannel') {
                 this.$store.dispatch('updateCurrentChannel')
                 return;
-              }
-              else{
+              } else {
                 this.channelSubscribeCallBack(e);
                 return;
               }
