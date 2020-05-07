@@ -2,7 +2,7 @@
   <nav id="sidebar" class="myflex-column" v-bind:class="{active: $store.state.isLActive}">
     <div class="sidebar-header">
       <div class="menulist-header-icon">
-        <a @click="LSidebarToggle" v-if="isSamllWidth">
+        <a @click="LSidebarToggle" v-if="$store.state.isSmallWidth">
           <i class="im im-x-mark" style="color:white;margin-bottom: 15px;"></i>
         </a>
         </div>
@@ -91,12 +91,9 @@
         channelmode: '',
         channelTitle: '',
         channelUsers: [],
-        isSamllWidth:false
       }
     },
     created() {
-      this.widthCheck()
-      window.addEventListener('resize', this.widthCheck);
       this.updateUserList(this.currentChannel)
     },
     mounted() {
@@ -114,9 +111,9 @@
             this.$store.commit('setChannelUsers',res.data)
           })
       },
-      widthCheck(){
-        this.isSamllWidth = (window.innerWidth < 500) ? true : false;
-      },
+      // widthCheck(){
+      //   this.isSamllWidth = (window.innerWidth < 500) ? true : false;
+      // },
       LSidebarToggle: function () {
         this.$store.state.isLActive = !this.$store.state.isLActive
       },

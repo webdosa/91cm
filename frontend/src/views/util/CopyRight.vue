@@ -172,7 +172,7 @@
     data() {
       return {}
     },
-    created: {},
+    created(){},
     methods: {
       testBtn: function () {
         const element = this.$refs.testBtn

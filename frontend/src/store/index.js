@@ -30,7 +30,8 @@ export default new Vuex.Store({
     isLogout: false,
     isSearchMode: false,
     isInviteMode: false,
-    searchText: ''
+    searchText: '',
+    isSmallWidth:false
   },
   mutations: {
     setChannelUsers: function(state,payload){
@@ -66,6 +67,9 @@ export default new Vuex.Store({
     },
     setTaskBoard: function (state,payload) {
       state.taskBoard = payload
+    },
+    setSmallWidth: function (state,payload){
+      state.isSmallWidth = payload
     }
   },
   actions: {

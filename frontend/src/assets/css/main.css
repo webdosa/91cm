@@ -1,3 +1,6 @@
+.td-dd-wrapper .dropdown .btn{
+    padding:0
+}
 .info-w{
     height: 100%;
   background-color: white;
@@ -250,7 +253,7 @@ MainContents
 /* width */
 ::-webkit-scrollbar {
     width: 0.4em;
-    height: 0.4em;
+    height: 1em;
 }
 
 /* Track */

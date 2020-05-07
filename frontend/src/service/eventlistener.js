@@ -32,6 +32,13 @@ class EventListener{
                 AboutChannel.updateFocus(isfocus)
         }
         })
-      }
+    }
+
+    resizeEvt(){
+        window.addEventListener('resize', function(){
+            store.commit('setSmallWidth',(window.innerWidth < 500) ? true : false)
+        })
+    }
+
 }
 export default new EventListener()

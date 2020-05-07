@@ -111,10 +111,12 @@
         await AboutChannel.initCurrentChannel(currentChannel.id)
       }
       this.connect()
+      EventListener.resizeEvt()
       EventListener.beforeunloadEvt()
       EventListener.focusEvt(this)
       EventListener.blurEvt()
       NotificationClass.requestPermission()
+      this.$store.commit('setSmallWidth',(window.innerWidth < 500) ? true : false)
     },
     updated() {
     },
