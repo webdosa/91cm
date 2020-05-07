@@ -69,12 +69,6 @@
         if (res.headers.typename == 'taskUpdate') {
           this.$store.dispatch('updateTaskBoard')
         }
-        if(res.body != null){
-          const task = JSON.parse(res.body)
-          const taskList = this.getTaskBoard.find(taskList => taskList.id == task.tasklist_id)
-          taskList.tasks[task.position] = task
-          // this.$store.commit('setTaskBoard',this.getTaskBoard)
-        }
       })
     },
     deactivated() {

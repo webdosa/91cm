@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export default {
-
   // 현재 채널의 모든 taskList 가져오기
   updateTaskBoard: function(context){
     axios.get('/api/tasklist/get/'+context.state.currentChannel.id)

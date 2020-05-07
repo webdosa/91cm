@@ -24,7 +24,7 @@
       <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus
                     @keydown.enter.exact="setTaskListName"></b-form-input>
     </div>
-    
+
     <div style="height: 100%;overflow-y: auto;">
     <b-list-group style="width: 100%; padding: 10px;"> <!-- 임시로 정해주 높이 값 정확한 반응형 높이가 아님 -->
       <b-list-group-item v-if="create" style="padding: 10px;">
@@ -81,7 +81,8 @@
     props: ["taskList"],
     computed: {
       ...mapGetters({
-        channelUsers: 'getChannelUsers'
+        channelUsers: 'getChannelUsers',
+        currentChannel: 'getCurrentChannel'
       }),
       getTasks: function () {
         return this.taskList.tasks
@@ -116,8 +117,6 @@
         create: false,
         edit: false,
       }
-    },
-    created() {
     },
     methods: {
       taskEventHandler: function ({added, moved, removed}) {
@@ -223,9 +222,10 @@
           }
         })
           .then(res => {
+            console.log(res.data)
             this.taskList.id = res.data.id
-            this.task.tasklist_id = res.data.id
-            this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+            // this.task.tasklist_id = res.data.id
+            this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
           })
           .catch(error => {
             console.error(error)
