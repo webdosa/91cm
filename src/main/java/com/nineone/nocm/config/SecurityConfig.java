@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setForceEncoding(true);
         http
                 .addFilterBefore(filter, CsrfFilter.class)
+//                .csrf().disable()
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .headers().frameOptions().disable()
@@ -53,6 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/css/**", "/js/**", "/img/**", "/login/**", "/oauth2/**", "/api/**", "/endpoint/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
+//	            .cors()
+//	            .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
@@ -65,4 +68,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint().userService(customOAuthUserService);
 
     }
+//	  @Bean
+//	  public CorsConfigurationSource corsConfigurationSource() {
+//	      CorsConfiguration configuration = new CorsConfiguration();
+//	      // - (3)
+//	      configuration.addAllowedOrigin("*");
+//	      configuration.addAllowedMethod("*");
+//	      configuration.addAllowedHeader("*");
+//	      configuration.setAllowCredentials(true);
+//	      configuration.setMaxAge(3600L);
+//	      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//	      source.registerCorsConfiguration("/**", configuration);
+//	      return source;
+//	  }
 }

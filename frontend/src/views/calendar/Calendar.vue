@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <full-calendar ref="calendar" :config="config" :events="events" @event-selected="selectEvent"></full-calendar>
+  <div class="mainwrapper">
+    <full-calendar ref="calendar" :config="config" :events="events" @event-selected="selectEvent" ></full-calendar>
     <b-modal id="change-event" @ok="handleOk" title="일정 수정" @cancel="resetData" @hide="resetData">
       <v-swatches class="float-right" v-model="eventColor" popover-x="right"
                   show-fallback placeholder="제목을 입력해주세요."></v-swatches>
@@ -113,7 +113,8 @@ export default {
         editable: false,
         defaultView: 'month',
         selectHelper: false,
-        locale: 'ko'
+        locale: 'ko',
+        height: 'parent'
       }
     }
   },
@@ -172,4 +173,7 @@ export default {
   .fc-content {
     text-align: center;
   }
+  /* .fc-scroller{
+    height: 100% !important;
+  } */
 </style>

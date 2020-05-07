@@ -30,7 +30,7 @@
                             </span>
               </div>
               <input id="firstName" type="text" name="email" placeholder="Id"
-                     class="form-control bg-white border-left-0 border-md">
+                     class="form-control bg-white border-left-0 border-md" v-model="userid">
             </div>
             <!-- Password -->
             <div class="input-group col-lg-12 mb-4">
@@ -41,7 +41,7 @@
                             </span>
               </div>
               <input id="password" type="password" name="password" placeholder="Password"
-                     class="form-control bg-white border-left-0 border-md">
+                     class="form-control bg-white border-left-0 border-md" v-model="password">
             </div>
 
 
@@ -91,14 +91,17 @@
     },
     methods: {
       login: function () {
-        const form = new FormData()
-        form.append('userid', this.userid)
-        form.append('password', this.password)
-        axios.post('/', form)
-          .then(res => {
-          }).catch(error => {
-          console.error(error)
-        })
+        console.log(this.password)
+      //   let obj = {userid: this.userid,password: this.password}
+      //   axios.post('http://localhost:9191/api/user/backdoor', obj)
+      //     .then(res => {
+      //       console.log(res.data)
+      //       if(res.data){
+      //         router.replace('/main')
+      //       }
+      //     }).catch(error => {
+      //     console.error(error)
+      //   })
       }
     },
     mounted() {
