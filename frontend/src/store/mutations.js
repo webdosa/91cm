@@ -32,5 +32,8 @@ export default {
   },
   setTaskBoard: function (state,payload) {
     state.taskBoard = payload
+  },
+  setSmallWidth: function (state, payload) {
+    state.isSmallWidth = payload
   }
 }
