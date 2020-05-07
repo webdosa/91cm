@@ -13,12 +13,12 @@ import java.util.Collection;
 @Getter
 @NoArgsConstructor
 @Setter
-public class User implements UserDetails {
+public class User {
     private String name;
     private String phone;
     private String email;
     private String picture;
-    private String password;
+
 
     @Builder
     public User(String name, String phone, String picture, String email, String password) {
@@ -26,7 +26,6 @@ public class User implements UserDetails {
         this.phone = phone;
         this.picture = picture; 
         this.email = email;
-        this.password = password;
         
     }
 
@@ -36,39 +35,4 @@ public class User implements UserDetails {
         return this;
     }
 
-    //Form 로그인 설정
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }
