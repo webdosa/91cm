@@ -18,7 +18,7 @@ class EventListener{
                 AboutChannel.updateFocus(isfocus)
                 console.log('focus')
                 console.log(store.state.currentChannel)
-                if(store.state.currentChannel != null){
+                if(store.state.currentChannel != null && store.state.selectComponent == 'main'){
                     instance.msgCountUpdate(store.state.currentChannel.id,false)
                 }
             }
