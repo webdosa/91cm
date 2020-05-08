@@ -69,8 +69,10 @@
   export default {
     props: ['modalObj', 'msgCountObj'],
     watch: {
-      currentChannel(newCurrentChannel, oldCurrentChannle) {
+      currentChannel(newCurrentChannel, oldCurrentChannel) {
         this.updateUserList(newCurrentChannel)
+        console.log('oldCompo',this.$store.state.oldComponent)
+        console.log('currentc',this.$store.state.currentChannel)
       },
       syncChannelUser(){
         this.updateUserList(this.$store.state.currentChannel)
@@ -122,8 +124,12 @@
           this.LSidebarToggle()
         }
         this.$store.commit('getSelectComponent', 'main')
+        if (this.$store.state.oldComponent == 'main') {
+            AboutChannel.updateLastAccessDate(this.$store.state.userChannelList[index].id, this.$store.state.currentChannel.id)
+        }
         this.$store.commit('setCurrentChannel',this.$store.state.userChannelList[index])
-        this.$emit('sendTitle', this.$store.state.userChannelList[index])   // 나중에 변경
+        this.$store.state.currentChannel.count = 0
+        this.$store.state.isSearchMode = false
       },
       prepareModal: function (mode) {
         if (mode == 'create') {
@@ -184,6 +190,7 @@
           .then(async (res) => {
             //res.data = 새로 생성된 channel 인스턴스
             if(this.$store.state.currentChannel != null){
+              console.log('create')
               AboutChannel.updateLastAccessDate(res.data.id, this.$store.state.currentChannel.id)
             }
             this.$store.commit('setCurrentChannel',res.data)

@@ -75,5 +75,10 @@ public class UserApiController {
 	public List<User> getChannelUserList(@PathVariable int channel_id){
 		return userService.getCurrentChannelUserList(channel_id);
 	}
+    
+    @RequestMapping("/test/t")
+    public void testapi() {
+    	log.info("ddddddddddddddddddd");
+    }
   
 }

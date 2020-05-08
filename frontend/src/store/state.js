@@ -9,7 +9,7 @@ export default {
   userChannelList: [],
   stompClient: null,
   selectComponent: 'main',
-  oldComponent: '',
+  oldComponent: 'main',
   currentUser: {},
   userList: [],
   currentChannelUser: [],

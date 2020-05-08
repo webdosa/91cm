@@ -42,8 +42,6 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
                 oAuth2User.getAttributes());
         User user = saveOrUpdate(attributes);
-        LastAccess lastAccess = setLastAccess();
-        httpSession.setAttribute("lastAccess", lastAccess);
         httpSession.setAttribute("user", user);
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("USER")),
@@ -66,9 +64,4 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         return user;
     }
     
-    private LastAccess setLastAccess() {
-    	LastAccess lastAccess = LastAccess.builder()
-    			.currentChannelId(0).isContentWrapper(true).isFocus(true).build();
-    	return lastAccess;
-    }
 }
