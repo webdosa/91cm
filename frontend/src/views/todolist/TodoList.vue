@@ -102,7 +102,6 @@
     methods: {
       addTaskList: function () {
         this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
-        console.log('addTaskList',this.taskList)
       },
       tasklistEventHandler: function ({added, moved, removed}) {
         if (moved) {

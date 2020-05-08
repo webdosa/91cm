@@ -138,7 +138,7 @@
           updateTaskItem.taskId = moved.element.id
           this.$http.post('/api/task/update/position', updateTaskItem)
             .then(res => {
-              this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+              this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
             }).catch(error => {
             console.error(error)
           })
@@ -151,7 +151,7 @@
           updateTaskItem.taskId = removed.element.id
           this.$http.post('/api/task/update/position', updateTaskItem)
             .then(res => {
-              this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+              this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
             }).catch(error => {
             console.error(error)
           })
@@ -168,7 +168,7 @@
         })
           .then(res => {
             this.$eventBus.$emit('deleteTaskList', this.taskList)
-            this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
           })
           .catch(error => {
 
@@ -182,7 +182,7 @@
           id: this.taskList.id,
           name: this.taskList.name
         }).then(res => {
-          this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+          this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
           this.editToggle()
         }).catch(error => {
           console.error(error)
@@ -192,7 +192,7 @@
         task.state = state
         this.$http.post('/api/task/update/content', task)
           .then(res => {
-            this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/'+this.currentChannel.id,{},{typename: 'taskUpdate'})
           }).catch(error => {
           console.error(error)
         })
@@ -201,7 +201,7 @@
         // 현저 유저와 작성자가 같은지 비교해서 삭제할 수 있도록 변경 필요
         this.$http.post('/api/task/delete', task)
           .then(res => {
-            this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
             this.taskList.tasks.splice(index, 1)
           }).catch(error => {
           console.error(error)
@@ -215,6 +215,7 @@
         this.editSelector = index
       },
       setTaskListName: function () {
+        this.taskList.channel_id = this.currentChannel.id
         this.taskList.name = this.taskListName
         this.$http.post('/api/tasklist/insert', JSON.stringify(this.taskList), {
           headers: {
@@ -222,9 +223,7 @@
           }
         })
           .then(res => {
-            console.log(res.data)
             this.taskList.id = res.data.id
-            // this.task.tasklist_id = res.data.id
             this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
           })
           .catch(error => {
