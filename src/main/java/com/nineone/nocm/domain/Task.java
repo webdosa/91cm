@@ -14,6 +14,10 @@ public class Task {
 	private Date register_date;
 	private Date edit_date;
 	private String member_email;
-//	private int state;
 	private int position;
+	private boolean state;
+	private Date start_date;
+	private Date end_date;
+	private String color;
+	private String title;
 }

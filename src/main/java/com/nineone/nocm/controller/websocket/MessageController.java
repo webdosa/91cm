@@ -24,13 +24,9 @@ public class MessageController {
 
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
-
 	
 	@Autowired
 	private MessageService messageService; 
-
-	//	@Autowired
-//	WebsocketEventListener sessionListener;
 
 	@MessageMapping("/chat/message")
 	@Transactional
@@ -43,7 +39,6 @@ public class MessageController {
 		}else {
 			messagingTemplate.convertAndSend("/sub/"+message.getSender(), message);
 		}
-		 
 	}
 	@MessageMapping("/sync/info")
 	public void storeUpdateMessage(){

@@ -38,7 +38,7 @@
       <!-- Users 메뉴 시작 -->
       <a class="r-style" v-b-toggle.user-info>
         <i class="im im-users"></i>
-        <span style="margin-left:20px;">{{channelUserSize}} Users</span>
+        <span style="margin-left:20px;">{{channelUsers.length}} Users</span>
       </a>
       <!-- Users 메뉴 끝 -->
 
@@ -49,7 +49,7 @@
       </a>
       <!-- to do list 메뉴 끝 -->
       <!-- calender 메뉴 시작 -->
-      <a class="r-style">
+      <a class="r-style"  @click="callComponent('calendar')">
         <i class="im im-calendar"></i>
         <span style="margin-left:20px;">Calendar</span>
       </a>
@@ -58,9 +58,16 @@
   </nav>
 </template>
 <script>
+  import {mapGetters} from "vuex";
+
   export default {
     props: ['modalObj'],
     name: 'RSidebar',
+    computed:{
+      ...mapGetters({
+        channelUsers: 'getChannelUsers'
+      })
+    },
     data() {
       return {
         channelUserSize: 0,
@@ -68,12 +75,13 @@
       }
     },
     mounted() {
-      this.$eventBus.$on('channelUserSize', data => {
-        this.channelUserSize = data
-      })
+
     },
     methods: {
       callComponent: function (componentName) {
+        if(this.$store.state.isSmallWidth){
+          this.RSidebarClose()
+        }
         this.$store.commit('getSelectComponent',componentName)
       },
       leaveChannle: function () {

@@ -16,4 +16,6 @@ public interface ChannelService {
     boolean updateChannel(Channel name);
 
     List<Channel> channelListAll();
+
+    Channel getCurrentChannel(Channel channel);
 }

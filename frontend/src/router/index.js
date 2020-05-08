@@ -5,15 +5,11 @@ import Home from '../components/Home.vue'
 import NotFound from '../views/NotFound.vue'
 import Clock from '../views/Clock'
 import Main from '../components/Main'
-import ContentWrapper from '../views/main/ContentWrapper'
-import ChannelHeader from '../views/main/ChannelHeader'
-import test from '../views/user/UserInfo'
-import EditProfile from '../views/user/EditProfile'
 import SignUp from '../components/SignUp'
 import FormSignUp from "../views/FormSignUp";
-import CopyRight from "../views/util/CopyRight"
-import Todolist from '../views/TodoList'
+import Todolist from '../views/todolist/TodoList'
 import About from "../views/About";
+import Calendar from "../views/calendar/Calendar";
 
 Vue.use(VueRouter)
 
@@ -25,13 +21,12 @@ const routes = [
   },
   {
     path: '/about',
-    name: 'ContentWrapper',
-    component: ContentWrapper
+    name: 'mains',
+    component: About
   },
   {
     path: '*',
     component: NotFound
-    // redirect: '/errorpage'
   },
   {
     path: '/clock',
@@ -62,7 +57,7 @@ const routes = [
   // 테스트용 path 테스트 후에 삭제
   {
     path: '/test',
-    component: CopyRight
+    component: Calendar
   },
   {
     path: '/todo',

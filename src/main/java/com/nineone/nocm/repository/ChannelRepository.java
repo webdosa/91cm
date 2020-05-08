@@ -12,4 +12,6 @@ public interface ChannelRepository {
     List<Channel> channelList (String userId);
     List<Channel> channelListAll ();
     int joinInfo(JoinInfo joinInfo);
+    Channel getCurrentChannel(Channel channel);
+
 }

@@ -42,19 +42,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
-        http	
+        http
                 .addFilterBefore(filter, CsrfFilter.class)
+//                .csrf().disable()
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //개발 임시 설정
-                .antMatchers("/", "/css/**", "/js/**","/img/**", "/login/**", "/oauth2/**","/api/**","/endpoint/**").permitAll()
+                .antMatchers("/", "/css/**", "/js/**", "/img/**", "/login/**", "/oauth2/**", "/api/**", "/endpoint/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-//                .cors()
-//                .and()
+//	            .cors()
+//	            .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
@@ -63,27 +64,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .oauth2Login()
                 .defaultSuccessUrl("/main")
-                .loginPage("/") 
+                .loginPage("/")
                 .userInfoEndpoint().userService(customOAuthUserService);
 
     }
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        // - (3)
-//        configuration.addAllowedOrigin("*");
-//        configuration.addAllowedMethod("*");
-//        configuration.addAllowedHeader("*");
-//        configuration.setAllowCredentials(true);
-//        configuration.setMaxAge(3600L);
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-//    }
+//	  @Bean
+//	  public CorsConfigurationSource corsConfigurationSource() {
+//	      CorsConfiguration configuration = new CorsConfiguration();
+//	      // - (3)
+//	      configuration.addAllowedOrigin("*");
+//	      configuration.addAllowedMethod("*");
+//	      configuration.addAllowedHeader("*");
+//	      configuration.setAllowCredentials(true);
+//	      configuration.setMaxAge(3600L);
+//	      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//	      source.registerCorsConfiguration("/**", configuration);
+//	      return source;
+//	  }
 }

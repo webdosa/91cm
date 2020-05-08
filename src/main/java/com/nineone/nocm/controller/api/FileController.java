@@ -41,7 +41,6 @@ public class FileController {
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
-
     @Autowired
     private MessageService messageService;
     @Autowired
@@ -55,7 +54,6 @@ public class FileController {
     public ResponseEntity<?> uploadFile(@RequestParam("files") MultipartFile[] files,
                                         @RequestParam("channel_id") int channel_id,
                                         @RequestParam("sender") String sender, @Socialuser User user) {
-
         Message message = Message.builder().channel_id(channel_id)
                 .sender(sender)
                 .user(user)
@@ -66,7 +64,6 @@ public class FileController {
         List<ContentsFile> fileList = new ArrayList<>();
         for (MultipartFile file : files) {
             ContentsFile contentsFile = ContentsFile.getDefaultInstance(file);
-            log.info(contentsFile.getOriginal_name());
             contentsFile.setSender(sender);
             contentsFile.setMessage_id(message.getId());
             fileList.add(contentsFile);
@@ -86,7 +83,7 @@ public class FileController {
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException ex) {
-            log.info("알 수 없는 파일");
+            log.error("unknown file extension");
         }
         if (contentType == null) {
             contentType = "application/octet-stream";

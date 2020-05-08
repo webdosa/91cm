@@ -5,17 +5,16 @@
       <!-- Sidebar  -->
       <LSidebar
         :msgCountObj="msgCountObj"
-        @channelUpdate="channelUpdate"
-        @sendTitle="sendTitle"></LSidebar>
+        @channelUpdate="channelUpdate"></LSidebar>
       <!-- Page Content  -->
       <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
         <MainHeader @channelUpdate="channelUpdate"></MainHeader>
-        <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
         <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
         <!-- CjannelHeader -->
         <div v-else>
-<!--          추후에 깔금한 방식으로 변경-->
-          <ChannelHeader v-if="$store.state.selectComponent=='main'||$store.state.selectComponent=='todoList'"></ChannelHeader>
+          <!--          추후에 깔금한 방식으로 변경-->
+          <ChannelHeader
+            v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit'"></ChannelHeader>
           <keep-alive>
             <component :is="whichComponent"
                        :msgArray="msgArray"
@@ -45,8 +44,9 @@
   import Loading from '../views/main/Loading'
   import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
-  import TodoList from '../views/TodoList'
-
+  import TodoList from '../views/todolist/TodoList'
+  import Calendar from "../views/calendar/Calendar";
+  
   export default {
     name: 'Main',
     components: {
@@ -59,7 +59,8 @@
       'EditProfile': EditProfile,
       'NoChannel': NoChannel,
       'Loading': Loading,
-      'TodoList' : TodoList
+      'TodoList': TodoList,
+      'Calendar': Calendar
     },
     data() {
       return {
@@ -73,7 +74,6 @@
     },
     computed: {
       whichComponent() {
-        console.log(this.$store.state.oldComponent)
         AboutChannel.updateLastAccessStatus(this.$store.state.oldComponent, this.$store.state.selectComponent)
         switch (this.$store.state.selectComponent) {
           case 'main':
@@ -84,6 +84,8 @@
             return 'EditProfile'
           case 'todoList':
             return 'TodoList'
+          case 'calendar':
+            return 'Calendar'
           default:
             return 'ContentWrapper'
         }
@@ -95,38 +97,26 @@
       }
     },
     deactivated() {
-      console.log('deactiveed')
     },
     async created() {
-      // 적용은 mounted 이후에 가능한 것으로 보임...
       await this.$store.dispatch('userListUpdate')
       await this.$store.dispatch('channelList') // 설정되는 값은 userChannelList
-      await this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[0])
+      this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[0])
       const currentChannel = this.$store.state.currentChannel
-      console.log(currentChannel)
       if (currentChannel != null) {
         currentChannel.count = 0
-        await AboutChannel.initCurrentChannel(currentChannel.id)
       }
       this.connect()
+      EventListener.resizeEvt()
       EventListener.beforeunloadEvt()
       EventListener.focusEvt(this)
       EventListener.blurEvt()
       NotificationClass.requestPermission()
+      this.$store.commit('setSmallWidth',(window.innerWidth < 500) ? true : false)
     },
     updated() {
     },
     methods: {
-      sendTitle(channel) {
-        if (this.$store.state.oldComponent == 'main') {
-          let oldChannel = this.$store.state.currentChannel
-          AboutChannel.updateLastAccessDate(channel.id, oldChannel.id)
-          console.log(oldChannel.id)
-        }
-        this.$store.commit('setCurrentChannel', channel)
-        this.$store.state.currentChannel.count = 0
-        this.$store.state.isSearchMode = false
-      },
       connect() {
         // 새로고침 했을때 Main의 로직이 실행되지 않는 환경에서는 문제가 생길 수 있음
         this.$store.state.stompClient = Stomp.over(new SockJS('/endpoint/'))
@@ -134,10 +124,12 @@
 
           this.$store.state.userChannelList.forEach(channel => {
             this.$store.state.stompClient.subscribe("/sub/chat/room/" + channel.id, (e) => {
-              console.log(e.body);
               let data = JSON.parse(e.body)
               if (data.message == 'updateChannel') {
                 this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
+                return;
+              } else if (data.message == 'updateCurrentChannel') {
+                this.$store.dispatch('updateCurrentChannel')
                 return;
               } else {
                 this.channelSubscribeCallBack(e);
@@ -146,9 +138,7 @@
             })
           })
           this.$store.state.stompClient.subscribe("/sub/sync/info", (res) => {
-            if (res.body == 'true') {
-              this.storeUpdate()
-            } else if (res.body == 'userList') {
+            if (res.body == '"userList"') {
               this.$store.dispatch('userListUpdate')
             }
           })
@@ -156,22 +146,24 @@
             //메시지 전송 실패시
             this.channelSubscribeCallBack(e, true)
           })
-        }, function () {
-          window.location.href = "/"
+        }, ()=> {  
+          console.log('stomp close',this.$store.state.isLogout)      
+          if(!this.$store.state.isLogout){
+            window.location.href = "/" 
+          }
         })
       },
       channelUpdate() {
-          this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.$store.state.currentChannel.id, (e) => {
-            console.log(e.body);
-            let data = JSON.parse(e.body)
-            if (data.message == 'updateChannel') {
-              this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
-              return;
-            } else {
-              this.channelSubscribeCallBack(e);
-              return;
-            }
-          })
+        this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.$store.state.currentChannel.id, (e) => {
+          let data = JSON.parse(e.body)
+          if (data.message == 'updateChannel') {
+            this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
+            return;
+          } else {
+            this.channelSubscribeCallBack(e);
+            return;
+          }
+        })
         // this.$store.commit('setChannelList', newChannelList)
       },
       msgArrayUpdate(newmsgArray) {
@@ -179,8 +171,6 @@
       },
       channelSubscribeCallBack(e, fail) {
         let data = JSON.parse(e.body)
-        // console.log(data)
-        // console.log(this.$store.state.isfocus)
         NotificationClass.sendNotification(this.$store.state.isfocus, data)
         if (data.channel_id == this.$store.state.currentChannel.id && this.$store.state.selectComponent == 'main') {
           data.content = CommonClass.replacemsg(data.content)
@@ -189,33 +179,31 @@
           }
           this.msgArray.push(data)
           if (!this.$store.state.isfocus) {
-            this.msgCountUpdate(data.channel_id,true)
+            this.msgCountUpdate(data.channel_id, true)
           }
         } else {
-          this.msgCountUpdate(data.channel_id,true)
+          this.msgCountUpdate(data.channel_id, true)
         }
       },
-      msgCountUpdate(id,counting){
+      msgCountUpdate(id, counting) {
         // commit 을 안해도 객체 내부의 내용은 변경이 되는지 확인 필요 확인 후 해당 주석 제거
         for (let i = 0; i < this.$store.state.userChannelList.length; i++) {
-          console.log('msgCountUpdate id: ' + id)
-          console.log('msgCountUpdate current id: ' + this.$store.state.userChannelList[i].id)
           if (id == this.$store.state.userChannelList[i].id) {
-             if(counting){
-               this.msgCounting(i)
-               break
-             } else{
-               this.msgCountReset(i)
-               break
-             }
+            if (counting) {
+              this.msgCounting(i)
+              break
+            } else {
+              this.msgCountReset(i)
+              break
+            }
           }
         }
       },
       msgCounting(i) {
         this.$store.state.userChannelList[i].count += 1
       },
-      msgCountReset(i){
-        this.$store.state.userChannelList[i].count = 0 
+      msgCountReset(i) {
+        this.$store.state.userChannelList[i].count = 0
       }
 
     }

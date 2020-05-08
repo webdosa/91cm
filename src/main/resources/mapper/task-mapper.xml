@@ -2,92 +2,99 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-        
-        
+
+
 <mapper namespace="com.nineone.nocm.mapper.task">
-	<!-- 서브쿼리로 한번 더 감싸는 이유는 mysql 에러가 떠서.. 임시해결로 한번더 감싸주었다. -->	
-	<insert id="insertTask" useGeneratedKeys="true" keyProperty="id">
-		insert task (tasklist_id,content,member_email,position)
+    <!-- 서브쿼리로 한번 더 감싸는 이유는 mysql 에러가 떠서.. 임시해결로 한번더 감싸주었다. -->
+    <insert id="insertTask" useGeneratedKeys="true" keyProperty="id">
+		insert task (tasklist_id,content,member_email,position,state,start_date, end_date,color,title)
 			values (
 			#{tasklist_id},
 			#{content},
 			#{member_email},
-			0
+			0,
+			#{state},
+			#{start_date},
+			#{end_date},
+			#{color},
+			#{title}
 			)
 	</insert>
-	
-	<delete id="deleteTask">
+
+    <delete id="deleteTask">
 		delete from task where id = #{id}
 	</delete>
-	
-	<update id="updateTaskPositionByDelete">
+
+    <update id="updateTaskPositionByDelete">
 		update task set position = (position - 1 ) where position > #{position} and tasklist_id = #{tasklist_id}
 	</update>
-	
-	<update id="updateTaskContent">
-		update task set content = #{content}, edit_date = #{edit_date} where id = #{id}
+
+    <update id="updateTaskContent">
+		update task set content = #{content}, edit_date = #{edit_date}, start_date = #{start_date},
+		end_date = #{end_date}, color = #{color}, title = #{title}, state = #{state}
+		where id = #{id}
 	</update>
-	
-	<!-- <update id="updateTaskPosition">
-		update task set 
-			position = (select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a),
-			tasklist_id = #{tasklist_id}
-			where id = #{id}
-	</update> -->
-	
-	<update id="updateTaskPositionByInsert">
+
+    <!-- <update id="updateTaskPosition">
+        update task set
+            position = (select * from (select ifnull(max(position)+1, 1) from task where tasklist_id = #{tasklist_id}) a),
+            tasklist_id = #{tasklist_id}
+            where id = #{id}
+    </update> -->
+
+    <update id="updateTaskPositionByInsert">
 		update task set position = (position + 1) where tasklist_id = #{tasklist_id}
 	</update>
-	<!-- ===================================================== -->
-	<!-- <update id="initTaskPosition">
-		update task set position = 0  where position = #{taskOldIndex} and tasklist_id = #{tasklistId}
-	</update> -->
-	
-	<update id="moveTaskPosition">
-		update task set
-		<choose>
-			<when test="isUp">
-				position = (position + 1)
-				where position >= #{taskNewIndex}
-				and position <![CDATA[<]]> #{taskOldIndex}
-				and tasklist_id = #{tasklistId}
-			</when>
-			<otherwise>
-				position = (position - 1)
-				where position > #{taskOldIndex}
-				and position <![CDATA[<=]]> #{taskNewIndex}
-				and tasklist_id = #{tasklistId}
-			</otherwise>
-		</choose> 
-	</update>
-	
-	<update id="updateTaskPosition">
-		update task set position = #{taskNewIndex}
-			<choose>
-				<when test="tasklistNewId == null">
-					where id = #{taskId} and 
-						tasklist_id = #{tasklistId}		
-				</when>
-				<otherwise>
-				,tasklist_id = #{tasklistNewId}
-				where id = #{taskId} and
-					tasklist_id = #{tasklistOldId}
-				</otherwise>
-			</choose>
-			
-	</update>
-	<!-- ==================================================== -->
-	<update id="moveTaskPositionByDelete">
+    <!-- ===================================================== -->
+    <!-- <update id="initTaskPosition">
+        update task set position = 0  where position = #{taskOldIndex} and tasklist_id = #{tasklistId}
+    </update> -->
+
+    <update id="moveTaskPosition">
+        update task set
+        <choose>
+            <when test="isUp">
+                position = (position + 1)
+                where position >= #{taskNewIndex}
+                and position <![CDATA[<]]> #{taskOldIndex}
+                and tasklist_id = #{tasklistId}
+            </when>
+            <otherwise>
+                position = (position - 1)
+                where position > #{taskOldIndex}
+                and position <![CDATA[<=]]> #{taskNewIndex}
+                and tasklist_id = #{tasklistId}
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateTaskPosition">
+        update task set position = #{taskNewIndex}
+        <choose>
+            <when test="tasklistNewId == null">
+                where id = #{taskId} and
+                tasklist_id = #{tasklistId}
+            </when>
+            <otherwise>
+                ,tasklist_id = #{tasklistNewId}
+                where id = #{taskId} and
+                tasklist_id = #{tasklistOldId}
+            </otherwise>
+        </choose>
+
+    </update>
+    <!-- ==================================================== -->
+    <update id="moveTaskPositionByDelete">
 		update task set position = (position - 1 ) where position >
 				#{taskOldIndex} and tasklist_id = #{tasklistOldId}	
 	</update>
-	
-	<update id="moveTaskPositionByinsert">
+
+    <update id="moveTaskPositionByinsert">
 		update task set position = (position + 1) where position >= #{taskNewIndex} and tasklist_id = #{tasklistNewId}
 	</update>
-	
-	<!-- <update id="updateTaskPositionBy">
-		update task set postion = #{taskNewIndex}, tasklist_id = #{tasklistNewId} where id = #{taskId} 
-	</update> -->
-	
+
+    <!-- <update id="updateTaskPositionBy">
+        update task set postion = #{taskNewIndex}, tasklist_id = #{tasklistNewId} where id = #{taskId}
+    </update> -->
+
 </mapper>

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '../store'
 class AboutChannel{
     // 임시로 제가 만든 채널리스트 가져오는 api입니다.
     // 추후에 코드 합치고나서 만들어주신 api 쓸 예정입니다.
@@ -25,55 +26,21 @@ class AboutChannel{
 
     updateLastAccessDate (currentId,oldId) {
       console.log(oldId)
-      axios.put('/api/channel/update/lastaccessdate',
+      return axios.put('/api/channel/update/lastaccessdate',
       {
         oldChannelId: oldId,
-        currentChannelId: currentId
+        currentChannelId: currentId,
+        userEmail: store.state.currentUser.email
       }
-      ).catch(error => {
-        console.log(error.response)   
-      })
+      )
     }
 
-    updateSessionIsCW (bool) {
-      console.log(bool)
-      axios.put("/api/channel/update/sessioniscw",
-      {
-        isContentWrapper: bool
-      }
-      ).catch(error => {
-         console.log(error.response)   
-      })
-    }
 
     updateLastAccessStatus (oldVal,newVal) {
       if(oldVal == 'main' && newVal != 'main' ){
-        this.updateSessionIsCW(false)
-      }else if(oldVal != 'main' && newVal == 'main'){
-        this.updateSessionIsCW(true)
+        this.updateLastAccessDate(store.state.currentChannel.id)
       }
     }
-
-    initCurrentChannel (currentChannel){
-      axios.post("/api/channel/update/sessioncc",
-      {
-        currentChannelId: currentChannel
-      }
-      ).catch(error => {
-        console.log(error.response)   
-      })
-    }
-
-    updateFocus (bool) {
-      axios.post("/api/channel/update/sessionfocus",
-      {
-        isFocus: bool
-      }
-      ).catch(error => {
-        console.log(error.response)   
-      })
-    }
-    
 }
 
 export default new AboutChannel()

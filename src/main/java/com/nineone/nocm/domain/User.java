@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Getter
 @NoArgsConstructor
@@ -15,8 +19,9 @@ public class User {
     private String email;
     private String picture;
 
+
     @Builder
-    public User(String name, String phone, String picture, String email) {
+    public User(String name, String phone, String picture, String email, String password) {
         this.name = name;
         this.phone = phone;
         this.picture = picture; 
@@ -29,4 +34,5 @@ public class User {
         this.picture = icon;
         return this;
     }
+
 }

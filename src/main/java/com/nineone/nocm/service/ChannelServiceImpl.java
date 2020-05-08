@@ -28,7 +28,6 @@ public class ChannelServiceImpl implements ChannelService{
     			.channel_id(channel.getId())
     			.member_email(channel.getMember_email())
     			.build();
-    	System.out.println(joinInfo.getChannel_id());
         return (channelRepository.joinInfo(joinInfo) > 0 ) ? true : false;
     }
 
@@ -57,5 +56,10 @@ public class ChannelServiceImpl implements ChannelService{
     @Override
     public List<Channel> channelListAll() {
         return channelRepository.channelListAll();
+    }
+
+    @Override
+    public Channel getCurrentChannel(Channel channel) {
+        return channelRepository.getCurrentChannel(channel);
     }
 }

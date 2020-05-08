@@ -2,7 +2,7 @@
   <nav id="sidebar" class="myflex-column" v-bind:class="{active: $store.state.isLActive}">
     <div class="sidebar-header">
       <div class="menulist-header-icon">
-        <a @click="LSidebarToggle" v-if="isSamllWidth">
+        <a @click="LSidebarToggle" v-if="$store.state.isSmallWidth">
           <i class="im im-x-mark" style="color:white;margin-bottom: 15px;"></i>
         </a>
         </div>
@@ -69,26 +69,21 @@
   export default {
     props: ['modalObj', 'msgCountObj'],
     watch: {
-      getCurrentChannel(newCurrentChannel, oldCurrentChannle) {
-        console.log("getCurrentChannel Watch...")
-        this.$http.get('/api/user/channel/' + newCurrentChannel.id)
-          .then(res => {
-            this.channelUsers = res.data
-            this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
-          })
+      currentChannel(newCurrentChannel, oldCurrentChannel) {
+        this.updateUserList(newCurrentChannel)
+        console.log('oldCompo',this.$store.state.oldComponent)
+        console.log('currentc',this.$store.state.currentChannel)
+      },
+      syncChannelUser(){
+        this.updateUserList(this.$store.state.currentChannel)
       }
     },
     computed: {
       ...mapGetters({
-        userChannelList: 'getUserChannelList'
+        userChannelList: 'getUserChannelList',
+        currentChannel: 'getCurrentChannel',
+        syncChannelUser: 'getSyncChannelUser'
       }),
-      // 유저 초대 및 처음 채널 생성 시 동기화
-      getCurrentChannel: function () {
-        if (this.$store.state.syncSignal.syncChannelUser){
-          return this.$store.state.currentChannel
-        }
-        return this.$store.state.currentChannel
-      },
     },
     name: 'LSidebar',
     data() {
@@ -98,33 +93,29 @@
         channelmode: '',
         channelTitle: '',
         channelUsers: [],
-        isSamllWidth:false
       }
     },
     created() {
-      console.log("LSidebar created")
-      this.widthCheck()
-      window.addEventListener('resize', this.widthCheck);
-      this.$http.get('/api/user/channel/' + this.$store.state.currentChannel.id)
-        .then(res => {
-          this.channelUsers = res.data
-          this.$eventBus.$emit('channelUserSize', this.channelUsers.length)
-        })
+      this.updateUserList(this.currentChannel)
     },
     mounted() {
-      console.log("LSidebar mounted")
       this.$eventBus.$on('useModal', res =>{
         this.prepareModal(res)
       })
-      // this.getUserList()
     },
     updated() {
-      console.log("LSidebar updated")
     },
     methods: {
-      widthCheck(){
-        this.isSamllWidth = (window.innerWidth < 500) ? true : false;
+      updateUserList: function(currentChannel){
+        this.$http.get('/api/user/channel/' + currentChannel.id)
+          .then(res => {
+            this.channelUsers = res.data
+            this.$store.commit('setChannelUsers',res.data)
+          })
       },
+      // widthCheck(){
+      //   this.isSamllWidth = (window.innerWidth < 500) ? true : false;
+      // },
       LSidebarToggle: function () {
         this.$store.state.isLActive = !this.$store.state.isLActive
       },
@@ -133,11 +124,14 @@
           this.LSidebarToggle()
         }
         this.$store.commit('getSelectComponent', 'main')
+        if (this.$store.state.oldComponent == 'main') {
+            AboutChannel.updateLastAccessDate(this.$store.state.userChannelList[index].id, this.$store.state.currentChannel.id)
+        }
         this.$store.commit('setCurrentChannel',this.$store.state.userChannelList[index])
-        this.$emit('sendTitle', this.$store.state.userChannelList[index])   // 나중에 변경
+        this.$store.state.currentChannel.count = 0
+        this.$store.state.isSearchMode = false
       },
       prepareModal: function (mode) {
-        console.log(mode)
         if (mode == 'create') {
           this.channelmode = '채널 생성'
         } else if(mode == 'edit'){
@@ -184,9 +178,10 @@
       updateChannel: function () {
         AboutChannel.updateChannelAPI(this.$store.state.currentChannel)
           .then(res => {
-            console.log(res)
+            this.$store.state.stompClient.send("/sub/chat/room/"+this.$store.state.currentChannel.id,
+              JSON.stringify({'message':'updateCurrentChannel', 'error':"null"}))
           }).catch(error => {
-          console.log(error)
+          console.error(error)
         })
       },
       createChannel: function () {
@@ -195,6 +190,7 @@
           .then(async (res) => {
             //res.data = 새로 생성된 channel 인스턴스
             if(this.$store.state.currentChannel != null){
+              console.log('create')
               AboutChannel.updateLastAccessDate(res.data.id, this.$store.state.currentChannel.id)
             }
             this.$store.commit('setCurrentChannel',res.data)

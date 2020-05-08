@@ -14,7 +14,11 @@ import AlertModal from "./plugins/AlertModal";
 import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
 
 
-
+Date.prototype.addDays = function (days) {
+  var date = new Date(this.valueOf());
+  date.setDate(date.getDate() + days);
+  return date;
+}
 Vue.use(AlertModal)
 Vue.use(VueSession, { persist: true})
 Vue.prototype.$eventBus = new Vue();

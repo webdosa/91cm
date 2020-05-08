@@ -24,4 +24,7 @@
     <select id="channelListAll" resultType="com.nineone.nocm.domain.Channel">
         select * from channel;
     </select>
+    <select id="getCurrentChannel" resultType="com.nineone.nocm.domain.Channel">
+        select * from channel where id = #{id}
+    </select>
 </mapper>
