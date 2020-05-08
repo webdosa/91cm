@@ -20,7 +20,7 @@
               <label>이름</label>
             </th>
             <td>
-              <b-input type="text" name="name" v-model="user.name"></b-input>
+              <b-input type="text" @keyup="symbolsFormatter" name="name" v-model="user.name"></b-input>
             </td>
           </tr>
           <tr>
@@ -28,7 +28,7 @@
               <label>이메일</label>
             </th>
             <td>
-              <b-input type="email" name="email" disabled="true" v-model="$store.state.currentUser.email"></b-input>
+              <b-input type="email" name="email" disabled="true" v-model="user.email"></b-input>
             </td>
           </tr>
           <tr>
@@ -83,9 +83,6 @@
         user: Object.assign({}, this.$store.state.currentUser)
       }
     },
-    mounted() {
-      this.$eventBus.$on('stomp',)
-    },
     methods: {
       handleOk: function (bvModalEvt) {
         bvModalEvt.preventDefault()
@@ -110,6 +107,9 @@
         this.imageUrl = ''
       },
       edit: function () {
+        if (!this.valueCheck(this.user.email, this.user.name, this.user.phone)){
+          return;
+        }
         this.$http.post('/api/user/update', this.user)
           .then(res => {
             if (res.data) {
@@ -124,6 +124,39 @@
         this.user.phone = this.user.phone.replace(/[^0-9]/g, "") // 숫자만 추출 되도록하는 정규식
         this.user.phone = this.user.phone.replace(/(^02.{0}|^01.{1}|[0-9]{4})([0-9]+)([0-9]{4})/, "$1-$2-$3");// 휴대폰번호 자동 하이픈 넣어주는 정규식
       },
+      symbolsFormatter: function(){
+        this.user.name = this.user.name.replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi, "")
+      },
+
+      valueCheck: function (email, name, phone) {
+        const phoneRegex = '^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$'
+        // const symbolsRegex = '/[~!@#$%^&*()_+|<>?:{}]/'
+        // if (!name.match(symbolsRegex)){
+        //   this.$alertModal('error','이름에는 특수기호가 들어갈 수 없습니다')
+        //   return false
+        // }
+        if (email == null || email == '') {
+          this.$alertModal('error', '이메일을 입력해주세요')
+          return false
+        }
+        if (name == null || name == '') {
+          this.$alertModal('error', '이름을 입력해주세요')
+          return false
+        }
+        if (name.length > 20){
+          this.$alertModal('error', '이름이 너무 깁니다.')
+          return false
+        }
+        if (phone == null || phone == '') {
+          this.$alertModal('error', '핸드폰 번호를 입력해주세요')
+          return false
+        }
+        if (!phone.match(phoneRegex)){
+          this.$alertModal('error','핸드폰 번호가 형식에 맞지 않습니다')
+          return false
+        }
+        return true
+      }
     }
   }
 </script>

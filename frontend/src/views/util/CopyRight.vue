@@ -5,7 +5,7 @@
       <b-card>
         <span>link :</span>
         <b-link href="https://github.com/daneden/animate.css" style="color: blue;">
-          https://github.com/daneden/animate.css
+          https://github.com/animate-css/animate.css
         </b-link>
         <p class="card-text">
           The MIT License (MIT)
