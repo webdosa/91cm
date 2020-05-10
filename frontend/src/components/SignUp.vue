@@ -14,7 +14,7 @@
                   <label v-if="!user.email">가입할 이메일을 입력해주세요</label>
                   <b-input v-if="!user.email" type="text" name="email" v-model="email" placeholder="이메일"></b-input>
                   <label>91cm에서 사용할 이름을 입력해주세요</label>
-                  <b-input type="text" name="name" v-model="user.name" placeholder="이름"></b-input>
+                  <b-input type="text" name="name" v-model="user.name" placeholder="이름" @keyup="symbolsFormatter"></b-input>
                   <label>업무에 사용하는 핸드폰 번호를 입력해주세요</label>
                   <b-input type="text" name="phone" v-model="user.phone" placeholder="핸드폰 번호"
                            @keyup="phoneFormatter" ref="phoneNum"></b-input>
@@ -45,6 +45,9 @@
       this.getUser()
     },
     methods: {
+      symbolsFormatter: function(){
+        this.user.name = this.user.name.replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi, "")
+      },
       phoneFormatter: function () {
         this.user.phone = this.user.phone.replace(/[^0-9]/g, "") // 숫자만 추출 되도록하는 정규식
         this.user.phone = this.user.phone.replace(/(^02.{0}|^01.{1}|[0-9]{4})([0-9]+)([0-9]{4})/, "$1-$2-$3");// 휴대폰번호 자동 하이픈 넣어주는 정규식
@@ -79,12 +82,21 @@
       },
       valueCheck: function (email, name, phone) {
         const phoneRegex = '^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$'
+        // const symbolsRegex = '/[~!@#$%^&*()_+|<>?:{}]/'
+        // if (!name.match(symbolsRegex)){
+        //   this.$alertModal('error','이름에는 특수기호가 들어갈 수 없습니다')
+        //   return false
+        // }
         if (email == null || email == '') {
           this.$alertModal('error', '이메일을 입력해주세요')
           return false
         }
         if (name == null || name == '') {
           this.$alertModal('error', '이름을 입력해주세요')
+          return false
+        }
+        if (name.length > 20){
+          this.$alertModal('error', '이름이 너무 깁니다.')
           return false
         }
         if (phone == null || phone == '') {

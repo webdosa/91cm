@@ -12,7 +12,7 @@ import "@/assets/css/app.scss"
 import './assets/css/main.css'
 import AlertModal from "./plugins/AlertModal";
 import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
-
+import 'animate.css'
 
 Date.prototype.addDays = function (days) {
   var date = new Date(this.valueOf());

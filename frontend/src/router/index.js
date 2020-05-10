@@ -10,6 +10,7 @@ import FormSignUp from "../views/FormSignUp";
 import Todolist from '../views/todolist/TodoList'
 import About from "../views/About";
 import Calendar from "../views/calendar/Calendar";
+import DevelopView from "../views/util/DevelopView";
 
 Vue.use(VueRouter)
 
@@ -62,6 +63,11 @@ const routes = [
   {
     path: '/todo',
     component: Todolist
+  },
+  {
+    path: '/develop',
+    component: DevelopView
+
   }
 
 ]
