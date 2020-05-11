@@ -117,9 +117,9 @@
       },
       shakeAnimation: function(){
         const element = this.$refs.bell;
-        element.classList.add('animated','shake');
+        element.classList.add('animate__animated','animate__swing');
         element.addEventListener('animationend',()=>{
-          element.classList.remove('animated','shake')
+          element.classList.remove('animate__animated','animate__swing')
         });
       },
       inviteAccept: function (alarm, index) {

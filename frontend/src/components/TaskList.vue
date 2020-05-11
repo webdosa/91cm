@@ -24,7 +24,6 @@
       <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus
                     @keydown.enter.exact="setTaskListName"></b-form-input>
     </div>
-
     <div style="height: 100%;overflow-y: auto;">
     <b-list-group style="width: 100%; padding: 10px;"> <!-- 임시로 정해주 높이 값 정확한 반응형 높이가 아님 -->
       <b-list-group-item v-if="create" style="padding: 10px;">
@@ -93,7 +92,7 @@
         this.taskList.tasks.forEach(task => {
           task.position = this.taskList.tasks.indexOf(task)
         })
-      }
+      },
     },
     components: {
       TaskEdit,
