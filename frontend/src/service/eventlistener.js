@@ -16,8 +16,6 @@ class EventListener{
                 store.commit('setFocus',true)
                 let isfocus = store.state.isfocus
                 AboutChannel.updateFocus(isfocus)
-                console.log('focus')
-                console.log(store.state.currentChannel)
                 if(store.state.currentChannel != null){
                     instance.msgCountUpdate(store.state.currentChannel.id,false)
                 }

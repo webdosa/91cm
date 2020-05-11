@@ -3,8 +3,7 @@ class NotificationClass {
 
     requestPermission () {
         Notification.requestPermission().then(function (result){
-            console.log(result)
-            return
+            return;
         })
     }
 
@@ -15,13 +14,13 @@ class NotificationClass {
                 body: data.user.name + ' : '+ contents
             }
             let notification = new Notification("91CM 메시지 도착", options);
-            
+
             notification.onclick = function(event) {
                 // 잘 모르겠음...ㅠ
                 // event.preventDefault() // prevent the browser from focusing the Notification's tab
                 // window.focus()
               }
-            
+
             //알림 후 4초 뒤,
             setTimeout(function () {
                 //얼람 메시지 닫기
