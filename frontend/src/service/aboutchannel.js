@@ -34,7 +34,6 @@ class AboutChannel{
     }
 
     updateSessionIsCW (bool) {
-      console.log(bool)
       axios.put("/api/channel/update/sessioniscw",
       {
         isContentWrapper: bool
