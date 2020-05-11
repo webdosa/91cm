@@ -1,6 +1,7 @@
 package com.nineone.nocm.controller.api;
 
 
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +77,11 @@ public class UserApiController {
         } else {
             return false;
         }
+    }
+    @RequestMapping(value = "/check", method = RequestMethod.POST)
+    public boolean emailChecker(@RequestBody User user){
+        log.info(user.getEmail());
+        return userService.emailCheck(user.getEmail());
     }
 
     @RequestMapping(value = "/channel/{channel_id}")

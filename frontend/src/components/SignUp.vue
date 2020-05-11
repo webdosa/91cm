@@ -67,17 +67,32 @@
           return;
         }
         let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
-        this.$http.post('/api/user/signup', JSON.stringify(this.user), {
+        this.$http.post('/api/user/check', JSON.stringify(this.user),{
           headers: {
-            'X-CSRF-TOKEN': csrfToken[2],
             'Content-Type': 'application/json'
           }
-        }).then(res => {
-          if (res.data) {
-            this.$router.replace('main')
-          } else {
-            this.$alertModal('error', '회원가입 실패')
-          }
+        })
+          .then(res=>{
+            console.log(res.data)
+            if (res.data){
+              this.$http.post('/api/user/signup', JSON.stringify(this.user), {
+                headers: {
+                  'X-CSRF-TOKEN': csrfToken[2],
+                  'Content-Type': 'application/json'
+                }
+              }).then(res => {
+                if (res.data) {
+                  this.$router.replace('main')
+                } else {
+                  this.$alertModal('error', '회원가입 실패')
+                }
+              })
+            }else {
+              this.user.email = null
+              this.$alertModal('error','해당 이메일은 이미 가입되어 있습니다.')
+            }
+        }).catch(error =>{
+          console.log(error)
         })
       },
       valueCheck: function (email, name, phone) {
@@ -87,6 +102,7 @@
         //   this.$alertModal('error','이름에는 특수기호가 들어갈 수 없습니다')
         //   return false
         // }
+
         if (email == null || email == '') {
           this.$alertModal('error', '이메일을 입력해주세요')
           return false
