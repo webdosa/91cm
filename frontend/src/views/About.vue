@@ -12,10 +12,13 @@
 <script>
 import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
+  import axios from "axios"
   export default {
     name: 'About',
     created(){
-      'use strict'
+      axios.get("/api/user/test/t2")
+
+      
       this.$store.state.stompClient = Stomp.over(new SockJS('http://localhost:9191/endpoint/'))
       this.$store.state.stompClient.connect({}, () => {
         this.$store.state.stompClient.subscribe("/sub/test", async (e) => {

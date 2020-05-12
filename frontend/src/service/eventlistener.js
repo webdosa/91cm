@@ -32,7 +32,7 @@ class EventListener{
 
     resizeEvt(){
         window.addEventListener('resize', function(){
-            store.commit('setSmallWidth',(window.innerWidth < 500) ? true : false)
+            store.commit('setSmallWidth',(window.innerWidth < 600) ? true : false)
         })
     }
 

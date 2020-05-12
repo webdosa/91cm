@@ -2,13 +2,14 @@ package com.nineone.nocm.controller.api;
 
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,4 +82,15 @@ public class UserApiController {
     	log.info("ddddddddddddddddddd");
     }
   
+    @RequestMapping("/test/t2")
+    public void testapi2() {
+    	Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	
+    	DefaultOAuth2User userDetails = (DefaultOAuth2User)principal; 
+    
+    	log.info(userDetails.getAttributes().toString());
+    	log.info(userDetails.getAuthorities().toString());
+    
+
+    }
 }

@@ -14,7 +14,7 @@
         <div v-else>
           <!--          추후에 깔금한 방식으로 변경-->
           <ChannelHeader
-            v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit'"></ChannelHeader>
+            v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit' && $store.state.selectComponent!='admin'"></ChannelHeader>
           <keep-alive>
             <component :is="whichComponent"
                        :msgArray="msgArray"
@@ -46,6 +46,7 @@
   import SockJS from "sockjs-client";
   import TodoList from '../views/todolist/TodoList'
   import Calendar from "../views/calendar/Calendar";
+  import AdminPage from "../views/admin/AdminPage"
   
   export default {
     name: 'Main',
@@ -60,7 +61,8 @@
       'NoChannel': NoChannel,
       'Loading': Loading,
       'TodoList': TodoList,
-      'Calendar': Calendar
+      'Calendar': Calendar,
+      'AdminPage': AdminPage
     },
     data() {
       return {
@@ -86,6 +88,8 @@
             return 'TodoList'
           case 'calendar':
             return 'Calendar'
+          case 'admin':
+            return 'AdminPage'
           default:
             return 'ContentWrapper'
         }
@@ -112,7 +116,7 @@
       EventListener.focusEvt(this)
       EventListener.blurEvt()
       NotificationClass.requestPermission()
-      this.$store.commit('setSmallWidth',(window.innerWidth < 500) ? true : false)
+      this.$store.commit('setSmallWidth',(window.innerWidth < 600) ? true : false)
     },
     updated() {
     },
