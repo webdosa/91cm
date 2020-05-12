@@ -10,6 +10,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@mdi/js": "^5.1.45",
     "axios": "^0.19.2",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.4.1",
@@ -28,6 +29,7 @@
     "vue-swatches": "^2.0.1",
     "vue2-datepicker": "^3.4.1",
     "vuedraggable": "^2.23.2",
+    "vuetify": "^2.2.27",
     "vuex": "^3.2.0",
     "webstomp-client": "^1.2.6"
   },

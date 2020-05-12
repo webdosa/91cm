@@ -12,6 +12,8 @@ import "@/assets/css/app.scss"
 import './assets/css/main.css'
 import AlertModal from "./plugins/AlertModal";
 import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
+import vuetify from "vuetify";
+import "vuetify/dist/vuetify.min.css"
 
 
 Date.prototype.addDays = function (days) {
@@ -25,8 +27,14 @@ Vue.prototype.$eventBus = new Vue();
 Vue.prototype.$http = axios
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false
+Vue.use(vuetify);
 
 new Vue({
+  vuetify: new vuetify({
+    icons: {
+      iconfont: "mdiSvg"
+    }
+  }),
   router,
   store,
   render: h => h(App)

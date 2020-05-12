@@ -1,8 +1,8 @@
 <template>
   <header>
     <b-navbar toggleable="lg" type="light" variant="white">
-      <i v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
-      <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
+      <i style="display: flex;" v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
+      <i style="display: flex;" v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align dropwonInvite" variant="nonoutline" :disabled="getAlarmList.length <= 0">
@@ -49,9 +49,10 @@
                  width="40" height="40">
             <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
           </template>
-          <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
+          <b-dropdown-item @click="callComponent('user')">Profile</b-dropdown-item>
           <b-dropdown-item @click="showModal('copyRight-modal')">Opensource license</b-dropdown-item>
           <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
+          <b-dropdown-item @click="callComponent('admin')">Permission</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-navbar>
@@ -164,8 +165,9 @@
           })
       }
       ,
-      callComponent: function () {
-        this.$store.commit('getSelectComponent', 'user')
+      callComponent: function (component) {
+        console.log(component)
+        this.$store.commit('getSelectComponent', component)
       }
       ,
       LSidebarToggle: function () {
