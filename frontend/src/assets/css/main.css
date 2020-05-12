@@ -513,7 +513,7 @@ ul.CTAs a {
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     #sidebar {
      margin-left: -100%;
      width: 100%;
