@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import Vue from 'vue'
 export default {
   // 현재 채널의 모든 taskList 가져오기
   updateTaskBoard: function(context){
@@ -33,6 +33,9 @@ export default {
     await axios.get('/api/user/info')
       .then(res => {
         context.commit('setCurrentUser', res.data)
+      }).catch(error=>{
+        alert('회원가입 수락을 기다리고 있습니다.')
+        context.commit('setCurrentUser', 'none')
       })
   },
   resetCurrentUser: function (context) {

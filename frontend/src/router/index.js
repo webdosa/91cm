@@ -39,10 +39,15 @@ const routes = [
     component: Main,
     beforeEnter: async function (to, from, next) {
       await store.dispatch('initCurrentUser')
-      if (store.state.currentUser.phone != null) {
+      console.log(store.state.currentUser)
+      if (store.state.currentUser == 'none') {
+        next('/')
+      } else if (store.state.currentUser.phone == null) {
+        next('/signup')
+      } else if (store.state.currentUser.phone != null) {
         next()
       } else {
-        next('/signup')
+        next('/')
       }
     }
   },

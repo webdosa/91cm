@@ -97,6 +97,12 @@ foreign key (member_email) references member(email) on update cascade
 );
 
 
+
+insert roles (authority, description) values ('ROLE_RESTRICTED', '제한된 사용자');
+insert roles (authority, description) values ('ROLE_USER', '일반 사용자');
+insert roles (authority, description) values ('ROLE_ADMIN', '관리자');
+
+
 delimiter $$
 drop procedure if exists testUser $$
 create procedure testUser()

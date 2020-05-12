@@ -7,7 +7,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.nineone.nocm.domain.Authorities;
+import com.nineone.nocm.domain.enums.Role;
+import com.nineone.nocm.repository.UserAuthoritiesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -33,6 +38,8 @@ public class UserApiController {
     private SimpMessageSendingOperations messagingTemplate;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserAuthoritiesRepository authoritiesRepository;
 
     @RequestMapping("/list")
     public List<User> userList() {
@@ -59,19 +66,23 @@ public class UserApiController {
     }
 
     @RequestMapping(value = "/getsession")
-    public User test(@Socialuser User user) {
+    public User getSessionUser(@Socialuser User user) {
         return user;
     }
 
     @RequestMapping(value = "/info")
-    public User userInfo(@Socialuser User user) {
-        return user;
+    public ResponseEntity<?> userInfo(@Socialuser User user) {
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public boolean signup(@RequestBody User user, Authentication authentication, HttpSession httpsession) {
         DefaultOAuth2User oauth2user = (DefaultOAuth2User) authentication.getPrincipal();
         if (userService.insertUser(user, oauth2user, httpsession)) {
+            authoritiesRepository.insertAuthority(Authorities.builder()
+                    .member_email(user.getEmail())
+                    .roles_authority("ROLE_ANON")
+                    .build());
             messagingTemplate.convertAndSend("/sub/sync/info", "userList");
             return true;
         } else {
