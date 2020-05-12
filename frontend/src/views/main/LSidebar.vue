@@ -120,7 +120,7 @@
         this.$store.state.isLActive = !this.$store.state.isLActive
       },
       sendSelectChannel: function (index) {
-        if(window.innerWidth<500){
+        if(window.innerWidth<600){
           this.LSidebarToggle()
         }
         this.$store.commit('getSelectComponent', 'main')

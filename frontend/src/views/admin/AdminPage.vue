@@ -98,9 +98,9 @@ export default {
             sortable: false,
             value: "number"
             },
-            { text: "이름", value: "name" },
-            { text: "이메일", value: "email" },
-            { text: "권한", value: "authorities" },
+            { text: "이름", value: "name",sortable: false },
+            { text: "이메일", value: "email" ,sortable: false},
+            { text: "권한", value: "authorities" ,sortable: false},
             { text: "Actions", value: "actions", sortable: false }
         ],
         desserts: [
