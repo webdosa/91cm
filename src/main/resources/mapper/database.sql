@@ -125,3 +125,5 @@ delete from message;
 delete from file;
 delete from task;
 delete from tasklist;
+delete from authorities;
+delete from roles;
