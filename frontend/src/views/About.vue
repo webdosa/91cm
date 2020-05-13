@@ -1,16 +1,28 @@
 <template>
   <div>
-    <b-button @click="test">test</b-button>
-    <br><br><br><br><br><br><br><br>
-<!--    <b-dropdown variant="nonoutline" dropup no-flip ref="ott">-->
-<!--      <b-dropdown-item-button v-for="item in users" @click="alertsBtn">{{item}}</b-dropdown-item-button>-->
-<!--    </b-dropdown>-->
-    <b-list-group>
-      <b-list-group-item button></b-list-group-item>
-    </b-list-group>
-    <b-form-textarea @keydown.shift.50="test"
-      placeholder="Enter chat message"
-    ></b-form-textarea>
+      <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
+              <label for="file-input" style="display: block;margin-bottom: 0;">
+                <i class="im im-cloud-upload myfile-upload"></i>
+              </label>
+              <input id="file-input" type="file" ref="fileInput" multiple @change="attachFile" hidden/>
+              <label for="invite" style="display: block;margin-bottom: 0;">
+                <i class="im im-users myfile-upload" style="margin-right: 4.3vh;"></i>
+              </label>
+              <b-button id="invite" type="file" ref="fileInput" @click="inviteToggle" hidden/>
+              <b-form-textarea
+                class="mytextarea"
+                autofocus
+                id="textarea-no-resize"
+                placeholder="Enter chat message"
+                rows="2"
+                no-resize
+                v-model="message.content"
+                @keydown.ctrl.shift.70="toggleSearchMode"
+                @keydown.enter.exact="send"
+                @keyup="byteCheck"
+                @keydown.shift.alt.50='inviteToggle'
+              ></b-form-textarea>
+            </div>
   </div>
 </template>
 
