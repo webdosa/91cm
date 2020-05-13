@@ -1,3 +1,7 @@
+.list-inline, .list-unstyled{
+    padding-left: 0 !important;
+    list-style: none;
+}
 .b-dropdown-text{
     padding: 0
   }
@@ -355,6 +359,7 @@ a:focus {
     display: flex;
     text-decoration: none;
     width: 17px;
+    color: white !important;
 }
 .wrapper {
     display: flex;
@@ -369,7 +374,7 @@ a:focus {
     height: 100vh;
     z-index: 999;
     background: #7386D5;
-    color: #fff;
+    color: #fff !important;
     transition: all 0.3s;
 }
 
@@ -393,7 +398,7 @@ a:focus {
 }
 
 #sidebar ul .menulist-header {
-    color: #fff;
+    color: #fff !important;
     margin: 0px;
     padding: 20px 15px 0px 10px;
     font-weight: bold;
@@ -406,10 +411,11 @@ a:focus {
     padding: 10px;
     font-size: 15px;
     display: flex;
+    color: #fff !important;
 }
 
 #sidebar ul li a:hover {
-    color: #7386D5;
+    color: #7386D5 !important;
     background: #fff;
 }
 

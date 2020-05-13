@@ -25,7 +25,7 @@
           <div>
             <div style="display:flex;">
               <p>Channel Name</p>
-                <a class="verti-align" data-mode="edit" @click="useModal('edit')">Edit</a>
+                <a class="verti-align" style="color: #007bff;" data-mode="edit" @click="useModal('edit')">Edit</a>
             </div>
             <li class="list-unstyled">{{ $store.state.currentChannel.name }}</li>
           </div>
