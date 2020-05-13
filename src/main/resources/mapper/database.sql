@@ -95,6 +95,27 @@ title varchar(45),
 foreign key (tasklist_id) references tasklist(id) on delete cascade on update cascade,
 foreign key (member_email) references member(email) on update cascade
 );
+create table roles (
+authority varchar(50) not null primary key,
+description varchar(100)
+);
+
+create table authorities (
+member_email varchar(100) not null,
+roles_authority varchar(50) not null,
+primary key(member_email,roles_authority),
+foreign key (member_email) references member(email) on delete cascade on update cascade,
+foreign key (roles_authority) references roles(authority) on delete cascade on update cascade
+);
+
+create table permission (
+id int unsigned  primary key auto_increment not null,
+member_email varchar(100) not null,
+roles_authority varchar(50) not null,
+state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ) default 'STAND_BY',
+foreign key (member_email) references member(email) on delete cascade on update cascade,
+foreign key (roles_authority) references roles(authority)on delete cascade on update cascade
+);
 
 
 
@@ -126,4 +147,3 @@ delete from file;
 delete from task;
 delete from tasklist;
 delete from authorities;
-delete from roles;

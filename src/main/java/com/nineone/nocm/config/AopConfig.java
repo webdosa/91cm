@@ -54,18 +54,22 @@ public class AopConfig {
     public Object CheckUserRole(ProceedingJoinPoint joinPoint) throws Throwable{
         User user = (User)joinPoint.getArgs()[0];
         user.setRoles(authoritiesRepository.getUserRoles(user.getEmail()));
-        for (String role : user.getRoles()){
-            if (role.equals("ROLE_ADMIN")){
-                return joinPoint.proceed();
-            }
-            if (role.equals("ROLE_USER")){
-                return joinPoint.proceed();
-            }
+        for (String str : user.getRoles()){
+            log.info("user :"+user.getName()+" role : "+str);
         }
-        if (user.getPhone()== null){
-            return joinPoint.proceed();
-        }
-        return new ResponseEntity<>("{}",HttpStatus.BAD_REQUEST);
+        return joinPoint.proceed();
+//        if (user.getRoles().isEmpty()){
+//            return joinPoint.proceed();
+//        }
+//        for (String role : user.getRoles()){
+//            if (role.equals("ROLE_ADMIN")){
+//                return joinPoint.proceed();
+//            }
+//            if (role.equals("ROLE_USER")){
+//                return joinPoint.proceed();
+//            }
+//        }
+//        return new ResponseEntity<>("{}",HttpStatus.BAD_REQUEST);
 
 //        if (user.getName().equals("원주민")){
 //            return joinPoint.proceed();

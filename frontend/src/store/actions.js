@@ -34,7 +34,6 @@ export default {
       .then(res => {
         context.commit('setCurrentUser', res.data)
       }).catch(error=>{
-        alert('회원가입 수락을 기다리고 있습니다.')
         context.commit('setCurrentUser', 'none')
       })
   },

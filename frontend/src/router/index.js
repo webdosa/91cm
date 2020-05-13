@@ -18,7 +18,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    props: true
   },
   {
     path: '/about',
@@ -40,15 +41,30 @@ const routes = [
     beforeEnter: async function (to, from, next) {
       await store.dispatch('initCurrentUser')
       console.log(store.state.currentUser)
-      if (store.state.currentUser == 'none') {
-        next('/')
-      } else if (store.state.currentUser.phone == null) {
+      console.log(store.state.currentUser.roles)
+      if (store.state.currentUser.roles.length == 0) {
         next('/signup')
+      } else if (store.state.currentUser.roles.length == 1
+        && store.state.currentUser.roles.includes('ROLE_ANON')) {
+        next({
+          path: '/',
+          query: { msg : {
+              show: true,
+              message: '가입 수락을 기다리는 중 입니다.'
+            } }
+        })
       } else if (store.state.currentUser.phone != null) {
         next()
-      } else {
-        next('/')
       }
+      // if (store.state.currentUser == 'none') {
+      //   next('/')
+      // } else if (store.state.currentUser.phone == null) {
+      //   next('/signup')
+      // } else if (store.state.currentUser.phone != null) {
+      //   next()
+      // } else {
+      //   next('/')
+      // }
     }
   },
   {

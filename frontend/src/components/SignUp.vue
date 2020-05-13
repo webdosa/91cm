@@ -14,7 +14,8 @@
                   <label v-if="!user.email">가입할 이메일을 입력해주세요</label>
                   <b-input v-if="!user.email" type="text" name="email" v-model="email" placeholder="이메일"></b-input>
                   <label>91cm에서 사용할 이름을 입력해주세요</label>
-                  <b-input type="text" name="name" v-model="user.name" placeholder="이름" @keyup="symbolsFormatter"></b-input>
+                  <b-input type="text" name="name" v-model="user.name" placeholder="이름"
+                           @keyup="symbolsFormatter"></b-input>
                   <label>업무에 사용하는 핸드폰 번호를 입력해주세요</label>
                   <b-input type="text" name="phone" v-model="user.phone" placeholder="핸드폰 번호"
                            @keyup="phoneFormatter" ref="phoneNum"></b-input>
@@ -29,6 +30,8 @@
   </div>
 </template>
 <script>
+  import Home from "./Home";
+
   export default {
     name: 'SignUp',
     data() {
@@ -45,7 +48,7 @@
       this.getUser()
     },
     methods: {
-      symbolsFormatter: function(){
+      symbolsFormatter: function () {
         this.user.name = this.user.name.replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi, "")
       },
       phoneFormatter: function () {
@@ -67,14 +70,13 @@
           return;
         }
         let csrfToken = document.cookie.match('(^|;) ?' + 'XSRF-TOKEN' + '=([^;]*)(;|$)')
-        this.$http.post('/api/user/check', JSON.stringify(this.user),{
+        this.$http.post('/api/user/check', JSON.stringify(this.user), {
           headers: {
             'Content-Type': 'application/json'
           }
         })
-          .then(res=>{
-            console.log(res.data)
-            if (res.data){
+          .then(res => {
+            if (res.data) {
               this.$http.post('/api/user/signup', JSON.stringify(this.user), {
                 headers: {
                   'X-CSRF-TOKEN': csrfToken[2],
@@ -82,16 +84,24 @@
                 }
               }).then(res => {
                 if (res.data) {
-                  this.$router.replace('main')
+                  this.$router.replace({
+                    name: 'Home',
+                    params: {
+                      msg: {
+                        show: true,
+                        message: '가입을 요청하였습니다.'
+                      }
+                    }
+                  })
                 } else {
                   this.$alertModal('error', '회원가입 실패')
                 }
               })
-            }else {
+            } else {
               this.user.email = null
-              this.$alertModal('error','해당 이메일은 이미 가입되어 있습니다.')
+              this.$alertModal('error', '해당 이메일은 이미 가입되어 있습니다.')
             }
-        }).catch(error =>{
+          }).catch(error => {
           console.log(error)
         })
       },
@@ -111,7 +121,7 @@
           this.$alertModal('error', '이름을 입력해주세요')
           return false
         }
-        if (name.length > 20){
+        if (name.length > 20) {
           this.$alertModal('error', '이름이 너무 깁니다.')
           return false
         }
@@ -119,11 +129,11 @@
           this.$alertModal('error', '핸드폰 번호를 입력해주세요')
           return false
         }
-        if (!phone.match(phoneRegex)){
-          this.$alertModal('error','핸드폰 번호가 형식에 맞지 않습니다')
+        if (!phone.match(phoneRegex)) {
+          this.$alertModal('error', '핸드폰 번호가 형식에 맞지 않습니다')
           return false
         }
-          return true
+        return true
       }
     }
   }
