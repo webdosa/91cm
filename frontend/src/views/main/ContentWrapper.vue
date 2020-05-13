@@ -249,10 +249,8 @@
               recipient: userEmail
             }
             console.log(this.$store.state.currentUser)
-            this.$http.post('/api/invite/mail', JSON.stringify(invite), {
-              headers: {
-                'Content-Type': 'application/json'
-              }
+            this.$http.post('/api/invite/mail', invite).then(res=>{
+              console.log(res.data)
             })
             this.message.content = userName + '님을 초대했습니다.'
             this.$eventBus.$emit('getUserList', true)
