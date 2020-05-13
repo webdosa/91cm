@@ -15,6 +15,12 @@ public class ChannelRepositoryImpl implements ChannelRepository{
     private SqlSessionTemplate sqlSession;
 
     private String namespace = "com.nineone.nocm.mapper.channel";
+
+    @Override
+    public Channel getChannel(int id) {
+        return sqlSession.selectOne(namespace+ ".getChannel",id);
+    }
+
     @Override
     public int insertChannel(Channel channel) {
         return sqlSession.insert(namespace + ".insertChannel",channel);
@@ -49,6 +55,7 @@ public class ChannelRepositoryImpl implements ChannelRepository{
     public Channel getCurrentChannel(Channel channel) {
         return sqlSession.selectOne(namespace + ".getCurrentChannel", channel);
     }
+
 
 
 }

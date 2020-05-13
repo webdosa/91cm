@@ -52,7 +52,7 @@
           <b-dropdown-item @click="callComponent('user')">Profile</b-dropdown-item>
           <b-dropdown-item @click="showModal('copyRight-modal')">Opensource license</b-dropdown-item>
           <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
-          <b-dropdown-item @click="callComponent('admin')">Permission</b-dropdown-item>
+          <b-dropdown-item v-if="getUserRoles" @click="callComponent('admin')">Permission</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-navbar>
@@ -86,9 +86,13 @@
     //   }
     // },
     computed: {
-      // ...mapGetters({
-      //   StompClient: 'getStompClient'
-      // }),
+      getUserRoles: function(){
+        if (this.$store.state.currentUser.roles.includes('ROLE_ADMIN')){
+          return true;
+        }else{
+          return false;
+        }
+      },
       getAlarmList: function () {
         while (this.alarmList.length > 5) {
           this.alarmList.pop()
@@ -146,7 +150,7 @@
                 this.$store.commit('setCurrentChannel', joinChannel)
                 this.$emit('channelUpdate')
               }).catch(err => console.error(err))
-            
+
           })
           .catch(error => {
             console.error(error)

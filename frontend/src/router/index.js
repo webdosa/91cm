@@ -56,15 +56,6 @@ const routes = [
       } else if (store.state.currentUser.phone != null) {
         next()
       }
-      // if (store.state.currentUser == 'none') {
-      //   next('/')
-      // } else if (store.state.currentUser.phone == null) {
-      //   next('/signup')
-      // } else if (store.state.currentUser.phone != null) {
-      //   next()
-      // } else {
-      //   next('/')
-      // }
     }
   },
   {

@@ -30,7 +30,7 @@ Vue.use(BootstrapVue)
 Vue.config.productionTip = false
 
 new Vue({
-  vuetify: new vuetify({
+  vuetify: new Vuetify({
     icons: {
       iconfont: "mdiSvg"
     }

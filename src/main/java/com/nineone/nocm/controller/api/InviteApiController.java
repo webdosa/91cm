@@ -1,14 +1,14 @@
 package com.nineone.nocm.controller.api;
 
 import com.nineone.nocm.annotation.Socialuser;
-import com.nineone.nocm.domain.ApiResponse;
-import com.nineone.nocm.domain.Invite;
-import com.nineone.nocm.domain.JoinInfo;
-import com.nineone.nocm.domain.User;
+import com.nineone.nocm.domain.*;
 import com.nineone.nocm.domain.enums.InviteState;
+import com.nineone.nocm.repository.ChannelRepository;
+import com.nineone.nocm.repository.UserRepository;
 import com.nineone.nocm.service.ChannelService;
 import com.nineone.nocm.service.InviteService;
 import com.nineone.nocm.service.JoinInfoService;
+import com.nineone.nocm.util.GoogleMailSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,15 +30,20 @@ public class InviteApiController {
     private JoinInfoService joinInfoService;
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
-
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private GoogleMailSender googleMailSender;
+    @Autowired
+    private ChannelRepository channelRepository;
 
     // map에 필요한 정보 생성자 정보 (권한 확인용)
     // 채널 정보, 초대자 정보(유저 id)
     @PostMapping
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> inviteUser(@RequestBody Invite invite, Exception e) {
+    public ResponseEntity<?> inviteUser(@RequestBody Invite invite) {
         try {
             if (joinInfoService.isExistUser(invite)) {
                 return new ResponseEntity<>(ApiResponse.builder().error("405")
@@ -65,12 +70,26 @@ public class InviteApiController {
         }
     }
 
+    @PostMapping("/mail")
+    public ResponseEntity<?> sendInviteMail(@RequestBody Invite invite) throws RuntimeException {
+        log.info(invite.getSender());
+        log.info(invite.getChannel_id()+"");
+        User user = userRepository.getUserfindByEmail(invite.getSender());
+        Channel inviteChannel = channelRepository.getChannel(invite.getChannel_id());
+        log.info(user.getEmail());
+        log.info(inviteChannel.getName());
+        googleMailSender.MailSend(user.getName() + "님이 " + inviteChannel.getName() + " 채널로 초대하였습니다."
+                , invite.getRecipient(), user.getName() + "님이 " + inviteChannel.getName() + " 채널로 초대하였습니다." +
+                        "\n이동 : http://91cm.nineonesoft.com:9191/");
+        return new ResponseEntity<>("{}",HttpStatus.OK);
+    }
+
     @PostMapping("/accept")
     public ResponseEntity<?> acceptUser(@RequestBody Invite invite) throws RuntimeException {
-        if (joinInfoService.isExistUser(invite)){
+        if (joinInfoService.isExistUser(invite)) {
             invite.setInvite_state(InviteState.ACCEPT);
             inviteService.updateInvite(invite);
-            return new ResponseEntity<>("{}",HttpStatus.OK);
+            return new ResponseEntity<>("{}", HttpStatus.OK);
         }
         joinInfoService.insertJoinInfo(JoinInfo.builder()
                 .channel_id(invite.getChannel_id())
@@ -80,15 +99,17 @@ public class InviteApiController {
         inviteService.updateInvite(invite);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
+
     @PostMapping("/refuse")
-    public ResponseEntity<?> refuseUser(@RequestBody Invite invite) throws RuntimeException{
+    public ResponseEntity<?> refuseUser(@RequestBody Invite invite) throws RuntimeException {
         // 거절 내용을 채널에 보내는 로직을 구현해야함
         invite.setInvite_state(InviteState.REFUSE);
         inviteService.updateInvite(invite);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
+
     @GetMapping("/list")
-    public List<Invite> getInviteList(@Socialuser User user) throws RuntimeException{
+    public List<Invite> getInviteList(@Socialuser User user) throws RuntimeException {
         return inviteService.getInviteList(user.getEmail());
     }
 }
