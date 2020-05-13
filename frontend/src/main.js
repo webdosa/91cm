@@ -30,6 +30,11 @@ Vue.use(BootstrapVue)
 Vue.config.productionTip = false
 
 new Vue({
+  vuetify: new vuetify({
+    icons: {
+      iconfont: "mdiSvg"
+    }
+  }),
   router,
   store,
   render: h => h(App)

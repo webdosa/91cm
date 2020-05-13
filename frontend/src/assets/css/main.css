@@ -1,3 +1,14 @@
+.b-dropdown-text{
+    padding: 0
+  }
+
+.dropwonInvite .dropdown-menu-right{
+    padding-top:0;
+    padding-bottom:0;
+    max-height: 300px;
+    overflow: auto;
+}
+
 .td-dd-wrapper .dropdown .btn{
     padding:0
 }
@@ -502,7 +513,7 @@ ul.CTAs a {
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     #sidebar {
      margin-left: -100%;
      width: 100%;

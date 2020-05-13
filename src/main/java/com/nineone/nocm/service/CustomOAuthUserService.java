@@ -1,9 +1,11 @@
 package com.nineone.nocm.service;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -13,7 +15,6 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.nineone.nocm.domain.LastAccess;
 import com.nineone.nocm.domain.User;
 import com.nineone.nocm.oauth.OAuthAttributes;
 import com.nineone.nocm.repository.UserRepository;
@@ -42,11 +43,11 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         OAuthAttributes attributes = OAuthAttributes.Of(registrationId, userNameAttributeName,
                 oAuth2User.getAttributes());
         User user = saveOrUpdate(attributes);
-        LastAccess lastAccess = setLastAccess();
-        httpSession.setAttribute("lastAccess", lastAccess);
         httpSession.setAttribute("user", user);
+        List<GrantedAuthority> list = new ArrayList<>();
+        list.add(new SimpleGrantedAuthority("ROLE_USER"));
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("USER")),
+                list,
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey());
     }
@@ -66,9 +67,4 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         return user;
     }
     
-    private LastAccess setLastAccess() {
-    	LastAccess lastAccess = LastAccess.builder()
-    			.currentChannelId(0).isContentWrapper(true).isFocus(true).build();
-    	return lastAccess;
-    }
 }

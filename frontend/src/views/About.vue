@@ -17,6 +17,7 @@
 <script>
 import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
+  import axios from "axios"
   export default {
     name: 'About',
     created(){

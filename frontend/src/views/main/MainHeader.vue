@@ -1,11 +1,11 @@
 <template>
   <header>
     <b-navbar toggleable="lg" type="light" variant="white">
-      <i v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
-      <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
+      <i style="display: flex;" v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
+      <i style="display: flex;" v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align" variant="nonoutline" :disabled="getAlarmList.length <= 0">
+        <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align dropwonInvite" variant="nonoutline" :disabled="getAlarmList.length <= 0">
           <template v-slot:button-content>
             <div style="position: relative;" ref="bell">
               <b-badge style="position: absolute; right: -5px;font-size: 10px;" variant="danger" v-show="getAlarmList.length > 0">
@@ -14,23 +14,25 @@
               <i class="im im-bell"></i>
             </div>
           </template>
-          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="width: 25vw;" :key="alarm"
-                           class="border">
+
+          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="min-width:10rem; border-bottom: 1px solid #dee2e6; padding-top: .5rem;" :key="alarm">
             <div>
-              <div class="row float-right">
-                <b-button class="float-right" id="esc" size="sm" variant="nonoutline"
-                          @click="getAlarmList.splice(index,1)"><i
-                  class="im im-x-mark"></i></b-button>
+              <div class="menulist-header-icon">
+                <b-button style="padding:0 .5rem 0 0; height: 16px;" id="esc" size="sm" variant="nonoutline" @click="getAlarmList.splice(index,1)">
+                  <i style="font-size:14px;" class="im im-x-mark"></i>
+                </b-button>
               </div>
-              <div class="row">
-                <p>{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
+              <div style="padding: .5rem;">
+                <p style="margin-bottom:0;">{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
               </div>
-              <div class="row float-right">
-                <b-button size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)"><i
+              <div class="menulist-header-icon">
+                <b-button style="padding: 0 0.5rem 0 0;" size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)">
+                  <i
                   class="im im-check-mark-circle"
                   style="color: #42b983;"></i>
                 </b-button>
-                <b-button size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)" style="padding-bottom: 0;"><i
+                <b-button style="padding: 0 0.5rem 0 0;" size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)" >
+                  <i
                   class="im im-x-mark-circle"
                   style="color: red;"></i>
                 </b-button>
@@ -47,9 +49,10 @@
                  width="40" height="40">
             <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
           </template>
-          <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
+          <b-dropdown-item @click="callComponent('user')">Profile</b-dropdown-item>
           <b-dropdown-item @click="showModal('copyRight-modal')">Opensource license</b-dropdown-item>
           <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
+          <b-dropdown-item @click="callComponent('admin')">Permission</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-navbar>
@@ -128,18 +131,22 @@
           user: this.$store.state.currentUser
         }
         this.$http.post('/api/invite/accept', alarm)
-          .then((res)=>{
+          .then( async(res)=>{
             // 현재 채널을 변경하는 로직을 구현해야할듯
             this.$store.state.stompClient.send('/pub/chat/message',JSON.stringify(message))
             this.alarmList.splice(index, 1);
             this.$store.state.stompClient.send('/pub/chat/room/' + alarm.channel_id,
               JSON.stringify({"message": "updateChannel", "error": "null"}))
-            AboutChannel.updateLastAccessDate(alarm.channel_id, null).then(async (res)=>{
-              await this.$store.dispatch('channelList')
-              const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
-              this.$store.commit('setCurrentChannel', joinChannel)
-              this.$emit('channelUpdate')
-            }).catch(err => console.error(err))
+              if(this.$store.state.currentChannel!=null){
+                await AboutChannel.updateLastAccessDate(this.$store.state.currentChannel.id)
+              }
+              AboutChannel.updateLastAccessDate(alarm.channel_id, null).then(async (res)=>{
+                await this.$store.dispatch('channelList')
+                const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
+                this.$store.commit('setCurrentChannel', joinChannel)
+                this.$emit('channelUpdate')
+              }).catch(err => console.error(err))
+            
           })
           .catch(error => {
             console.error(error)
@@ -158,8 +165,9 @@
           })
       }
       ,
-      callComponent: function () {
-        this.$store.commit('getSelectComponent', 'user')
+      callComponent: function (component) {
+        console.log(component)
+        this.$store.commit('getSelectComponent', component)
       }
       ,
       LSidebarToggle: function () {
