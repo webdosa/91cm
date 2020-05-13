@@ -71,7 +71,7 @@ public class InviteApiController {
     }
 
     @PostMapping("/mail")
-    public ResponseEntity<?> sendInviteMail(@RequestBody Invite invite) throws RuntimeException {
+    public boolean sendInviteMail(@RequestBody Invite invite) throws RuntimeException {
         log.info(invite.getSender());
         log.info(invite.getChannel_id()+"");
         User user = userRepository.getUserfindByEmail(invite.getSender());
@@ -80,7 +80,7 @@ public class InviteApiController {
         log.info(inviteChannel.getName());
         googleMailSender.MailSend(user.getName() + "님이 " + inviteChannel.getName() + " 채널로 초대하였습니다."
                 , invite.getRecipient(), user.getName() + "님이 " + inviteChannel.getName() + " 채널로 초대하였습니다.");
-        return new ResponseEntity<>("{}",HttpStatus.OK);
+        return true;
     }
 
     @PostMapping("/accept")
