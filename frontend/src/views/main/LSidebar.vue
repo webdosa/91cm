@@ -69,8 +69,10 @@
   export default {
     props: ['modalObj', 'msgCountObj'],
     watch: {
-      currentChannel(newCurrentChannel, oldCurrentChannle) {
+      currentChannel(newCurrentChannel, oldCurrentChannel) {
         this.updateUserList(newCurrentChannel)
+        console.log('oldCompo',this.$store.state.oldComponent)
+        console.log('currentc',this.$store.state.currentChannel)
       },
       syncChannelUser() {
         this.updateUserList(this.$store.state.currentChannel)
@@ -115,16 +117,18 @@
         this.$store.state.isLActive = !this.$store.state.isLActive
       },
       sendSelectChannel: function (index) {
-        if (window.innerWidth < 500) {
+        if(window.innerWidth<600){
           this.LSidebarToggle()
         }
         console.log("user select channel list index " + index)
         console.log("select channel info : "+this.$store.state.userChannelList[index].id)
         this.$store.commit('getSelectComponent', 'main')
-        this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[index])
-
-        console.log("current channel "+ this.$store.state.currentChannel.id)
-        this.$emit('sendTitle', this.$store.state.userChannelList[index])   // 나중에 변경
+        if (this.$store.state.oldComponent == 'main') {
+            AboutChannel.updateLastAccessDate(this.$store.state.userChannelList[index].id, this.$store.state.currentChannel.id)
+        }
+        this.$store.commit('setCurrentChannel',this.$store.state.userChannelList[index])
+        this.$store.state.currentChannel.count = 0
+        this.$store.state.isSearchMode = false
       },
       prepareModal: function (mode) {
         if (mode == 'create') {
@@ -184,7 +188,7 @@
         AboutChannel.createChannel(this.channelTitle, this.$store.state.currentUser.email)
           .then(async (res) => {
             //res.data = 새로 생성된 channel 인스턴스
-            if (this.$store.state.currentChannel != null) {
+            if(this.$store.state.currentChannel != null){
               AboutChannel.updateLastAccessDate(res.data.id, this.$store.state.currentChannel.id)
             }
             this.$store.commit('setCurrentChannel', res.data)

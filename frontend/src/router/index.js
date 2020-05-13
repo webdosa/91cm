@@ -18,7 +18,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    props: true
   },
   {
     path: '/about',
@@ -39,10 +40,21 @@ const routes = [
     component: Main,
     beforeEnter: async function (to, from, next) {
       await store.dispatch('initCurrentUser')
-      if (store.state.currentUser.phone != null) {
-        next()
-      } else {
+      console.log(store.state.currentUser)
+      console.log(store.state.currentUser.roles)
+      if (store.state.currentUser.roles.length == 0) {
         next('/signup')
+      } else if (store.state.currentUser.roles.length == 1
+        && store.state.currentUser.roles.includes('ROLE_ANON')) {
+        next({
+          path: '/',
+          query: { msg : {
+              show: true,
+              message: '가입 수락을 기다리는 중 입니다.'
+            } }
+        })
+      } else if (store.state.currentUser.phone != null) {
+        next()
       }
     }
   },

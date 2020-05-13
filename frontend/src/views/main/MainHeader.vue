@@ -1,8 +1,8 @@
 <template>
   <header>
     <b-navbar toggleable="lg" type="light" variant="white">
-      <i v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
-      <i v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
+      <i style="display: flex;" v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
+      <i style="display: flex;" v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align dropwonInvite" variant="nonoutline" :disabled="getAlarmList.length <= 0">
@@ -49,9 +49,10 @@
                  width="40" height="40">
             <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
           </template>
-          <b-dropdown-item @click="callComponent">Profile</b-dropdown-item>
+          <b-dropdown-item @click="callComponent('user')">Profile</b-dropdown-item>
           <b-dropdown-item @click="showModal('copyRight-modal')">Opensource license</b-dropdown-item>
           <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
+          <b-dropdown-item v-if="getUserRoles" @click="callComponent('admin')">Permission</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-navbar>
@@ -85,9 +86,13 @@
     //   }
     // },
     computed: {
-      // ...mapGetters({
-      //   StompClient: 'getStompClient'
-      // }),
+      getUserRoles: function(){
+        if (this.$store.state.currentUser.roles.includes('ROLE_ADMIN')){
+          return true;
+        }else{
+          return false;
+        }
+      },
       getAlarmList: function () {
         while (this.alarmList.length > 5) {
           this.alarmList.pop()
@@ -130,18 +135,22 @@
           user: this.$store.state.currentUser
         }
         this.$http.post('/api/invite/accept', alarm)
-          .then((res)=>{
+          .then( async(res)=>{
             // 현재 채널을 변경하는 로직을 구현해야할듯
             this.$store.state.stompClient.send('/pub/chat/message',JSON.stringify(message))
             this.alarmList.splice(index, 1);
             this.$store.state.stompClient.send('/pub/chat/room/' + alarm.channel_id,
               JSON.stringify({"message": "updateChannel", "error": "null"}))
-            AboutChannel.updateLastAccessDate(alarm.channel_id, null).then(async (res)=>{
-              await this.$store.dispatch('channelList')
-              const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
-              this.$store.commit('setCurrentChannel', joinChannel)
-              this.$emit('channelUpdate')
-            }).catch(err => console.error(err))
+              if(this.$store.state.currentChannel!=null){
+                await AboutChannel.updateLastAccessDate(this.$store.state.currentChannel.id)
+              }
+              AboutChannel.updateLastAccessDate(alarm.channel_id, null).then(async (res)=>{
+                await this.$store.dispatch('channelList')
+                const joinChannel = this.$store.state.userChannelList.find(channel => channel.id == alarm.channel_id)
+                this.$store.commit('setCurrentChannel', joinChannel)
+                this.$emit('channelUpdate')
+              }).catch(err => console.error(err))
+
           })
           .catch(error => {
             console.error(error)
@@ -160,8 +169,9 @@
           })
       }
       ,
-      callComponent: function () {
-        this.$store.commit('getSelectComponent', 'user')
+      callComponent: function (component) {
+        console.log(component)
+        this.$store.commit('getSelectComponent', component)
       }
       ,
       LSidebarToggle: function () {

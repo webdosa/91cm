@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nineone.nocm.mapper.authorities">
+    <select id="getUserAuthority" parameterType="java.lang.String" resultType="java.lang.String">
+        select roles.authority from authorities
+        join roles on roles.authority = authorities.roles_authority
+        where member_email = #{email};
+    </select>
+    <insert id="insertAuthority" parameterType="com.nineone.nocm.domain.Authorities">
+        insert authorities (member_email, roles_authority) values (#{member_email}, #{roles_authority})
+    </insert>
+    <delete id="deleteAllAuthority" parameterType="java.lang.String">
+        delete from authorities where member_email = #{email}
+    </delete>
+    <select id="getRoleUserList" resultType="java.util.HashMap">
+        select member.*,roles.authority from member
+        join authorities on member.email = authorities.member_email
+        join roles on roles.authority = authorities.roles_authority;
+    </select>
+</mapper>
