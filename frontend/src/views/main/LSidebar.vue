@@ -5,7 +5,7 @@
         <a @click="LSidebarToggle" v-if="$store.state.isSmallWidth">
           <i class="im im-x-mark" style="color:white;margin-bottom: 15px;"></i>
         </a>
-        </div>
+      </div>
       <a href="/main">
         <img style="width: 100%;" src="../../assets/images/nineone.png">
       </a>
@@ -22,7 +22,6 @@
           </div>
         </div>
         <li>
-
           <a v-b-toggle.collapse-1 class="dropdown-toggle">Channels</a>
           <b-collapse id="collapse-1" visible>
             <ul class="list-unstyled">
@@ -66,6 +65,7 @@
 <script>
   import AboutChannel from '../../service/aboutchannel'
   import {mapGetters} from "vuex";
+
   export default {
     props: ['modalObj', 'msgCountObj'],
     watch: {
@@ -74,7 +74,7 @@
         console.log('oldCompo',this.$store.state.oldComponent)
         console.log('currentc',this.$store.state.currentChannel)
       },
-      syncChannelUser(){
+      syncChannelUser() {
         this.updateUserList(this.$store.state.currentChannel)
       }
     },
@@ -99,23 +99,20 @@
       this.updateUserList(this.currentChannel)
     },
     mounted() {
-      this.$eventBus.$on('useModal', res =>{
+      this.$eventBus.$on('useModal', res => {
         this.prepareModal(res)
       })
     },
     updated() {
     },
     methods: {
-      updateUserList: function(currentChannel){
+      updateUserList: function (currentChannel) {
         this.$http.get('/api/user/channel/' + currentChannel.id)
           .then(res => {
             this.channelUsers = res.data
-            this.$store.commit('setChannelUsers',res.data)
+            this.$store.commit('setChannelUsers', res.data)
           })
       },
-      // widthCheck(){
-      //   this.isSamllWidth = (window.innerWidth < 500) ? true : false;
-      // },
       LSidebarToggle: function () {
         this.$store.state.isLActive = !this.$store.state.isLActive
       },
@@ -123,6 +120,8 @@
         if(window.innerWidth<600){
           this.LSidebarToggle()
         }
+        console.log("user select channel list index " + index)
+        console.log("select channel info : "+this.$store.state.userChannelList[index].id)
         this.$store.commit('getSelectComponent', 'main')
         if (this.$store.state.oldComponent == 'main') {
             AboutChannel.updateLastAccessDate(this.$store.state.userChannelList[index].id, this.$store.state.currentChannel.id)
@@ -134,7 +133,7 @@
       prepareModal: function (mode) {
         if (mode == 'create') {
           this.channelmode = '채널 생성'
-        } else if(mode == 'edit'){
+        } else if (mode == 'edit') {
           this.channelmode = '채널 수정'
           this.channelTitle = this.$store.state.currentChannel.name
         }
@@ -178,8 +177,8 @@
       updateChannel: function () {
         AboutChannel.updateChannelAPI(this.$store.state.currentChannel)
           .then(res => {
-            this.$store.state.stompClient.send("/sub/chat/room/"+this.$store.state.currentChannel.id,
-              JSON.stringify({'message':'updateCurrentChannel', 'error':"null"}))
+            this.$store.state.stompClient.send("/sub/chat/room/" + this.$store.state.currentChannel.id,
+              JSON.stringify({'message': 'updateCurrentChannel', 'error': "null"}))
           }).catch(error => {
           console.error(error)
         })
@@ -190,10 +189,9 @@
           .then(async (res) => {
             //res.data = 새로 생성된 channel 인스턴스
             if(this.$store.state.currentChannel != null){
-              console.log('create')
               AboutChannel.updateLastAccessDate(res.data.id, this.$store.state.currentChannel.id)
             }
-            this.$store.commit('setCurrentChannel',res.data)
+            this.$store.commit('setCurrentChannel', res.data)
             // 채널 생성 후 리스트를 업데이트 하는 부분
             await this.$store.dispatch('channelList')
             this.$emit('channelUpdate')

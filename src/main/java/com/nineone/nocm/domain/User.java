@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -18,14 +19,16 @@ public class User {
     private String phone;
     private String email;
     private String picture;
-
+    private List<String> roles;
 
     @Builder
-    public User(String name, String phone, String picture, String email, String password) {
+    public User(String name, String phone, String picture, String email, String password,
+                List<String> roles) {
         this.name = name;
         this.phone = phone;
         this.picture = picture; 
         this.email = email;
+        this.roles = roles;
         
     }
 

@@ -90,35 +90,13 @@
       }
     },
     methods: {
-      login: function () {
-        console.log(this.password)
-      //   let obj = {userid: this.userid,password: this.password}
-      //   axios.post('http://localhost:9191/api/user/backdoor', obj)
-      //     .then(res => {
-      //       console.log(res.data)
-      //       if(res.data){
-      //         router.replace('/main')
-      //       }
-      //     }).catch(error => {
-      //     console.error(error)
-      //   })
-      }
+
     },
     mounted() {
-      axios.get('/api/user/login')
-        .then(res => {
-          if (res.data) {
-            router.replace('/main')
-          }
-        }).catch(error => {
-        console.error(error)
-      })
     }
   }
 </script>
 <style scoped>
-  /* @import "~bootstrap/dist/css/bootstrap.min.css";
-  @import '~bootstrap-vue/dist/bootstrap-vue.min.css'; */
 
   .social-logo {
     width: 50px;
