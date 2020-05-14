@@ -1,8 +1,12 @@
 <template>
-  <div id="clock text">
-    <p class="date">{{date}}</p>
-    <p class="time">{{time}}</p>
-  </div>
+  <b-card style="max-width: 20rem;" class="mb-2">
+    <b-card-text>
+      <div id="clock text">
+        <p class="date">{{date}}</p>
+        <p class="time">{{time}}</p>
+      </div>
+    </b-card-text>
+  </b-card>
 </template>
 
 <script>
@@ -51,12 +55,12 @@ export default {
   }
   .time {
     letter-spacing: 0.05em;
-    font-size: 5vw;
+    font-size: 3.5vw;
     padding: 5px 0;
   }
   .date {
     letter-spacing: 0.1em;
-    font-size: 2vw;
+    font-size: 1.5vw;
   }
   .text {
     letter-spacing: 0.1em;

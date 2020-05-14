@@ -1,18 +1,21 @@
 <template>
-  <div style="padding: 15px 20px 0px 20px;" class="col-12 rounded-lg bg-light">
-    <div v-if="taskList.name != ''" style="margin-bottom: 10px;">
+  <div style="padding: 0px; height: 100%;display: flex; flex-direction: column;" class="col-12 rounded-lg bg-light">
+    <div v-if="taskList.name != ''" style="padding: 10px;">
       <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">
-        <div class="rounded-lg bg-secondary" style="height: 10vh; padding-top: 10px; padding-left: 10px;">
-          <span class="h3" style="color: white;" v-if="!edit" slot="header">{{taskList.name}}
-          <b-badge variant="nonoutline" @click="editToggle"><i class="im im-pencil"></i></b-badge>
-          <b-badge variant="nonoutline" @click="msgBox"><i class="im im-trash-can"></i></b-badge>
-        </span>
+        <div class="rounded-lg bg-secondary" style="padding:10px; display:flex;">
+          <div v-if="!edit" slot="header" style="width: 100%;display: flex;align-items: center;">
+            <span style="color: white; font-size:20px;">{{taskList.name}}</span>
+            <div style="flex-grow: 1;display: flex;align-items: center;justify-content: flex-end;">
+            <i class="im im-pencil" @click="editToggle" style="cursor:pointer;"></i>
+            <i class="im im-trash-can" @click="msgBox" style="cursor:pointer;"></i>
+            <i class="im im-plus" style="padding:0px; color: white; cursor:pointer;" @click="createFormToggle"></i>
+            </div>
+          </div>
           <b-form-input v-else
                         @keydown.enter.exact="editTaskListName"
                         @keydown.esc="editToggle"
                         v-model="taskList.name"
                         autofocus></b-form-input>
-          <i class="im im-plus float-right btn" style="color: white;" @click="createFormToggle"></i>
         </div>
       </draggable>
 
@@ -21,30 +24,34 @@
       <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus
                     @keydown.enter.exact="setTaskListName"></b-form-input>
     </div>
-    <b-list-group style="width: 25vw; height: 75vh; overflow-y: scroll;"> <!-- 임시로 정해주 높이 값 정확한 반응형 높이가 아님 -->
-      <b-list-group-item v-if="create" style="padding: 10px 0px; margin-bottom: 10px;">
+    <div style="height: 100%;overflow-y: auto;">
+    <b-list-group style="width: 100%; padding: 10px;"> <!-- 임시로 정해주 높이 값 정확한 반응형 높이가 아님 -->
+      <b-list-group-item v-if="create" style="padding: 10px;">
         <TaskEdit @createFormToggle="createFormToggle" :color="color" :date="date"
                   :tasks="getTasks" :task-list-id="taskList.id"></TaskEdit>
       </b-list-group-item>
       <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">
         <transition-group name="task-list">
-          <b-list-group-item v-for="(task,index) in getTasks" :key="task" style="margin-bottom: 10px;" class="item">
+          <b-list-group-item v-for="(task,index) in getTasks" :key="task" style="margin-bottom: 10px; padding: 10px 10px;" class="item">
             <div v-if="index != editSelector">
+              <div style="display: flex; align-items: center;">
               <span class="small text-muted" v-if="task.start_date">{{getDateFormat(task.start_date)}} ~ {{getDateFormat(task.end_date)}}</span>
-              <b-dropdown no-caret variant="nonoutline" toggle-class="text-decoration-none"
-                          class="float-right" style="padding: 0px;">
-                <template v-slot:button-content>
-                  <i class="im im-menu-dot-h"></i>
-                </template>
-                <b-dropdown-item @click="editFormToggle(index)">Edit</b-dropdown-item>
-                <b-dropdown-item v-if="task.state" @click="editTask(task,false)">Done</b-dropdown-item>
-                <b-dropdown-item v-else @click="editTask(task,true)">Revoke</b-dropdown-item>
-                <b-dropdown-item @click="deleteTask(task,index)" variant="danger">Delete</b-dropdown-item>
-              </b-dropdown>
-              <br>
-              <p id="content">{{task.content}}</p>
-              <footer>
-                <small class="float-right">created by {{channelUsers.find(user => user.email ==
+              <div class="td-dd-wrapper" style="flex-grow: 1;display: flex;justify-content: flex-end;">
+                <b-dropdown no-caret variant="nonoutline" toggle-class="text-decoration-none"
+                            style="padding: 0px;">
+                  <template v-slot:button-content>
+                    <i class="im im-menu-dot-h"></i>
+                  </template>
+                  <b-dropdown-item @click="editFormToggle(index)">Edit</b-dropdown-item>
+                  <b-dropdown-item v-if="task.state" @click="editTask(task,false)">Done</b-dropdown-item>
+                  <b-dropdown-item v-else @click="editTask(task,true)">Revoke</b-dropdown-item>
+                  <b-dropdown-item @click="deleteTask(task,index)" variant="danger">Delete</b-dropdown-item>
+                </b-dropdown>
+              </div>
+              </div>
+              <p id="content" style="margin:0">{{task.content}}</p>
+              <footer style="display: flex;justify-content: flex-end;">
+                <small>created by {{channelUsers.find(user => user.email ==
                   task.member_email).name}}</small>
               </footer>
             </div>
@@ -56,6 +63,7 @@
         </transition-group>
       </draggable>
     </b-list-group>
+    </div>
   </div>
 </template>
 <script>
@@ -72,7 +80,8 @@
     props: ["taskList"],
     computed: {
       ...mapGetters({
-        channelUsers: 'getChannelUsers'
+        channelUsers: 'getChannelUsers',
+        currentChannel: 'getCurrentChannel'
       }),
       getTasks: function () {
         return this.taskList.tasks
@@ -83,7 +92,7 @@
         this.taskList.tasks.forEach(task => {
           task.position = this.taskList.tasks.indexOf(task)
         })
-      }
+      },
     },
     components: {
       TaskEdit,
@@ -108,8 +117,6 @@
         edit: false,
       }
     },
-    created() {
-    },
     methods: {
       taskEventHandler: function ({added, moved, removed}) {
         let updateTaskItem = {
@@ -130,7 +137,7 @@
           updateTaskItem.taskId = moved.element.id
           this.$http.post('/api/task/update/position', updateTaskItem)
             .then(res => {
-              this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+              this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
             }).catch(error => {
             console.error(error)
           })
@@ -143,7 +150,7 @@
           updateTaskItem.taskId = removed.element.id
           this.$http.post('/api/task/update/position', updateTaskItem)
             .then(res => {
-              this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+              this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
             }).catch(error => {
             console.error(error)
           })
@@ -160,7 +167,7 @@
         })
           .then(res => {
             this.$eventBus.$emit('deleteTaskList', this.taskList)
-            this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
           })
           .catch(error => {
 
@@ -174,7 +181,7 @@
           id: this.taskList.id,
           name: this.taskList.name
         }).then(res => {
-          this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+          this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
           this.editToggle()
         }).catch(error => {
           console.error(error)
@@ -184,7 +191,7 @@
         task.state = state
         this.$http.post('/api/task/update/content', task)
           .then(res => {
-            this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/'+this.currentChannel.id,{},{typename: 'taskUpdate'})
           }).catch(error => {
           console.error(error)
         })
@@ -193,7 +200,7 @@
         // 현저 유저와 작성자가 같은지 비교해서 삭제할 수 있도록 변경 필요
         this.$http.post('/api/task/delete', task)
           .then(res => {
-            this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
             this.taskList.tasks.splice(index, 1)
           }).catch(error => {
           console.error(error)
@@ -207,6 +214,7 @@
         this.editSelector = index
       },
       setTaskListName: function () {
+        this.taskList.channel_id = this.currentChannel.id
         this.taskList.name = this.taskListName
         this.$http.post('/api/tasklist/insert', JSON.stringify(this.taskList), {
           headers: {
@@ -215,8 +223,7 @@
         })
           .then(res => {
             this.taskList.id = res.data.id
-            this.task.tasklist_id = res.data.id
-            this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id, {}, {typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
           })
           .catch(error => {
             console.error(error)

@@ -5,18 +5,16 @@
       <!-- Sidebar  -->
       <LSidebar
         :msgCountObj="msgCountObj"
-        @channelUpdate="channelUpdate"
-        @sendTitle="sendTitle"></LSidebar>
+        @channelUpdate="channelUpdate"></LSidebar>
       <!-- Page Content  -->
       <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
         <MainHeader @channelUpdate="channelUpdate"></MainHeader>
-        <!-- 채널 리스트가 없을 경우 알림 글로 대체 (디자인은 추후에....)-->
         <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
         <!-- CjannelHeader -->
         <div v-else>
           <!--          추후에 깔금한 방식으로 변경-->
           <ChannelHeader
-            v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit'"></ChannelHeader>
+            v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit' && $store.state.selectComponent!='admin'"></ChannelHeader>
           <keep-alive>
             <component :is="whichComponent"
                        :msgArray="msgArray"
@@ -48,7 +46,8 @@
   import SockJS from "sockjs-client";
   import TodoList from '../views/todolist/TodoList'
   import Calendar from "../views/calendar/Calendar";
-
+  import AdminPage from "../views/admin/AdminPage"
+  
   export default {
     name: 'Main',
     components: {
@@ -62,7 +61,8 @@
       'NoChannel': NoChannel,
       'Loading': Loading,
       'TodoList': TodoList,
-      'Calendar': Calendar
+      'Calendar': Calendar,
+      'AdminPage': AdminPage
     },
     data() {
       return {
@@ -88,6 +88,8 @@
             return 'TodoList'
           case 'calendar':
             return 'Calendar'
+          case 'admin':
+            return 'AdminPage'
           default:
             return 'ContentWrapper'
         }
@@ -101,50 +103,39 @@
     deactivated() {
     },
     async created() {
-      // 적용은 mounted 이후에 가능한 것으로 보임...
       await this.$store.dispatch('userListUpdate')
       await this.$store.dispatch('channelList') // 설정되는 값은 userChannelList
       this.$store.commit('setCurrentChannel', this.$store.state.userChannelList[0])
       const currentChannel = this.$store.state.currentChannel
       if (currentChannel != null) {
         currentChannel.count = 0
-        await AboutChannel.initCurrentChannel(currentChannel.id)
       }
       this.connect()
+      EventListener.resizeEvt()
       EventListener.beforeunloadEvt()
       EventListener.focusEvt(this)
       EventListener.blurEvt()
       NotificationClass.requestPermission()
+      this.$store.commit('setSmallWidth',(window.innerWidth < 600) ? true : false)
     },
     updated() {
     },
     methods: {
-      sendTitle(channel) {
-        if (this.$store.state.oldComponent == 'main') {
-          let oldChannel = this.$store.state.currentChannel
-          AboutChannel.updateLastAccessDate(channel.id, oldChannel.id)
-        }
-        this.$store.commit('setCurrentChannel', channel)
-        this.$store.state.currentChannel.count = 0
-        this.$store.state.isSearchMode = false
-      },
       connect() {
         // 새로고침 했을때 Main의 로직이 실행되지 않는 환경에서는 문제가 생길 수 있음
         this.$store.state.stompClient = Stomp.over(new SockJS('/endpoint/'))
+        this.$store.state.stompClient.debug = f => f;
         this.$store.state.stompClient.connect({}, () => {
-
           this.$store.state.userChannelList.forEach(channel => {
             this.$store.state.stompClient.subscribe("/sub/chat/room/" + channel.id, (e) => {
               let data = JSON.parse(e.body)
               if (data.message == 'updateChannel') {
                 this.$store.state.syncSignal.syncChannelUser = !this.$store.state.syncSignal.syncChannelUser;
                 return;
-              }
-              else if(data.message == 'updateCurrentChannel'){
+              } else if (data.message == 'updateCurrentChannel') {
                 this.$store.dispatch('updateCurrentChannel')
                 return;
-              }
-              else{
+              } else {
                 this.channelSubscribeCallBack(e);
                 return;
               }
@@ -159,8 +150,11 @@
             //메시지 전송 실패시
             this.channelSubscribeCallBack(e, true)
           })
-        }, function () {
-          window.location.href = "/"
+        }, ()=> {  
+          console.log('stomp close',this.$store.state.isLogout)      
+          if(!this.$store.state.isLogout){
+            window.location.href = "/" 
+          }
         })
       },
       channelUpdate() {
@@ -181,8 +175,6 @@
       },
       channelSubscribeCallBack(e, fail) {
         let data = JSON.parse(e.body)
-        // console.log(data)
-        // console.log(this.$store.state.isfocus)
         NotificationClass.sendNotification(this.$store.state.isfocus, data)
         if (data.channel_id == this.$store.state.currentChannel.id && this.$store.state.selectComponent == 'main') {
           data.content = CommonClass.replacemsg(data.content)

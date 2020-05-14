@@ -1,15 +1,15 @@
 <template>
-  <div class="wrapper">
-    <div class="scrolling-wrapper">
-      <b-list-group horizontal style="overflow-x:auto;">
-        <draggable :list="getTaskBoard" class="row flex-nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
-          <b-list-group-item v-for="item in getTaskBoard" :key="item">
+  <div class="mainwrapper">
+    <div class="scrolling-wrapper h-inherit">
+      <b-list-group horizontal style="overflow-x:auto; height: inherit;" id="wheelReverse">
+        <draggable :list="getTaskBoard" style="display:flex; flex-wrap:nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
+          <b-list-group-item v-for="item in getTaskBoard" :key="item" style="min-width: 355px; max-width: 355px;">
             <TaskList :taskList="item"></TaskList>
           </b-list-group-item>
         </draggable>
-        <b-list-group-item>
+        <b-list-group-item style="min-width: 355px; max-width: 355px;">
           <div>
-            <b-card class="btn" align="center" style="width: 25vw; border-style: dotted" @click="addTaskList()">
+            <b-card class="btn" align="center" style="border-style: dotted" @click="addTaskList()">
               <i class="im im-plus" style="font-size: small"></i>
               Add New TaskList
             </b-card>
@@ -69,12 +69,6 @@
         if (res.headers.typename == 'taskUpdate') {
           this.$store.dispatch('updateTaskBoard')
         }
-        if(res.body != null){
-          const task = JSON.parse(res.body)
-          const taskList = this.getTaskBoard.find(taskList => taskList.id == task.tasklist_id)
-          taskList.tasks[task.position] = task
-          // this.$store.commit('setTaskBoard',this.getTaskBoard)
-        }
       })
     },
     deactivated() {
@@ -102,7 +96,7 @@
           channel_id: this.$store.state.currentChannel.id,
           position: '',
           tasks: []
-        }
+        },
       }
     },
     methods: {

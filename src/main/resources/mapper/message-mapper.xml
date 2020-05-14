@@ -34,7 +34,7 @@
 				and (send_date <![CDATA[<]]> (select send_date from message where id = #{cursorId}) or 
 				(send_date = (select send_date from message where id = #{cursorId}) and id <![CDATA[<]]> #{cursorId}))  
 			</if>
-				order by send_date desc, id desc limit 12
+				order by send_date desc, id desc limit 30
 				
     </select>
     

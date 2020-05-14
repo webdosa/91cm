@@ -10,6 +10,11 @@ class InviteService {
       recipient: recipient
     })
   }
+  sendMail(){
+    re
+  }
+
+
 }
 
 export default new InviteService()

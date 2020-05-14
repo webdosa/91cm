@@ -21,7 +21,6 @@
         </b-button>
         <b-button size="sm" variant="danger" @click="$emit('editFormToggle')">Cancel</b-button>
       </div>
-      <!--                <br><br>-->
     </div>
   </div>
 </template>
@@ -51,7 +50,6 @@
           color: ''
         },
         taskContent: '',
-
       }
     },
     created() {
@@ -75,7 +73,7 @@
             this.taskContent = ''
             this.tasks.unshift(res.data)
             this.$emit('createFormToggle')
-            this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,null,{typename: 'taskUpdate'})
           }).catch(error => {
           console.error(error)
         })
@@ -92,7 +90,7 @@
         }
         this.$http.post('/api/task/update/content', task)
           .then(res => {
-            this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,{},{typename: 'taskUpdate'})
+            this.$store.state.stompClient.send('/sub/todo/'+this.$store.state.currentChannel.id,null,{typename: 'taskUpdate'})
             this.$emit('editFormToggle',-1)
           }).catch(error => {
           console.error(error)

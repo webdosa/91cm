@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <full-calendar ref="calendar" :config="config" :events="events" @event-selected="selectEvent"></full-calendar>
+  <div class="mainwrapper">
+    <full-calendar ref="calendar" :config="config" :events="events" @event-selected="selectEvent" ></full-calendar>
     <b-modal id="change-event" @ok="handleOk" title="일정 수정" @cancel="resetData" @hide="resetData">
       <v-swatches class="float-right" v-model="eventColor" popover-x="right"
                   show-fallback placeholder="제목을 입력해주세요."></v-swatches>
@@ -13,9 +13,7 @@
       <b-form-group
         label="일정 내용"
         label-for="textarea-content">
-        <b-textarea id="textarea-content" v-model="taskContent">
-
-        </b-textarea>
+        <b-textarea id="textarea-content" v-model="taskContent"></b-textarea>
       </b-form-group>
 
     </b-modal>
@@ -113,14 +111,10 @@ export default {
         editable: false,
         defaultView: 'month',
         selectHelper: false,
-        locale: 'ko'
+        locale: 'ko',
+        height: 'parent'
       }
     }
-  },
-  created () {
-
-  },
-  mounted () {
   },
   methods: {
     getUniqueObjectArray: function (array) {
@@ -146,29 +140,18 @@ export default {
       this.selectTask.title = this.eventTitle
       this.selectTask.content = this.taskContent
       this.selectTask.color = this.eventColor
-      // this.taskUpdate()
       this.$http.post('/api/task/update/content', this.selectTask)
         .then(res =>{
           this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id,
-            JSON.stringify(this.selectTask), {typename: 'taskUpdate'})
+            {}, {typename: 'taskUpdate'})
         })
-
-
-
-      // 엑시오스로 db 업데이트 및 실시간 처리
-    },
-    taskUpdate: function () {
-      const taskList = this.taskBoard.find(taskList => taskList.id == this.selectTask.tasklist_id)
-      taskList.tasks[this.selectTask.position] = this.selectTask
     }
-
   }
 }
 </script>
 
 <style>
   @import "~fullcalendar/dist/fullcalendar.min.css";
-
   .fc-title {
     text-align: center;
     color: white;
@@ -188,4 +171,7 @@ export default {
   .fc-content {
     text-align: center;
   }
+  /* .fc-scroller{
+    height: 100% !important;
+  } */
 </style>

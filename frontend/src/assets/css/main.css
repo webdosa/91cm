@@ -1,3 +1,17 @@
+.b-dropdown-text{
+    padding: 0
+  }
+
+.dropwonInvite .dropdown-menu-right{
+    padding-top:0;
+    padding-bottom:0;
+    max-height: 300px;
+    overflow: auto;
+}
+
+.td-dd-wrapper .dropdown .btn{
+    padding:0
+}
 .info-w{
     height: 100%;
   background-color: white;
@@ -250,7 +264,7 @@ MainContents
 /* width */
 ::-webkit-scrollbar {
     width: 0.4em;
-    height: 0.4em;
+    height: 1em;
 }
 
 /* Track */
@@ -499,7 +513,7 @@ ul.CTAs a {
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     #sidebar {
      margin-left: -100%;
      width: 100%;

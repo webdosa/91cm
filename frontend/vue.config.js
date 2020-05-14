@@ -2,9 +2,10 @@ const path = require('path')
 
 module.exports = {
   lintOnSave: false,
+  productionSourceMap: false,
   outputDir: path.resolve(__dirname, '../' + 'src/main/resources/static'),
   devServer: {
-    host: 'localhost'
+    // host: 'localhost'
     // proxy: {
     //   '/': {
     //     target: 'http://localhost:9191',

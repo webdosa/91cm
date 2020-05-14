@@ -79,6 +79,9 @@
     },
     methods: {
       callComponent: function (componentName) {
+        if(this.$store.state.isSmallWidth){
+          this.RSidebarClose()
+        }
         this.$store.commit('getSelectComponent',componentName)
       },
       leaveChannle: function () {

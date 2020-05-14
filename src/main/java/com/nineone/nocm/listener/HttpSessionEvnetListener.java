@@ -15,8 +15,6 @@ import com.nineone.nocm.service.JoinInfoService;
 @WebListener
 public class HttpSessionEvnetListener implements HttpSessionListener{
 	
-	@Autowired
-	private JoinInfoService joinInfoService;
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
@@ -25,16 +23,6 @@ public class HttpSessionEvnetListener implements HttpSessionListener{
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
-		HttpSession session = se.getSession();
-		if(session.getAttribute("lastAccess")!=null) {
-			LastAccess lastAccess = (LastAccess)session.getAttribute("lastAccess");
-			if(lastAccess.isContentWrapper()) {
-				if(lastAccess.isFocus()) {
-					User user = (User)session.getAttribute("user");
-					joinInfoService.updateLastAccessDate(lastAccess.getCurrentChannelId(),user.getEmail());
-				}
-			}
-		}
 	}
 	  
 

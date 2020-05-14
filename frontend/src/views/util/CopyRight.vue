@@ -1,11 +1,11 @@
 <template>
-  <b-modal id="copyRight-modal" size="lg" scrollable ok-only title="오픈소스 라이센스">
+  <b-modal id="copyRight-modal" size="lg" scrollable ok-only title="라이센스">
     <b-button class="button-margin" v-b-toggle.collapse-open1 variant="outline-dark" block>Animate.css</b-button>
     <b-collapse id="collapse-open1" class="mt-2">
       <b-card>
         <span>link :</span>
         <b-link href="https://github.com/daneden/animate.css" style="color: blue;">
-          https://github.com/daneden/animate.css
+          https://github.com/animate-css/animate.css
         </b-link>
         <p class="card-text">
           The MIT License (MIT)
@@ -131,9 +131,9 @@
         </p>
       </b-card>
     </b-collapse>
-    <b-button class="button-margin" v-b-toggle.collapse-open4 variant="outline-dark" block>saintplay/vue-swatches
+    <b-button class="button-margin" v-b-toggle.collapse-open5 variant="outline-dark" block>saintplay/vue-swatches
     </b-button>
-    <b-collapse id="collapse-open4" class="mt-2">
+    <b-collapse id="collapse-open5" class="mt-2">
       <b-card>
         <span>link :</span>
         <b-link href="https://github.com/saintplay/vue-swatches" style="color: blue;">
@@ -172,54 +172,10 @@
     data() {
       return {}
     },
-    created: {},
-    methods: {
-      testBtn: function () {
-        const element = this.$refs.testBtn
-        element.classList.add("animated", "shake")
-        element.addEventListener("animationend", () => {
-          element.classList.remove("animated", "shake")
-        })
-      },
-      testAni: function () {
-        const node = this.$refs.swings
-        node.classList.add("animated", "shake")
-
-        function handleAnimationEnd() {
-          node.classList.remove("animated", "shake")
-          node.removeEventListener("animationend", handleAnimationEnd)
-          if (typeof callback === 'function')
-            callback()
-        }
-
-        node.addEventListener("animationend", handleAnimationEnd)
-      },
-      test: function () {
-        this.$bvModal.show("copyRight-modal")
-      },
-      shakeTest: function () {
-        this.check = true
-        this.checkmakeFalse()
-      },
-      checkmakeFalse: function () {
-        const v = this
-        setTimeout(() => {
-          v.check = false
-        }, 1000);
-      },
-      sleep(delay) {
-        let start = new Date().getTime()
-        while (new Date().getTime() < start + delay) ;
-      }
-    }
-
   }
 </script>
 <style scope>
-  @import "../../assets/css/animate.css";
-
   .button-margin {
     margin-bottom: 10px;
-
   }
 </style>
