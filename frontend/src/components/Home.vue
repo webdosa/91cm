@@ -16,8 +16,6 @@ export default {
     }
   },
   mounted() {
-    // console.log(this.$route.params.msg)
-    // console.log(this.$route.query.msg)
     if(this.$route.params.msg){
       if(this.$route.params.msg.show){
         this.$alertModal('alert',this.$route.params.msg.message)
@@ -29,16 +27,6 @@ export default {
       }
     }
   },
-  // watch: {
-  //   '$route': 'alertMessage'
-  // },
-  // methods:{
-  //   alertMessage: function () {
-  //     console.log("catch msg.show change event")
-  //     if(this.$route.params.msg.show){
-  //       this.$alertModal('alert',this.$route.params.msg.message)
-  //     }
-  //   }
-  // }
+
 }
 </script>

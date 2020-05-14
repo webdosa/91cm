@@ -8,7 +8,7 @@
           <v-card-title>사용자 리스트</v-card-title>
           <v-data-table
             :headers="headers"
-            :items="desserts"
+            :items="getDesserts"
             :items-per-page="5"
             :calculate-width="true"
             class="elevation-1"
@@ -35,7 +35,6 @@
           <v-card-title>
             <span class="headline">회원 정보 수정</span>
           </v-card-title>
-
           <v-card-text>
             <v-container>
               <v-row>
@@ -48,10 +47,9 @@
                 <v-col cols="12">
                   <v-text-field :disabled="true" v-model="editedItem.email" label="Fat (g)"></v-text-field>
                 </v-col>
-
                 <v-col cols="12">
                   <v-autocomplete
-                    v-model="editedItem.authorities"
+                    v-model="editedItem.authority"
                     :items="authorityList"
                     label="Interests"
                     multiple
@@ -60,7 +58,6 @@
               </v-row>
             </v-container>
           </v-card-text>
-
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
@@ -98,15 +95,21 @@
           },
           {text: "이름", value: "name", sortable: false},
           {text: "이메일", value: "email", sortable: false},
-          {text: "권한", value: "authorities", sortable: false},
-          {text: "Actions", value: "actions", sortable: false}
+          {text: "권한", value: "authority", sortable: false},
         ],
-        desserts: null
-
+      }
+    },
+    computed:{
+      getDesserts: function () {
+        return this.desserts
       }
     },
     activated() {
-      this.$http.post('/api/user/')
+      this.$http.post('/api/user/admin/userList')
+        .then(res =>{
+          console.log(res.data)
+          this.desserts = res.data
+      })
     },
     methods: {
       close() {
