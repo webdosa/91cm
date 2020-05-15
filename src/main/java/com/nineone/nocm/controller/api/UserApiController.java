@@ -2,6 +2,7 @@ package com.nineone.nocm.controller.api;
 
 
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -46,6 +47,12 @@ public class UserApiController {
     public List<User> userList() {
         return userService.getAllUserList();
     }
+
+    @RequestMapping("/admin/userList")
+    public List<HashMap> rolesUserList(@Socialuser User user){
+        return authoritiesRepository.getRoleUserList();
+    }
+
 
     @RequestMapping(value = "/login")
     public boolean userInit(@Socialuser User user) {

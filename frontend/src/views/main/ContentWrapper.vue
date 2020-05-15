@@ -249,10 +249,21 @@
           .then(res => {
             // 모두가 초대 메시지를 보게 할 것인지 아닌지
             // 그리고 지금은 초대했다는 메시지가 보여도 상대방이 수락하기 전까지는 채널에 대상 유저가 없다.
+            const invite = {
+              channel_id: this.$store.state.currentChannel.id,
+              sender: this.$store.state.currentUser.email,
+              recipient: userEmail
+            }
+            console.log(this.$store.state.currentUser)
+            this.$http.post('/api/invite/mail', invite).then(res=>{
+              console.log(res.data)
+            })
             this.message.content = userName + '님을 초대했습니다.'
             this.$eventBus.$emit('getUserList', true)
             this.send()
             this.inviteToggle()
+
+
           }).catch(error => {
             this.$alertModal('error', error.response.data.message)
             console.error(error.response)

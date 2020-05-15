@@ -5,6 +5,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -28,5 +29,10 @@ public class UserAuthoritiesRepositoryImpl implements UserAuthoritiesRepository 
     @Override
     public int deleteAllAuthority(String email) {
         return sqlSession.delete(namespace+".deleteAllAuthority",email);
+    }
+
+    @Override
+    public List<HashMap> getRoleUserList() {
+        return sqlSession.selectList(namespace + ".getRoleUserList");
     }
 }
