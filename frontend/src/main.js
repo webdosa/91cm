@@ -9,12 +9,13 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
 import VueSession from 'vue-session'
 import "@/assets/css/app.scss"
-import './assets/css/main.css'
 import AlertModal from "./plugins/AlertModal";
 import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
 import 'animate.css'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import './assets/css/main.css'
+
 
 Date.prototype.addDays = function (days) {
   var date = new Date(this.valueOf());
@@ -32,7 +33,7 @@ Vue.config.productionTip = false
 new Vue({
   vuetify: new Vuetify({
     icons: {
-      iconfont: "mdiSvg"
+      iconfont: "md"
     }
   }),
   router,

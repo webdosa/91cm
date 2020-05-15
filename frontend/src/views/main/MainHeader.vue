@@ -1,8 +1,12 @@
 <template>
   <header>
     <b-navbar toggleable="lg" type="light" variant="white">
-      <i style="display: flex;" v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i>
-      <i style="display: flex;" v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i>
+      <v-btn :ripple="false" depressed="true" style="min-width: 50px;max-width: 50px;padding: 0;" color="teal">
+        <v-icon large color="white"  v-if="$store.state.isLActive" @click="LSidebarToggle">keyboard_arrow_right</v-icon>
+        <!-- <i style="display: flex;" v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i> -->
+        <!-- <i style="display: flex;" v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i> -->
+        <v-icon large color="white" v-else @click="LSidebarToggle">keyboard_arrow_left</v-icon>
+      </v-btn>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align dropwonInvite" variant="nonoutline" :disabled="getAlarmList.length <= 0">
@@ -172,6 +176,11 @@
       callComponent: function (component) {
         console.log(component)
         this.$store.commit('getSelectComponent', component)
+        console.log('selectcom',this.$store.state.selectComponent=='main')
+        console.log('selectcom',this.$store.state.selectComponent)
+        console.log('userchannel',this.$store.state.userChannelList[0]==null)
+        console.log('userchannel',this.$store.state.userChannelList[0])
+        this.$emit('hihi')
       }
       ,
       LSidebarToggle: function () {

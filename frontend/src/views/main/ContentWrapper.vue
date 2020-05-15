@@ -45,14 +45,13 @@
         <div style="flex-grow:1;" class="myflex-column">
           <div style="position: relative;">
             <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
+              <v-icon class="my-mail" v-bind:class="{'active-m': sendMail}" @click="sendMailToggle">mail</v-icon>
+              <!-- <v-checkbox v-model="checkbox" class="myfile-upload" style="right: 82px;height: 24px; margin: 0;padding: 0;"></v-checkbox> -->
+              <i class="im im-users myfile-upload" style="right: 50px;" @click="inviteToggle"></i>
               <label for="file-input" style="display: block;margin-bottom: 0;">
                 <i class="im im-cloud-upload myfile-upload"></i>
               </label>
               <input id="file-input" type="file" ref="fileInput" multiple @change="attachFile" hidden/>
-              <label for="invite" style="display: block;margin-bottom: 0;">
-                <i class="im im-users myfile-upload" style="margin-right: 4.3vh;"></i>
-              </label>
-              <b-button id="invite" type="file" ref="fileInput" @click="inviteToggle" hidden/>
               <b-form-textarea
                 class="mytextarea"
                 autofocus
@@ -117,6 +116,7 @@
     },
     data() {
       return {
+        sendMail:false,
         tempImg: '',
         stringByteLength: 0,
         previewObj: {
@@ -166,6 +166,12 @@
       }
     },
     methods: {
+      sendMailToggle(){
+        this.sendMail =!this.sendMail
+        if(this.sendMail){
+          alert('지금부터 보내는 메시지는 나인원소프트 전체 메일로 보내집니다.')
+        }
+      },
       toggleSearchMode: function () {
         this.$store.state.isSearchMode = !this.$store.state.isSearchMode
         this.$store.state.isInviteMode = false
@@ -405,6 +411,11 @@
             this.previewObj.username = this.msgArray[this.msgArray.length - 1].user.name
             this.msgPreviewBool = true
           }
+        }
+      },
+      checkbox: function (){
+        if(this.checkbox){
+          alert('지금부터 보내는 메시지는 나인원소프트 전체 메일로 보내집니다.')
         }
       }
     },

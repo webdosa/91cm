@@ -1,7 +1,7 @@
 <template>
-  <div id="app" data-app>
+  <v-app color="#fafafa" id="app" data-app>
     <router-view/>
-  </div>
+  </v-app>
 </template>
 <style lang="scss">
 #app {
@@ -9,6 +9,19 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+#app{
+  height:100vh;
+  background-color:#fafafa;
+}
+#app a{
+  color:black;
+}
+
+#app ul{
+  padding-left:0;
+  list-style: none;
 }
 
 #nav {

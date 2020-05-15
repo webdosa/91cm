@@ -1,5 +1,5 @@
 drop database nocm;
-create database nocm;
+create database nocm default character set = utf8;
 use nocm;
 
 
@@ -108,42 +108,8 @@ foreign key (member_email) references member(email) on delete cascade on update 
 foreign key (roles_authority) references roles(authority) on delete cascade on update cascade
 );
 
-create table permission (
-id int unsigned  primary key auto_increment not null,
-member_email varchar(100) not null,
-roles_authority varchar(50) not null,
-state ENUM('STAND_BY' , 'ACCEPT' , 'REFUSE' ) default 'STAND_BY',
-foreign key (member_email) references member(email) on delete cascade on update cascade,
-foreign key (roles_authority) references roles(authority)on delete cascade on update cascade
-);
 
-
-
-insert roles (authority, description) values ('ROLE_RESTRICTED', '제한된 사용자');
+insert roles (authority, description) values ('ROLE_ANON', '제한된 사용자');
 insert roles (authority, description) values ('ROLE_USER', '일반 사용자');
 insert roles (authority, description) values ('ROLE_ADMIN', '관리자');
 
-
-delimiter $$
-drop procedure if exists testUser $$
-create procedure testUser()
-begin
-    declare i int;
-    set i = 1;
-    while i <= 10 do
-            insert into member (email, name, phone) value (concat('유저',cast(i as char )),concat('테스터',i),'qw');
-            set i = i+1;
-        end while;
-end $$
-
-delete from member;
-delete from channel;
-delete from invite;
-delete from message;
-delete from sns_info;
-delete from joininfo;
-delete from message;
-delete from file;
-delete from task;
-delete from tasklist;
-delete from authorities;
