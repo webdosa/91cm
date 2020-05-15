@@ -1,6 +1,5 @@
 import AboutChannel from './aboutchannel'
 import store from '../store'
-import axios from 'axios'
 class EventListener{
     beforeunloadEvt () {
         store.commit('setIsLogout',false)

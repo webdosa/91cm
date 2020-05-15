@@ -67,7 +67,7 @@
   import {mapGetters} from "vuex";
 
   export default {
-    props: ['modalObj', 'msgCountObj'],
+    props: ['modalObj'],
     watch: {
       currentChannel(newCurrentChannel, oldCurrentChannel) {
         this.updateUserList(newCurrentChannel)

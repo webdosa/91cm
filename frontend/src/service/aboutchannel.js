@@ -37,8 +37,10 @@ class AboutChannel{
 
 
     updateLastAccessStatus (oldVal,newVal) {
-      if(oldVal == 'main' && newVal != 'main' ){
-        this.updateLastAccessDate(store.state.currentChannel.id)
+      if(store.state.currentChannel!=null){
+        if(oldVal == 'main' && newVal != 'main' ){
+          this.updateLastAccessDate(store.state.currentChannel.id)
+        }
       }
     }
 }

@@ -1,14 +1,14 @@
 <template>
   <div>
+    <div style="flex-grow:1;" class="myflex-column">
+          <div style="position: relative;">
       <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
+            <v-checkbox v-model="checkbox" class="myfile-upload" style="right: 82px;height: 24px; margin: 0;padding: 0;"></v-checkbox>
+                <i class="im im-users myfile-upload" style="right: 50px;"></i>
               <label for="file-input" style="display: block;margin-bottom: 0;">
                 <i class="im im-cloud-upload myfile-upload"></i>
               </label>
-              <input id="file-input" type="file" ref="fileInput" multiple @change="attachFile" hidden/>
-              <label for="invite" style="display: block;margin-bottom: 0;">
-                <i class="im im-users myfile-upload" style="margin-right: 4.3vh;"></i>
-              </label>
-              <b-button id="invite" type="file" ref="fileInput" @click="inviteToggle" hidden/>
+              <input id="file-input" type="file" ref="fileInput" multiple hidden/>
               <b-form-textarea
                 class="mytextarea"
                 autofocus
@@ -16,13 +16,10 @@
                 placeholder="Enter chat message"
                 rows="2"
                 no-resize
-                v-model="message.content"
-                @keydown.ctrl.shift.70="toggleSearchMode"
-                @keydown.enter.exact="send"
-                @keyup="byteCheck"
-                @keydown.shift.alt.50='inviteToggle'
               ></b-form-textarea>
             </div>
+          </div>
+    </div>
   </div>
 </template>
 
@@ -44,7 +41,8 @@ import Stomp from "webstomp-client";
     },
     data() {
       return {
-          users:['user1','user2','user3','user4','user5']
+          users:['user1','user2','user3','user4','user5'],
+          checkbox:false
       }
     },
     methods: {
@@ -63,7 +61,7 @@ import Stomp from "webstomp-client";
    background-color: black;
  }
 
-.btn::after {
+/* .btn::after {
   content: none;
-}
+} */
 </style>
