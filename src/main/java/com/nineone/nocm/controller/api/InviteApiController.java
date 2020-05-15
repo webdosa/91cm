@@ -79,7 +79,8 @@ public class InviteApiController {
         log.info(user.getEmail());
         log.info(inviteChannel.getName());
         googleMailSender.MailSend(user.getName() + "님이 " + inviteChannel.getName() + " 채널로 초대하였습니다."
-                , invite.getRecipient(), user.getName() + "님이 " + inviteChannel.getName() + " 채널로 초대하였습니다.");
+                , invite.getRecipient(), user.getName() + "님이 " + inviteChannel.getName() + " 채널로 초대하였습니다." +
+                        "\n 91cm로 이동 : http://91cm.nineonesoft.com:9191/");
         return true;
     }
 

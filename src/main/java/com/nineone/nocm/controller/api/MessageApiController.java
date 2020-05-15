@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import com.nineone.nocm.util.GoogleMailSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,10 +22,22 @@ public class MessageApiController {
 	
 	@Autowired
 	MessageService messageServie;
+
+	@Autowired
+	private GoogleMailSender googleMailSender;
 	
 	@RequestMapping(value ="/getmsg",method=RequestMethod.POST)
 	public List<Message> getMsg(@RequestBody Map<String,Object> map) throws ParseException{
 		return messageServie.getMessageList(map);
+	}
+	@RequestMapping(value = "/send/mail", method = RequestMethod.POST)
+	public boolean sendMail(@RequestBody Map<String,String> messageMap) throws RuntimeException{
+		log.info(messageMap.get("toUser"));
+		googleMailSender.MailSend(messageMap.get("channelName")+" 채널에서 새로운 메시지가 왔습니다."
+				,messageMap.get("toUser"),messageMap.get("channelName")+" 채널에서 "+
+				messageMap.get("fromUser")+"님이 메시지를 보냈습니다. 확인해주세요."+
+						"\n 91cm로 이동 : http://91cm.nineonesoft.com:9191/");
+		return true;
 	}
 
 }
