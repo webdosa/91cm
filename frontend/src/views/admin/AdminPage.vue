@@ -8,7 +8,7 @@
           <v-card-title>사용자 리스트</v-card-title>
           <v-data-table
             :headers="headers"
-            :items="getDesserts"
+            :items="authUserList"
             :items-per-page="5"
             :calculate-width="true"
             class="elevation-1"
@@ -39,7 +39,7 @@
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="4">
-                  <v-text-field :disabled="true" v-model="editedItem.number" label="Dessert name"></v-text-field>
+                  <v-text-field :disabled="true" v-model="editedIndex" label="Dessert name"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field v-model="editedItem.name" label="Calories"></v-text-field>
@@ -74,6 +74,7 @@
     name: 'AdminPage',
     data() {
       return {
+        authUserList: [],
         authorityList: ["ROLE_USER", "ROLE_ADMIN", "ROLE_ANON"],
         editedIndex: -1,
         editedItem: {
@@ -83,6 +84,7 @@
           authority: 0,
           protein: 0
         },
+        desserts: null,
         dialog: false,
         isLActive: false,
         isRActive: false,
@@ -93,23 +95,21 @@
             sortable: false,
             value: "number"
           },
-          {text: "이름", value: "name", sortable: false},
-          {text: "이메일", value: "email", sortable: false},
-          {text: "권한", value: "authority", sortable: false},
+          {text: "이름", value: 'name'},
+          {text: "이메일", value: 'email', sortable: false},
+          {text: "권한", value: 'authority', sortable: false},
+          {text: "Actions", value: 'actions', sortable: false},
         ],
       }
     },
     computed:{
-      getDesserts: function () {
-        return this.desserts
-      }
+
     },
-    activated() {
+    beforeCreate() {
       this.$http.post('/api/user/admin/userList')
         .then(res =>{
-          console.log(res.data)
-          this.desserts = res.data
-      })
+          this.authUserList = res.data
+        })
     },
     methods: {
       close() {
@@ -119,7 +119,8 @@
         this.dialog = false;
       },
       editItem(item) {
-        this.editedIndex = this.desserts.indexOf(item);
+        console.log(item)
+        this.editedIndex = this.authUserList.indexOf(item);
         this.editedItem = Object.assign({}, item);
         this.dialog = true;
       },
