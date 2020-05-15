@@ -45,11 +45,16 @@
         <div style="flex-grow:1;" class="myflex-column">
           <div style="position: relative;">
             <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
+              <v-checkbox v-model="checkbox" class="myfile-upload" style="right: 82px;height: 24px; margin: 0;padding: 0;"></v-checkbox>
+              <i class="im im-users myfile-upload" style="right: 50px;" @click="inviteToggle"></i>
               <label for="file-input" style="display: block;margin-bottom: 0;">
                 <i class="im im-cloud-upload myfile-upload"></i>
               </label>
               <input id="file-input" type="file" ref="fileInput" multiple @change="attachFile" hidden/>
-
+              <!-- <label for="invite" style="display: block;margin-bottom: 0;">
+                <i class="im im-users myfile-upload" style="margin-right: 4.3vh;"></i>
+              </label>
+              <b-button id="invite" type="file" ref="fileInput" @click="inviteToggle" hidden/> -->
               <b-form-textarea
                 class="mytextarea"
                 autofocus
@@ -61,7 +66,7 @@
                 @keydown.ctrl.shift.70="toggleSearchMode"
                 @keydown.enter.exact="send"
                 @keyup="byteCheck"
-                @keydown.shift.50='inviteToggle'
+                @keydown.shift.alt.50='inviteToggle'
               ></b-form-textarea>
             </div>
             <div style="position: relative" v-if="$store.state.isInviteMode">
@@ -78,7 +83,7 @@
                 @change="splitData"
               ></b-form-input>
               <datalist id="user-info-list">
-                <option v-for="user in userList" :key="user.email">{{ user.name }} {{ user.email }}</option>
+                <option v-for="user in userList" :key="user.email">{{ user.name }}-{{ user.email }}</option>
               </datalist>
             </div>
             <SearchInput
@@ -114,6 +119,7 @@
     },
     data() {
       return {
+        checkbox: '',
         tempImg: '',
         stringByteLength: 0,
         previewObj: {
@@ -171,8 +177,8 @@
         this.oldScrollHeight = this.wrapperEl.scrollHeight
       },
       splitData(data) {
-        this.message.content = data.split(" ")[0]
-        this.selectedUserEmail = data.split(" ")[1]
+        this.message.content = data.split("-")[0]
+        this.selectedUserEmail = data.split("-")[1]
       },
       imgLoad() {
         if (!this.msgPreviewBool) {
@@ -248,6 +254,7 @@
             this.$alertModal('error', error.response.data.message)
             console.error(error.response)
             this.message.content = ''
+            this.inviteToggle()
           })
       },
       inviteToggle: function (e) {
@@ -390,6 +397,11 @@
             this.previewObj.username = this.msgArray[this.msgArray.length - 1].user.name
             this.msgPreviewBool = true
           }
+        }
+      },
+      checkbox: function (){
+        if(this.checkbox){
+          alert('지금부터 보내는 메시지는 나인원소프트 전체 메일로 보내집니다.')
         }
       }
     },

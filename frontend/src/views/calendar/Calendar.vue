@@ -13,9 +13,7 @@
       <b-form-group
         label="일정 내용"
         label-for="textarea-content">
-        <b-textarea id="textarea-content" v-model="taskContent">
-
-        </b-textarea>
+        <b-textarea id="textarea-content" v-model="taskContent"></b-textarea>
       </b-form-group>
 
     </b-modal>
@@ -145,7 +143,7 @@ export default {
       this.$http.post('/api/task/update/content', this.selectTask)
         .then(res =>{
           this.$store.state.stompClient.send('/sub/todo/' + this.$store.state.currentChannel.id,
-            JSON.stringify(this.selectTask), {typename: 'taskUpdate'})
+            {}, {typename: 'taskUpdate'})
         })
     }
   }

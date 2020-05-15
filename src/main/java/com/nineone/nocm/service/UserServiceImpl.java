@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean emailCheck(String id) {
-        return (userRepository.getUserfindById(id) == null) ? true : false;
+    public boolean emailCheck(String email) {
+        return (userRepository.getUserfindByEmail(email) == null) ? true : false;
     }
 
 

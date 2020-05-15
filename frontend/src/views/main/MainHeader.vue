@@ -122,9 +122,9 @@
       },
       shakeAnimation: function(){
         const element = this.$refs.bell;
-        element.classList.add('animated','shake');
+        element.classList.add('animate__animated','animate__swing');
         element.addEventListener('animationend',()=>{
-          element.classList.remove('animated','shake')
+          element.classList.remove('animate__animated','animate__swing')
         });
       },
       inviteAccept: function (alarm, index) {
@@ -172,6 +172,11 @@
       callComponent: function (component) {
         console.log(component)
         this.$store.commit('getSelectComponent', component)
+        console.log('selectcom',this.$store.state.selectComponent=='main')
+        console.log('selectcom',this.$store.state.selectComponent)
+        console.log('userchannel',this.$store.state.userChannelList[0]==null)
+        console.log('userchannel',this.$store.state.userChannelList[0])
+        this.$emit('hihi')
       }
       ,
       LSidebarToggle: function () {
