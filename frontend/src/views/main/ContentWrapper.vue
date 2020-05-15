@@ -46,7 +46,6 @@
           <div style="position: relative;">
             <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
               <v-icon class="my-mail" v-bind:class="{'active-m': sendMail}" @click="sendMailToggle">mail</v-icon>
-              <!-- <v-checkbox v-model="checkbox" class="myfile-upload" style="right: 82px;height: 24px; margin: 0;padding: 0;"></v-checkbox> -->
               <i class="im im-users myfile-upload" style="right: 50px;" @click="inviteToggle"></i>
               <label for="file-input" style="display: block;margin-bottom: 0;">
                 <i class="im im-cloud-upload myfile-upload"></i>
@@ -169,7 +168,7 @@
       sendMailToggle(){
         this.sendMail =!this.sendMail
         if(this.sendMail){
-          alert('지금부터 보내는 메시지는 나인원소프트 전체 메일로 보내집니다.')
+          this.$alertModal('alert','지금부터 보내는 메시지는'+this.$store.state.currentChannel.name +' 채널 사용자들에게 '+'메일로 보내집니다.')
         }
       },
       toggleSearchMode: function () {
@@ -287,6 +286,19 @@
             this.$store.state.stompClient.send("/pub/chat/message", JSON.stringify(this.message), {})
             this.message.content = ''
             this.scrollToEnd(true)
+            if (this.sendMail){
+              this.$store.state.currentChannelUser.filter(channelUser => channelUser != this.$store.state.currentUser)
+                .forEach(channelUser =>{
+                this.$http.post('/api/message/send/mail',{
+                  channelName: this.$store.state.currentChannel.name,
+                  fromUser: this.$store.state.currentUser.name,
+                  toUser: channelUser.email
+                })
+                  .then(res =>{
+                    this.sendMail = false
+                  })
+              })
+            }
           } else {
             this.message.content = CommonClass.replaceErrorMsg(this.message.content)
             this.message.content = '<p style="color:red;">메세지 전송에 실패하였습니다.</p>' + this.message.content
