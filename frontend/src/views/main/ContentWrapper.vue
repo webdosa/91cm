@@ -287,7 +287,8 @@
             this.message.content = ''
             this.scrollToEnd(true)
             if (this.sendMail){
-              this.$store.state.currentChannelUser.filter(channelUser => channelUser != this.$store.state.currentUser)
+              console.log(this.$store.state.channelUsers.filter(channelUser=> channelUser!=this.$store.state.currentUser))
+              this.$store.state.channelUsers.filter(channelUser=> channelUser!=this.$store.state.currentUser)
                 .forEach(channelUser =>{
                 this.$http.post('/api/message/send/mail',{
                   channelName: this.$store.state.currentChannel.name,
