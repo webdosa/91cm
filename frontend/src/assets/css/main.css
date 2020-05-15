@@ -1,3 +1,17 @@
+.theme--light.v-icon:focus:after {
+    opacity: 0 !important;
+}
+.mytextarea-wrapper .active-m{
+    color: #FF4848 !important;
+}
+.mytextarea-wrapper .my-mail{
+    position: absolute !important;
+    z-index: 1;
+    bottom: 5px;
+    cursor: pointer;
+    right: 90px; 
+    color: #2C3E50;
+}
 .list-inline, .list-unstyled{
     padding-left: 0 !important;
     list-style: none;
@@ -23,7 +37,7 @@
   flex-direction: column;
 }
 .myfile-upload{
-    position: absolute;
+    position: absolute !important;
     z-index: 1;
     bottom: 5px;
     right: 10px;
