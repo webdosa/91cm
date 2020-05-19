@@ -6,34 +6,61 @@
       >
         <v-card v-bind:class="{moHeight:  $store.state.isSmallWidth }">
           <v-card-title>사용자 리스트</v-card-title>
+
           <v-data-table
             :headers="headers"
             :items="authUserList"
             :items-per-page="5"
             :calculate-width="true"
             class="elevation-1"
+
           >
             <template v-slot:item.actions="{ item }">
-              <svg
-                @click="editItem(item)"
-                style="cursor: pointer;"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <template v-slot:item.actions="{ item }">
-                  <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
-                </template>
-              </v-data-table>
-            </v-card>
-          </div>
-           <v-dialog v-model="dialog" max-width="500px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">회원 정보 수정</span>
-        </v-card-title>
+              <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
+            </template>
+          </v-data-table>
+        </v-card>
+      </div>
+      <v-dialog v-model="dialog" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">회원 정보 수정</span>
+          </v-card-title>
 
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field :disabled="true" v-model="editedItem.number" label="Dessert name"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field v-model="editedItem.name" label="Calories"></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field :disabled="true" v-model="editedItem.email" label="Fat (g)"></v-text-field>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="editedItem.authority"
+                    :items="authorityList"
+                    label="Interests"
+                    multiple
+                  ></v-autocomplete>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </main>
 </template>
 <script>
   export default {
@@ -68,12 +95,10 @@
         ],
       }
     },
-    computed:{
-
-    },
+    computed: {},
     beforeCreate() {
       this.$http.post('/api/user/admin/userList')
-        .then(res =>{
+        .then(res => {
           this.authUserList = res.data
         })
     },
