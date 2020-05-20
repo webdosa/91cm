@@ -1,8 +1,13 @@
 package com.nineone.nocm.domain;
 
-import com.nineone.nocm.domain.enums.Role;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class Authorities {
 
     private String member_email;

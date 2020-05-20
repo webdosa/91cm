@@ -4,6 +4,7 @@ package com.nineone.nocm.controller.api;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -46,6 +47,18 @@ public class UserApiController {
     @RequestMapping("/list")
     public List<User> userList() {
         return userService.getAllUserList();
+    }
+
+
+    @PostMapping("/admin/auth")
+    public ResponseEntity<?> insertUserAuth(@RequestBody Authorities authorities){
+        try {
+            authoritiesRepository.deleteAllAuthority(authorities.getMember_email());
+            authoritiesRepository.insertAuthority(authorities);
+            return new ResponseEntity<>("{}",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("{}",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping("/admin/userList")
