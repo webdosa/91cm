@@ -14,10 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/task")
 public class TaskController {
-	
+
 	@Autowired
 	private TaskService taskService;
-	
+
 	@RequestMapping(value="/insert",method = RequestMethod.POST)
 	public Task insertTask(@RequestBody Task task) {
 		if(taskService.insertTask(task)){
@@ -25,7 +25,7 @@ public class TaskController {
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value="/delete",method = RequestMethod.POST)
 	public boolean deleteTask(@RequestBody Task task) {
 		return taskService.deleteTask(task);
@@ -35,12 +35,12 @@ public class TaskController {
 	public boolean updateTaskContent(@RequestBody Task task) {
 		return taskService.updateTaskContent(task);
 	}
-	
+
 //	@RequestMapping(value="/update/position",method = RequestMethod.POST)
 //	public boolean updateTaskPosition(@RequestBody Task task) {
 //		return taskService.updateTaskPosition(task);
 //	}
-	
+
 	@RequestMapping(value="/update/position",method=RequestMethod.POST)
 	public boolean updateTaskPosition(@RequestBody Map<String,Object> map) {
 		// 한 리스트안에서만 task 이동이 있을 때는 위치 변경 전 task의 index값과 변경 후 task의 index값 , task가 속한 list의 id값,해당 task의 id값 이 필요

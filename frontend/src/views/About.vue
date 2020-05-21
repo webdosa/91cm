@@ -1,27 +1,6 @@
 <template>
   <div>
-    <div style="flex-grow:1;" class="myflex-column">
-          <div style="position: relative;">
-      <div class="mytextarea-wrapper" v-if="!$store.state.isInviteMode && !$store.state.isSearchMode">
-        <v-icon class="my-mail" v-bind:class="{'active-m': sendMail}" @click="sendMailToggle">mail</v-icon>
-        <!-- <v-icon class="myfile-upload" style="right: 111px; color: #2C3E50;">mail</v-icon>
-            <v-checkbox v-model="checkbox" class="myfile-upload" style="right: 82px;height: 24px; margin: 0;padding: 0;"></v-checkbox> -->
-                <i class="im im-users myfile-upload" style="right: 50px;"></i>
-              <label for="file-input" style="display: block;margin-bottom: 0;">
-                <i class="im im-cloud-upload myfile-upload"></i>
-              </label>
-              <input id="file-input" type="file" ref="fileInput" multiple hidden/>
-              <b-form-textarea
-                class="mytextarea"
-                autofocus
-                id="textarea-no-resize"
-                placeholder="Enter chat message"
-                rows="2"
-                no-resize
-              ></b-form-textarea>
-            </div>
-          </div>
-    </div>
+    <p>22</p>
   </div>
 </template>
 

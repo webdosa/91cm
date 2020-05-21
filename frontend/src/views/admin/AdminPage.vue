@@ -23,7 +23,7 @@
             <AuthorityPage v-if="i==tabs[0]"></AuthorityPage>
             <NoticeMessage v-if="i==tabs[1]"></NoticeMessage>
             <div v-if="i==tabs[2]">
-              <v-img src="src/assets/images/egg/egg01.gif" contain></v-img>
+              <v-img src="@/assets/images/fileIcon/file_icon.png"></v-img>
             </div>
           </v-tab-item>
         </v-tabs>
