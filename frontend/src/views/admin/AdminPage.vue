@@ -19,10 +19,12 @@
             {{i}}
           </v-tab>
 
-          <v-tab-item
-            :value="'tab-' + tabs[0]"
-          >
-            <AuthorityPage></AuthorityPage>
+          <v-tab-item v-for="i in tabs" :key="i" :value="'tab-' + i ">
+            <AuthorityPage v-if="i==tabs[0]"></AuthorityPage>
+            <NoticeMessage v-if="i==tabs[1]"></NoticeMessage>
+            <div v-if="i==tabs[2]">
+              <v-img src="src/assets/images/egg/egg01.gif" contain></v-img>
+            </div>
           </v-tab-item>
         </v-tabs>
       </div>
@@ -31,76 +33,21 @@
 </template>
 <script>
   import AuthorityPage from "./AuthorityPage";
+  import NoticeMessage from "./NoticeMessage";
   export default {
     name: 'AdminPage',
-    components: {AuthorityPage},
+    components: {NoticeMessage, AuthorityPage},
     data() {
       return {
         tab: null,
         tabs: ['권한 설정','전체메시지','개발중'],
-        // authUserList: [],
-        // authorityList: ["ROLE_USER", "ROLE_ADMIN", "ROLE_ANON"],
-        // editedIndex: -1,
-        // editedItem: {
-        //   number: 0,
-        //   name: "",
-        //   email: "",
-        //   authority: 0,
-        //   protein: 0
-        // },
-        // dialog: false,
         isLActive: false,
         isRActive: false,
-        // headers: [
-        //   {
-        //     text: "번호",
-        //     align: "start",
-        //     sortable: false,
-        //     value: "number"
-        //   },
-        //   {text: "이름", value: 'name'},
-        //   {text: "이메일", value: 'email', sortable: false},
-        //   {text: "권한", value: 'authority'},
-        //   {text: "Actions", value: 'actions', sortable: false},
-        // ],
       }
     },
     computed: {},
-    beforeCreate() {
-      // this.$http.post('/api/user/admin/userList')
-      //   .then(res => {
-      //     this.authUserList = res.data
-      //     this.authUserList.forEach((user, index) => {
-      //       user.number = index + 1;
-      //     });
-      //   })
-
-    },
     methods: {
-      // close() {
-      //   this.dialog = false;
-      // },
-      // save() {
-      //   this.$http.post('/api/user/admin/auth', {
-      //       member_email: this.editedItem.email,
-      //       roles_authority: this.editedItem.authority
-      //     }
-      //   )
-      //     .then(res => {
-      //       this.authUserList[this.editedIndex].authority = this.editedItem.authority
-      //       this.dialog = false
-      //       this.$alertModal("alert", "권한이 수정되었습니다.")
-      //     }).catch(error => {
-      //     this.$alertModal("error", "권한 수정에 실패했습니다." + "\n" + error)
-      //     this.dialog = false
-      //   })
-      // },
-      // editItem(item) {
-      //   console.log(item)
-      //   this.editedIndex = this.authUserList.indexOf(item);
-      //   this.editedItem = Object.assign({}, item);
-      //   this.dialog = true;
-      // },
+
     }
 
   }
