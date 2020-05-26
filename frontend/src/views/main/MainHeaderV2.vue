@@ -113,6 +113,7 @@
 </template>
 
 <script>
+import theme from '../../../dist/js/theme.js'
      import {mapGetters} from "vuex";
   import CopyRight from "../util/CopyRight";
   import AboutChannel from '../../service/aboutchannel'

@@ -82,7 +82,7 @@
           
 </template>
 <script>
-  
+  // import theme from '../../../dist/js/theme.js'
   import AboutChannel from '../../service/aboutchannel'
   import {mapGetters} from "vuex";
 
@@ -103,6 +103,7 @@
         userChannelList: 'getUserChannelList',
         currentChannel: 'getCurrentChannel',
         syncChannelUser: 'getSyncChannelUser'
+        
       }),
     },
     name: 'LSidebar',
@@ -124,6 +125,7 @@
       })
     },
     updated() {
+      
     },
     methods: {
       // navClose: function(){
