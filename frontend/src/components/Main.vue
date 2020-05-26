@@ -1,41 +1,39 @@
 <template>
     <div>
       <div class="wrapper">
-          <MainHeader></MainHeader>
-
-            <div class="page-wrap">
-              <LSidebar @channelUpdate="channelUpdate" ></LSidebar>
-
-
-                <div class="main-content" style="padding-bottom:0;">
-                    <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
-                        <keep-alive v-else>
-                          <component :is="whichComponent"
-                          :msgArray="msgArray"
-                          @msgArrayUpdate="msgArrayUpdate"
-                          ></component>
-                        </keep-alive>
-                    
+        <template v-if="connectionCheck">
+        <MainHeader></MainHeader>
+          <div class="page-wrap">
+            <LSidebar @channelUpdate="channelUpdate" ></LSidebar>
+              <div class="main-content" style="padding-bottom:0;">
+                  <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
+                    <keep-alive v-else>
+                      <component :is="whichComponent"
+                      :msgArray="msgArray"
+                      @msgArrayUpdate="msgArrayUpdate"
+                      ></component>
+                    </keep-alive>  
                   <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
-
-
-                </div>
-
-              
-                <footer class="footer">
-                    <div class="w-100 clearfix">
-                        <span class="text-center text-sm-left d-md-inline-block">Copyright © 2018 ThemeKit v2.0. All Rights Reserved.</span>
-                        <span class="float-none float-sm-right mt-1 mt-sm-0 text-center">Crafted with <i class="fa fa-heart text-danger"></i> by <a href="http://lavalite.org/" class="text-dark" target="_blank">Lavalite</a></span>
-                    </div>
-                </footer>
+              </div>
+              <footer class="footer">
+                  <div class="w-100 clearfix">
+                      <span class="text-center text-sm-left d-md-inline-block">Copyright © 2018 ThemeKit v2.0. All Rights Reserved.</span>
+                      <span class="float-none float-sm-right mt-1 mt-sm-0 text-center">Crafted with <i class="fa fa-heart text-danger"></i> by <a href="http://lavalite.org/" class="text-dark" target="_blank">Lavalite</a></span>
+                  </div>
+              </footer>
                 
-            </div>
+          </div>
           
-
-        </div>
-          <AppsModal></AppsModal>
-      
+          </template>
+          <Loading v-else/>
       </div>
+
+
+      <AppsModal></AppsModal>
+
+
+      
+    </div>
 
 
 </template>
@@ -53,7 +51,8 @@
   import AboutChannel from '../service/aboutchannel'
   import NotificationClass from '../service/notification'
   import EventListener from '../service/eventlistener'
-  import UserInfo from "../views/user/UserInfo"
+  // import UserInfo from "../views/user/UserInfo"
+  import UserInfo from "../views/user/UserInfoV2"
   import EditProfile from "../views/user/EditProfile"
   import ChannelHeader from "../views/main/ChannelHeader"
   import CommonClass from '../service/common'
@@ -233,3 +232,7 @@
   }
 
 </script>
+<style>
+
+
+</style>

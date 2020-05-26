@@ -30,8 +30,23 @@ class EventListener{
     }
 
     resizeEvt(){
-        window.addEventListener('resize', function(){
+        window.addEventListener('resize', function(){        
             store.commit('setSmallWidth',(window.innerWidth < 600) ? true : false)
+            // let n = $(".app-sidebar");
+            // let i = jQuery
+            // i(e).width() < 992 && (n.addClass("hide-sidebar"), l.removeClass("nav-collapsed menu-collapsed")), i(e).resize(function() {
+            //     i(e).width() < 992 && (n.addClass("hide-sidebar"), l.removeClass("nav-collapsed menu-collapsed")), i(e).width() > 992 && (n.removeClass("hide-sidebar"), "collapsed" === i(".toggle-icon").attr("data-toggle") && l.not(".nav-collapsed menu-collapsed") && l.addClass("nav-collapsed menu-collapsed"))
+            // }), i(s).on("click", ".navigation li:not(.has-sub)", function() {
+            //     i(e).width() < 992 && n.addClass("hide-sidebar")
+            // }), i(s).on("click", ".logo-text", function() {
+            //     i(e).width() < 992 && n.addClass("hide-sidebar")
+            // }), i(".mobile-nav-toggle").on("click", function(e) {
+            //     e.stopPropagation(), n.toggleClass("hide-sidebar")
+            // }), i("html").on("click", function(s) {
+            //     i(e).width() < 992 && (n.hasClass("hide-sidebar") || 0 !== n.has(s.target).length || n.addClass("hide-sidebar"))
+            // }), i("#sidebarClose").on("click", function() {
+            //     n.addClass("hide-sidebar")
+            // })
         })
     }
 

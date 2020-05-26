@@ -5,7 +5,7 @@
         function a(e, s) {
             e.children(".submenu-content").show().slideUp(200, function() {
                 i(this).css("display", ""), i(this).find(".menu-item").removeClass("is-shown"), e.removeClass("open"), s && s()
- 
+      
             })
         }
         var n = i(".app-sidebar"),
@@ -33,6 +33,7 @@
                 a(e.siblings(".open")), e.siblings(".open").find(".nav-item.open").removeClass("open")
             }
         }), i(".nav-toggle").on("click", function() {
+            console.log('?')
             var e = i(this).find(".toggle-icon");
             "expanded" === e.attr("data-toggle") ? (l.addClass("nav-collapsed"), i(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-right").addClass("ik-toggle-left"), e.attr("data-toggle", "collapsed")) : (l.removeClass("nav-collapsed menu-collapsed"), i(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-left").addClass("ik-toggle-right"), e.attr("data-toggle", "expanded"))
         }), n.on("mouseenter", function() {
@@ -148,11 +149,13 @@
         //     wheelPropagation: true,
         //     minScrollbarLength: 5
         // });
-        $(".right-sidebar-toggle").on("click",function(e) {
-            this.classList.toggle('active');
-            $('.wrapper').toggleClass('right-sidebar-expand');
-            return false;
-        });
+        
+        // $(".right-sidebar-toggle").on("click",function(e) {
+        //     console.log('?')
+        //     this.classList.toggle('active');
+        //     $('.wrapper').toggleClass('right-sidebar-expand');
+        //     return false;
+        // });
 
         document.addEventListener('click', function(event) {
           

@@ -19,13 +19,12 @@
                         <div class="dropdown-menu dropdown-menu-right notification-dropdown" aria-labelledby="notiDropdown">
                             <h4 class="header">Notifications</h4>
                             <div class="notifications-wrap">
-                                <!-- <div v-for="(alarm,index) in getAlarmList" :key="alarm"> -->
+                                <div v-for="(alarm,index) in getAlarmList" :key="alarm">
                                     <a class="media" style="cursor: default;">
                                        <span class="media-body">
                                             <!-- <span class="heading-font-family media-heading">Invitation accepted</span>  -->
                                             <div class="heading-font-family media-heading">
-                                                <!-- {{getUserNameByEmail(alarm.sender)}}  -->
-                                                ssssssssss님이 채널에 초대했습니다. 수락하시겠습니까?</div>
+                                                {{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</div>
 
                                                 
                                                 <div class="menulist-header-icon">
@@ -42,17 +41,9 @@
                                                 </div>
                                         </span>     
 
-                                        <!-- <div class="menulist-header-icon">
-                                            <b-button style="padding:0 .5rem 0 0; height: 16px;" id="esc" size="sm" variant="nonoutline" @click="getAlarmList.splice(index,1)">
-                                            <i style="font-size:14px;" class="im im-x-mark"></i>
-                                            </b-button>
-                                        </div> -->
-                                        <!-- <span class="d-flex">
-                                            <i class="ik ik-check"></i> 
-                                        </span> -->
-                                        
+                                      
                                     </a>
-                                <!-- </div>     -->
+                                </div>    
                                 <!-- <a href="#" class="media">
                                     <span class="d-flex">
                                         <img src="img/users/1.jpg" class="rounded-circle" alt="">
@@ -76,7 +67,7 @@
                             <div class="footer"><a href="javascript:void(0);">See all activity</a></div>
                         </div>
                     </div>
-                    <button type="button" class="nav-link ml-10 right-sidebar-toggle"><i class="ik ik-message-square"></i></button>
+                    <button type="button" @click="rightSidebarToggle" class="nav-link ml-10 right-sidebar-toggle"><i class="ik ik-message-square"></i></button>
                     <!-- <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ik ik-plus"></i></a>
                         <div class="dropdown-menu dropdown-menu-right menu-grid" aria-labelledby="menuDropdown">
@@ -158,7 +149,7 @@
           this.alarmList.pop()
         }
         return this.alarmList
-      },
+      }
     },
     created() {
       this.$store.state.stompClient.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
@@ -168,9 +159,7 @@
       }),
       this.$http.get('/api/invite/list')
         .then(res => {
-            console.log('?',res.data)   
           this.alarmList = res.data.reverse()
-          console.log(this.alarmList)   
         })
         .catch(error => {
         })
@@ -179,6 +168,13 @@
       
     },
     methods: {
+      rightSidebarToggle: function(e){
+        // console.log(e)
+        $('.right-sidebar-toggle')[0].classList.toggle('active');
+        $('.wrapper').toggleClass('right-sidebar-expand');
+        return false;
+      },
+
       showModal: function(modalId){
         console.log('click')
         this.$bvModal.show(modalId)

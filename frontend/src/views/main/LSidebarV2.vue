@@ -45,8 +45,8 @@
                                         <div v-for="(channel, index ) in userChannelList" :key="channel.id">
                                             <a @click="sendSelectChannel(index)" class="menu-item" style="display: flex;">
                                                  <div>{{ channel.name }}</div>
-                                                <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
-                                                    <span class="badge badge-danger" style="position: inherit;">{{channel.count }}</span>
+                                                <div style="display: flex;justify-content: flex-end;flex-grow: 1;" v-if="channel.count!=0">
+                                                    <span class="badge badge-danger" style="position: inherit;" >{{channel.count }}</span>
                                                     <!-- <b-badge  variant="danger"  >
                                                         {{channel.count }}
                                                     </b-badge> -->
@@ -82,6 +82,7 @@
           
 </template>
 <script>
+  
   import AboutChannel from '../../service/aboutchannel'
   import {mapGetters} from "vuex";
 
@@ -125,6 +126,14 @@
     updated() {
     },
     methods: {
+      // navClose: function(){
+      //   $(".app-sidebar").addClass("hide-sidebar")
+      // },
+      // navToggle: function(){
+      //   var e = $(".nav-toggle").find(".toggle-icon");
+      //   var l = $(".wrapper")
+      //   "expanded" === e.attr("data-toggle") ? (l.addClass("nav-collapsed"), $(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-right").addClass("ik-toggle-left"), e.attr("data-toggle", "collapsed")) : (l.removeClass("nav-collapsed menu-collapsed"), $(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-left").addClass("ik-toggle-right"), e.attr("data-toggle", "expanded"))
+      // },
       updateUserList: function (currentChannel) {
         this.$http.get('/api/user/channel/' + currentChannel.id)
           .then(res => {
