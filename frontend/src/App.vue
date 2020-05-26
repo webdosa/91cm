@@ -1,11 +1,18 @@
 <template>
-  <v-app color="#fafafa" id="app" data-app>
+  <div >
     <router-view/>
-  </v-app>
+  </div>
+  
 </template>
+
+<script>
+
+</script>
+
+
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  // font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -15,9 +22,9 @@
   height:100vh;
   background-color:#fafafa;
 }
-#app a{
-  color:black;
-}
+// #app a{
+//   color:black;
+// }
 
 #app ul{
   padding-left:0;

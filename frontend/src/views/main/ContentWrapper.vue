@@ -1,5 +1,5 @@
 <template>
-  <main class="mainwrapper">
+  <main class="mainwrapper" style="height: calc(100vh - 150px);">
     <div class="h-inherit" v-cloak @drop.prevent="dropFile" @dragover.prevent>
       <ul class="c-c-wrapper list-unstyled" @scroll="scrollEvt">
         <MsgBox v-for="msg in msgArray" :key="msg.id">

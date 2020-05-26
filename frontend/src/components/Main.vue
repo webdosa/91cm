@@ -1,36 +1,54 @@
 <template>
-  <div class="wrapper">
+    <div>
+      <div class="wrapper">
+          <MainHeader></MainHeader>
 
-    <template v-if="connectionCheck">
-      <!-- Sidebar  -->
-      <LSidebar
-        @channelUpdate="channelUpdate"></LSidebar>
-      <!-- Page Content  -->
-      <div id="m-wrapper" v-bind:class="{active: $store.state.isLActive}">
-        <MainHeader @channelUpdate="channelUpdate" @hihi="hihi"></MainHeader>
-        <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
-        <!-- CjannelHeader -->
-        <div v-else>
-          <!--          추후에 깔금한 방식으로 변경-->
-          <ChannelHeader
-            v-if="$store.state.selectComponent!='user' && $store.state.selectComponent!='edit' && $store.state.selectComponent!='admin'"></ChannelHeader>
-          <keep-alive>
-            <component :is="whichComponent"
-                       :msgArray="msgArray"
-                       @msgArrayUpdate="msgArrayUpdate"
-            ></component>
-          </keep-alive>
+            <div class="page-wrap">
+              <LSidebar @channelUpdate="channelUpdate" ></LSidebar>
+
+
+                <div class="main-content" style="padding-bottom:0;">
+                    <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
+                        <keep-alive v-else>
+                          <component :is="whichComponent"
+                          :msgArray="msgArray"
+                          @msgArrayUpdate="msgArrayUpdate"
+                          ></component>
+                        </keep-alive>
+                    
+                  <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
+
+
+                </div>
+
+              
+                <footer class="footer">
+                    <div class="w-100 clearfix">
+                        <span class="text-center text-sm-left d-md-inline-block">Copyright © 2018 ThemeKit v2.0. All Rights Reserved.</span>
+                        <span class="float-none float-sm-right mt-1 mt-sm-0 text-center">Crafted with <i class="fa fa-heart text-danger"></i> by <a href="http://lavalite.org/" class="text-dark" target="_blank">Lavalite</a></span>
+                    </div>
+                </footer>
+                
+            </div>
+          
+
         </div>
+          <AppsModal></AppsModal>
+      
       </div>
-      <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
-    </template>
-    <Loading v-else/>
-  </div>
+
+
 </template>
 <script>
-  import LSidebar from '../views/main/LSidebar'
-  import RSidebar from '../views/main/RSidebar'
-  import MainHeader from '../views/main/MainHeader'
+
+  import theme from '../../dist/js/theme.js'
+  // import perfectScrollbar from '../../plugins/perfect-scrollbar/dist/perfect-scrollbar.min.js'
+  // import LSidebar from '../views/main/LSidebar'
+  import LSidebar from '../views/main/LSidebarV2'
+  // import RSidebar from '../views/main/RSidebar'
+  import RSidebar from '../views/main/RSidebarV2'
+  // import MainHeader from '../views/main/MainHeader'
+  import MainHeader from '../views/main/MainHeaderV2'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
   import NotificationClass from '../service/notification'
@@ -46,6 +64,7 @@
   import TodoList from '../views/todolist/TodoList'
   import Calendar from "../views/calendar/Calendar";
   import AdminPage from "../views/admin/AdminPage"
+  import AppsModal from "../views/main/AppsModal"
   
   export default {
     name: 'Main',
@@ -61,7 +80,8 @@
       'Loading': Loading,
       'TodoList': TodoList,
       'Calendar': Calendar,
-      'AdminPage': AdminPage
+      'AdminPage': AdminPage,
+      'AppsModal' : AppsModal
     },
     data() {
       return {
@@ -119,14 +139,10 @@
     updated() {
     },
     methods: {
-      hihi(){
-        console.log('ss',this.$store.state.selectComponent)
-        console.log('sslist',this.$store.state.userChannelList[0])
-      },
       connect() {
         // 새로고침 했을때 Main의 로직이 실행되지 않는 환경에서는 문제가 생길 수 있음
         this.$store.state.stompClient = Stomp.over(new SockJS('/endpoint/'))
-        this.$store.state.stompClient.debug = f => f;
+        // this.$store.state.stompClient.debug = f => f;
         this.$store.state.stompClient.connect({}, () => {
           this.$store.state.userChannelList.forEach(channel => {
             this.$store.state.stompClient.subscribe("/sub/chat/room/" + channel.id, (e) => {

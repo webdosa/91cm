@@ -280,6 +280,7 @@ MainContents
 
 /*--------------------Scrollbar-----------------------------*/
 /* width */
+
 ::-webkit-scrollbar {
     width: 0.4em;
     height: 1em;
@@ -307,7 +308,7 @@ MainContents
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 body {
-    font-family: "Poppins", sans-serif !important;
+    /* font-family: "Poppins", sans-serif !important; */
     background: #fafafa !important;
 }
 
@@ -375,10 +376,10 @@ a:focus {
     width: 17px;
     color: white !important;
 }
-.wrapper {
+/* .wrapper {
     display: flex;
     width: 100%;
-}
+} */
 
 #sidebar {
     width: 250px;
@@ -449,12 +450,16 @@ a[aria-expanded="true"] {
     position: relative;
 }
 
-.dropdown-toggle::after {
+/* .dropdown-toggle::after {
     display: block;
     position: absolute;
     top: 50%;
     right: 20px;
     transform: translateY(-50%);
+} */
+
+.dropdown-toggle::after {
+    display: none;
 }
 
 ul ul a {
