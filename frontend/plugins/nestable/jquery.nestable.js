@@ -57,6 +57,7 @@
 
         init: function()
         {
+            debugger
             var list = this;
 
             list.reset();

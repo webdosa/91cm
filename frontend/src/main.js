@@ -23,6 +23,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import BootstrapVue from 'bootstrap-vue'
+Vue.use(BootstrapVue)
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
@@ -31,8 +34,7 @@ import "@/assets/css/app.scss"
 import AlertModal from "./plugins/AlertModal";
 import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
 import 'animate.css'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+
 import './assets/css/main.css'
 import '../dist/css/theme.css'
 //
@@ -52,7 +54,7 @@ Vue.use(Vuetify)
 Vue.use(VueSession, { persist: true})
 Vue.prototype.$eventBus = new Vue();
 Vue.prototype.$http = axios
-Vue.use(BootstrapVue)
+
 Vue.config.productionTip = false
 
 new Vue({

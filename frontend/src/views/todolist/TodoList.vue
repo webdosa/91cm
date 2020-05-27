@@ -1,5 +1,5 @@
 <template>
-  <div class="mainwrapper">
+  <div class="mainwrapper" style="height: calc(100vh - 150px);">
     <div class="scrolling-wrapper h-inherit">
       <b-list-group horizontal style="overflow-x:auto; height: inherit;" id="wheelReverse">
         <draggable :list="getTaskBoard" style="display:flex; flex-wrap:nowrap" v-bind="dragOptions" @change="tasklistEventHandler">

@@ -1,7 +1,7 @@
 <template>
   <div class="app-sidebar colored">
                     <div class="sidebar-header">
-                        <a class="header-brand" href="index.html">
+                        <a class="header-brand" href="/main">
                             <!-- <div class="logo-img">
                                <img src="" class="header-brand-img" alt="lavalite"> 
                             </div> -->
@@ -59,7 +59,7 @@
                                 <div class="nav-lavel">Users</div>
                                <div class="nav-item">
                                   <div v-for="(user) in channelUsers" :key="user.email">
-                                    <a href=""><span>{{ user.name }}</span></a>
+                                    <a style="cursor:default;"><span>{{ user.name }}</span></a>
                                   </div>
                               </div>
                             </nav>
@@ -117,25 +117,25 @@
       }
     },
     created() {
-     // this.updateUserList(this.currentChannel)
+     this.updateUserList(this.currentChannel)
     },
     mounted() {
       this.$eventBus.$on('useModal', res => {
         this.prepareModal(res)
       })
+      if(window.innerWidth < 500){
+        this.$nextTick(function() {
+          let el = document.querySelector('.app-sidebar')  
+          el.classList.add("hide-sidebar")
+        });
+        
+        
+      }
     },
     updated() {
       
     },
     methods: {
-      // navClose: function(){
-      //   $(".app-sidebar").addClass("hide-sidebar")
-      // },
-      // navToggle: function(){
-      //   var e = $(".nav-toggle").find(".toggle-icon");
-      //   var l = $(".wrapper")
-      //   "expanded" === e.attr("data-toggle") ? (l.addClass("nav-collapsed"), $(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-right").addClass("ik-toggle-left"), e.attr("data-toggle", "collapsed")) : (l.removeClass("nav-collapsed menu-collapsed"), $(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-left").addClass("ik-toggle-right"), e.attr("data-toggle", "expanded"))
-      // },
       updateUserList: function (currentChannel) {
         this.$http.get('/api/user/channel/' + currentChannel.id)
           .then(res => {

@@ -1,5 +1,5 @@
 <template>
-    <main class="mainwrapper" style="height: calc(100vh - 150px);">
+    <main class="mainwrapper" style="height: calc(100vh - 150px);overflow: auto;">
         <div class="container-fluid">
             <div class="page-header">
                 <div class="row align-items-end">
@@ -15,16 +15,16 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-2 col-md-3">
+            <div class="row no-gutters">
+                <div class="col-lg-2 col-md-3" >
 
                 </div>
                 <div class="col-lg-8 col-md-7">
                     <div class="card">
                         <div class="info-w verti-align">
                             
-                                <div class="info-wrapper cetered-align">
-                                    <div style="margin: 0px 0px 35px 0;">
+                                <div class="info-wrapper cetered-align card-body">
+                                    <div style="margin: 20px 0px 35px;">
                                         <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture" width="200" height="200">
                                         <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="200" height="200">
                                     </div>
@@ -56,8 +56,8 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                     <b-button style="margin:15px;" variant="primary" @click="callComponent">수정</b-button>
                                 </div>
-                                <b-button style="margin:15px;" variant="primary" @click="callComponent">수정</b-button>
                             </div>
                     </div>
                 </div>

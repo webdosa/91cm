@@ -1,8 +1,50 @@
   
 ! function(e, s, i) {
     "use strict";
+
+    window.addEventListener('resize', function(){       
+        var n = i(".app-sidebar"),
+            l = i(".wrapper")
+          
+        i(e).width() < 992 && (n.addClass("hide-sidebar"), l.removeClass("nav-collapsed menu-collapsed")), i(e).resize(function() {
+            i(e).width() < 992 && (n.addClass("hide-sidebar"), l.removeClass("nav-collapsed menu-collapsed")), i(e).width() > 992 && (n.removeClass("hide-sidebar"), "collapsed" === i(".toggle-icon").attr("data-toggle") && l.not(".nav-collapsed menu-collapsed") && l.addClass("nav-collapsed menu-collapsed"))
+        })
+    })
+
+    i(s).on("click", ".navigation li:not(.has-sub)", function() {
+        var n = i(".app-sidebar")
+        i(e).width() < 992 && n.addClass("hide-sidebar")
+    })
     
+    i(s).on("click", ".logo-text", function() {
+        var n = i(".app-sidebar")
+        i(e).width() < 992 && n.addClass("hide-sidebar")
+    })
+    
+    i(s).on("click", ".mobile-nav-toggle",function(e) {
+        var n = i(".app-sidebar")
+        e.stopPropagation(), n.toggleClass("hide-sidebar")
+    })
+ 
+
+    i(s).on("click","#sidebarClose", function() {
+        var n = i(".app-sidebar")
+        n.addClass("hide-sidebar")
+    })
+
+    i(s).on("click",".nav-toggle" ,function() {
+        var e = $(".nav-toggle").find(".toggle-icon");
+        var l = $(".wrapper")
+        "expanded" === e.attr("data-toggle") ? (l.addClass("nav-collapsed"), $(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-right").addClass("ik-toggle-left"), e.attr("data-toggle", "collapsed")) : (l.removeClass("nav-collapsed menu-collapsed"), $(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-left").addClass("ik-toggle-right"), e.attr("data-toggle", "expanded"))
+    })
+
     i(s).on("click",".navigation-main .nav-item a",function(){
+        function a(e, s) {
+            e.children(".submenu-content").show().slideUp(200, function() {
+                i(this).css("display", ""), i(this).find(".menu-item").removeClass("is-shown"), e.removeClass("open"), s && s()
+            })
+        }
+
         var  t = i(".sidebar-content")
          
         var e = i(this).parent(".nav-item");
@@ -19,7 +61,7 @@
                     }(e), t.data("collapsible")) return !1;
                 a(e.siblings(".open")), e.siblings(".open").find(".nav-item.open").removeClass("open")
             }
-    })
+    });
 
 
 
@@ -40,7 +82,7 @@
         // });
         t.on("click", ".navigation-main .nav-item a", function() {
             var e = i(this).parent(".nav-item");
-            // debugger
+           
             if (e.hasClass("has-sub") && e.hasClass("open")) a(e);
             else {
                 if (e.hasClass("has-sub") && function(e, s) {
@@ -54,12 +96,13 @@
                     }(e), t.data("collapsible")) return !1;
                 a(e.siblings(".open")), e.siblings(".open").find(".nav-item.open").removeClass("open")
             }
-            // debugger
-        }), i(".nav-toggle").on("click", function() {
-            console.log('?')
-            var e = i(this).find(".toggle-icon");
-            "expanded" === e.attr("data-toggle") ? (l.addClass("nav-collapsed"), i(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-right").addClass("ik-toggle-left"), e.attr("data-toggle", "collapsed")) : (l.removeClass("nav-collapsed menu-collapsed"), i(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-left").addClass("ik-toggle-right"), e.attr("data-toggle", "expanded"))
-        }), n.on("mouseenter", function() {
+           
+        })
+        // , i(".nav-toggle").on("click", function() {
+        //     var e = i(this).find(".toggle-icon");
+        //     "expanded" === e.attr("data-toggle") ? (l.addClass("nav-collapsed"), i(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-right").addClass("ik-toggle-left"), e.attr("data-toggle", "collapsed")) : (l.removeClass("nav-collapsed menu-collapsed"), i(".nav-toggle").find(".toggle-icon").removeClass("ik-toggle-left").addClass("ik-toggle-right"), e.attr("data-toggle", "expanded"))
+        // })
+        , n.on("mouseenter", function() {
             if (l.hasClass("nav-collapsed")) {
                 l.removeClass("menu-collapsed");
                 var e = i(".navigation-main .nav-item.nav-collapsed-open");
@@ -76,19 +119,22 @@
                     i(this).css("display", "")
                 }), s.removeClass("open")
             }
-        }), i(e).width() < 992 && (n.addClass("hide-sidebar"), l.removeClass("nav-collapsed menu-collapsed")), i(e).resize(function() {
-            i(e).width() < 992 && (n.addClass("hide-sidebar"), l.removeClass("nav-collapsed menu-collapsed")), i(e).width() > 992 && (n.removeClass("hide-sidebar"), "collapsed" === i(".toggle-icon").attr("data-toggle") && l.not(".nav-collapsed menu-collapsed") && l.addClass("nav-collapsed menu-collapsed"))
-        }), i(s).on("click", ".navigation li:not(.has-sub)", function() {
-            i(e).width() < 992 && n.addClass("hide-sidebar")
-        }), i(s).on("click", ".logo-text", function() {
-            i(e).width() < 992 && n.addClass("hide-sidebar")
-        }), i(".mobile-nav-toggle").on("click", function(e) {
-            e.stopPropagation(), n.toggleClass("hide-sidebar")
-        }), i("html").on("click", function(s) {
-            i(e).width() < 992 && (n.hasClass("hide-sidebar") || 0 !== n.has(s.target).length || n.addClass("hide-sidebar"))
-        }), i("#sidebarClose").on("click", function() {
-            n.addClass("hide-sidebar")
         })
+        // , i(e).width() < 992 && (n.addClass("hide-sidebar"), l.removeClass("nav-collapsed menu-collapsed")), i(e).resize(function() {
+        //     i(e).width() < 992 && (n.addClass("hide-sidebar"), l.removeClass("nav-collapsed menu-collapsed")), i(e).width() > 992 && (n.removeClass("hide-sidebar"), "collapsed" === i(".toggle-icon").attr("data-toggle") && l.not(".nav-collapsed menu-collapsed") && l.addClass("nav-collapsed menu-collapsed"))
+        // }), i(s).on("click", ".navigation li:not(.has-sub)", function() {
+        //     i(e).width() < 992 && n.addClass("hide-sidebar")
+        // }), i(s).on("click", ".logo-text", function() {
+        //     i(e).width() < 992 && n.addClass("hide-sidebar")
+        // }), i(".mobile-nav-toggle").on("click", function(e) {
+        //     e.stopPropagation(), n.toggleClass("hide-sidebar")
+        // }) 위에서 선언함
+        , i("html").on("click", function(s) {
+            i(e).width() < 992 && (n.hasClass("hide-sidebar") || 0 !== n.has(s.target).length || n.addClass("hide-sidebar"))
+        })
+        // , i("#sidebarClose").on("click", function() {
+        //     n.addClass("hide-sidebar")
+        // })
         // , i('[data-toggle="tooltip"]').tooltip(), i("#checkbox_select_all").on("click", function() {
         //     for (var e = s.getElementsByName("item_checkbox"), a = 0; a < e.length; a++) "checkbox" == e[a].type && (e[a].checked = !0), i(e).parent().parent().addClass("selected")
         // })
