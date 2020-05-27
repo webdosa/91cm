@@ -11,6 +11,35 @@
         })
     })
 
+
+    i(s).on("click",".card-header-right .card-option .action-toggle", function() {
+        var e = i(this);
+        e.hasClass("ik-chevron-right") ? e.parents(".card-option").animate({
+            width: "28px"
+        }) : e.parents(".card-option").animate({
+            width: "120px"
+        }), i(this).toggleClass("ik-chevron-right").fadeIn("slow")
+    })
+    
+    i(s).on("click", ".card-header-right .close-card",function() {
+        var e = i(this);
+        e.parents(".card").animate({
+            opacity: "0",
+            "-webkit-transform": "scale3d(.3, .3, .3)",
+            transform: "scale3d(.3, .3, .3)"
+        }), setTimeout(function() {
+            e.parents(".card").remove()
+        }, 800)
+    })
+    
+    
+    i(s).on("click",".card-header-right .minimize-card",function() {
+        var e = i(this),
+            s = i(e.parents(".card"));
+        i(s).children(".card-body").slideToggle();
+        i(this).toggleClass("ik-minus").fadeIn("slow"), i(this).toggleClass("ik-plus").fadeIn("slow")
+    })
+
     i(s).on("click", ".navigation li:not(.has-sub)", function() {
         var n = i(".app-sidebar")
         i(e).width() < 992 && n.addClass("hide-sidebar")
@@ -172,28 +201,30 @@
             }), setTimeout(function() {
                 e.parents(".widget").remove()
             }, 800)
-        }), i(".card-header-right .card-option .action-toggle").on("click", function() {
-            var e = i(this);
-            e.hasClass("ik-chevron-right") ? e.parents(".card-option").animate({
-                width: "28px"
-            }) : e.parents(".card-option").animate({
-                width: "90px"
-            }), i(this).toggleClass("ik-chevron-right").fadeIn("slow")
-        }), i(".card-header-right .close-card").on("click", function() {
-            var e = i(this);
-            e.parents(".card").animate({
-                opacity: "0",
-                "-webkit-transform": "scale3d(.3, .3, .3)",
-                transform: "scale3d(.3, .3, .3)"
-            }), setTimeout(function() {
-                e.parents(".card").remove()
-            }, 800)
-        }), i(".card-header-right .minimize-card").on("click", function() {
-            var e = i(this),
-                s = i(e.parents(".card"));
-            i(s).children(".card-body").slideToggle();
-            i(this).toggleClass("ik-minus").fadeIn("slow"), i(this).toggleClass("ik-plus").fadeIn("slow")
-        }), i(".task-list").on("click", "li.list", function() {
+        }), 
+        // i(".card-header-right .card-option .action-toggle").on("click", function() {
+        //     var e = i(this);
+        //     e.hasClass("ik-chevron-right") ? e.parents(".card-option").animate({
+        //         width: "28px"
+        //     }) : e.parents(".card-option").animate({
+        //         width: "90px"
+        //     }), i(this).toggleClass("ik-chevron-right").fadeIn("slow")
+        // }), i(".card-header-right .close-card").on("click", function() {
+        //     var e = i(this);
+        //     e.parents(".card").animate({
+        //         opacity: "0",
+        //         "-webkit-transform": "scale3d(.3, .3, .3)",
+        //         transform: "scale3d(.3, .3, .3)"
+        //     }), setTimeout(function() {
+        //         e.parents(".card").remove()
+        //     }, 800)
+        // }), i(".card-header-right .minimize-card").on("click", function() {
+        //     var e = i(this),
+        //         s = i(e.parents(".card"));
+        //     i(s).children(".card-body").slideToggle();
+        //     i(this).toggleClass("ik-minus").fadeIn("slow"), i(this).toggleClass("ik-plus").fadeIn("slow")
+        // }),
+         i(".task-list").on("click", "li.list", function() {
             i(this).toggleClass("completed")
         }), i(".search-btn").on('click', function() {
             i(".header-search").addClass('open');

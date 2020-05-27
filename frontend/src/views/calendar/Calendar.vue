@@ -1,5 +1,5 @@
 <template>
-  <div class="mainwrapper">
+  <div class="mainwrapper" style="height: calc(100vh - 150px);">
     <full-calendar ref="calendar" :config="config" :events="events" @event-selected="selectEvent" ></full-calendar>
     <b-modal id="change-event" @ok="handleOk" title="일정 수정" @cancel="resetData" @hide="resetData">
       <v-swatches class="float-right" v-model="eventColor" popover-x="right"
