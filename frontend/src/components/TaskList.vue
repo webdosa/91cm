@@ -39,27 +39,6 @@
                                     :tasks="getTasks" :task-list-id="taskList.id"></TaskEdit>
                         </div>
                     </li>
-                    <!-- <ol class="dd-list">
-                        <li class="dd-item" data-id="1">
-                            <div class="dd-handle">
-                                <h6>Dashbaord</h6>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                            </div>
-                        </li>
-                        <li class="dd-item" data-id="2">
-                            <div class="dd-handle">
-                                <h6>New project</h6>
-                                <p>It is a long established fact that a reader will be distracted.</p>
-                            </div>
-                        </li>
-                        <li class="dd-item" data-id="3">
-                            <div class="dd-handle">
-                                <h6>Feed Details</h6>
-                                <p>here are many variations of passages of Lorem Ipsum available, but the majority have suffered.</p>
-                            </div>
-                        </li>
-                    </ol> -->
-
                 </div>
                 
                         <ol class="dd-list" name="task-list">
