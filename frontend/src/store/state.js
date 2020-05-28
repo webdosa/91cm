@@ -20,5 +20,6 @@ export default {
   isSearchMode: false,
   isInviteMode: false,
   searchText: '',
-  isSmallWidth:false
+  isSmallWidth:false,
+  isCreateListActive : false
 }

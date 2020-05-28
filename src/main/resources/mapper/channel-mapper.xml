@@ -18,7 +18,7 @@
         delete from channel where id = #{channelId}
     </delete>
     <select id="channelList" resultType="com.nineone.nocm.domain.Channel">
-        select channel.*,joininfo.member_email as login_email from channel join joininfo on channel.id = joininfo.channel_id where joininfo.member_email=#{userEmail};
+        select channel.*,joininfo.member_email as login_email from channel join joininfo on channel.id = joininfo.channel_id where joininfo.member_email=#{userEmail} order by channel.name;
     </select>
     <insert id="insertJoinInfo">
     	insert joininfo (channel_id,member_email)

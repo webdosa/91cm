@@ -27,7 +27,10 @@
             </div>
             <div v-else>
               <div class="card-header">
-                <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus @keydown.enter.exact="setTaskListName"></b-form-input>
+
+                <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus @keydown.enter.exact="setTaskListName" @keydown.esc="closeTaskList"></b-form-input>
+                <li class="list-unstyled" @click="closeTaskList"><i class="ik ik-x close-card" style="cursor: pointer;"></i></li>
+                <li class="list-unstyled" @click="setTaskListName"><i class="ik ik-plus" style="cursor: pointer;"></i></li>
                 </div>
             </div>
 
@@ -137,6 +140,9 @@
       }
     },
     methods: {
+      closeTaskList: function(){
+        this.$emit('closeTaskList')
+      },
       taskEventHandler: function ({added, moved, removed}) {
         let updateTaskItem = {
           taskOldIndex: null,
@@ -243,6 +249,7 @@
           .then(res => {
             this.taskList.id = res.data.id
             this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
+            this.$store.commit('setCreateListActive', false)
           })
           .catch(error => {
             console.error(error)

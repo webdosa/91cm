@@ -35,5 +35,8 @@ export default {
   },
   setSmallWidth: function (state, payload) {
     state.isSmallWidth = payload
+  },
+  setCreateListActive: function(state,payload){
+    state.isCreateListActive = payload
   }
 }

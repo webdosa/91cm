@@ -202,7 +202,6 @@ import theme from '../../../dist/js/theme.js'
         console.log('selectcom',this.$store.state.selectComponent)
         console.log('userchannel',this.$store.state.userChannelList[0]==null)
         console.log('userchannel',this.$store.state.userChannelList[0])
-        this.$emit('hihi')
       }
       ,
       LSidebarToggle: function () {

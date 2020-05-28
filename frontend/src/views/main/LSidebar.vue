@@ -43,13 +43,10 @@
                                     </a>
                                     <div class="submenu-content">
                                         <div v-for="(channel, index ) in userChannelList" :key="channel.id">
-                                            <a @click="sendSelectChannel(index)" class="menu-item" style="display: flex;">
+                                            <a @click="sendSelectChannel(index)" class="menu-item" style="display: flex;" :class="{ 'active-channel': channel.id == $store.state.currentChannel.id}">
                                                  <div>{{ channel.name }}</div>
                                                 <div style="display: flex;justify-content: flex-end;flex-grow: 1;" v-if="channel.count!=0">
                                                     <span class="badge badge-danger" style="position: inherit;" >{{channel.count }}</span>
-                                                    <!-- <b-badge  variant="danger"  >
-                                                        {{channel.count }}
-                                                    </b-badge> -->
                                                 </div>
                                             </a>
                                         </div>
@@ -136,6 +133,10 @@
       
     },
     methods: {
+      activeCurrentChannel:function(){
+        this.$store.state.currentChannel
+        return true
+      },
       activeBlock:function(){
         this.$nextTick(function() {
           let el = document.querySelector('.wrapper')
@@ -262,4 +263,10 @@
     }
   }
 </script>
+<style scoped>
+.active-channel{
+  background-color:white;
+  color:black !important; 
+}
+</style>
 

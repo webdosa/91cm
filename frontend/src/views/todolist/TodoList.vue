@@ -18,7 +18,7 @@
                            
                            <li class="breadcrumb-item"> 리스트 생성</li>
                             <li class="breadcrumb-item" @click="addTaskList">
-                                <i class="ik ik-plus-circle" style="font-size:1.8rem;"></i>
+                                <i class="ik ik-plus-circle" style="font-size:1.8rem;cursor: pointer;"></i>
                             </li>
                         </ol>
                     </nav>
@@ -30,7 +30,7 @@
         <div class="row">
             <draggable :list="getTaskBoard" v-bind="dragOptions" @change="tasklistEventHandler" style="width: 100%;flex-direction: row;display: flex;flex-wrap: wrap;">
                 <div class="col-md-4" v-for="item in getTaskBoard" :key="item.id">
-                    <TaskList :taskList="item" ></TaskList>
+                    <TaskList :taskList="item" @closeTaskList="closeTaskList"></TaskList>
                 </div>
             </draggable>
   
@@ -121,32 +121,19 @@
       }
     },
     methods: {
-      // setTaskListName: function () {
-      //   this.taskList.channel_id = this.currentChannel.id
-      //   this.taskList.name = this.taskListName
-      //   this.$http.post('/api/tasklist/insert', JSON.stringify(this.taskList), {
-      //     headers: {
-      //       'Content-Type': 'application/json'
-      //     }
-      //   })
-      //     .then(res => {
-      //       this.taskList.id = res.data.id
-      //       this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
-            
-      //     })
-      //     .catch(error => {
-      //       console.error(error)
-      //     })
-      // },
+      closeTaskList: function(){
+        this.taskList.pop()
+        this.$store.commit('setCreateListActive', false)
+      },
       activeNewList: function(){
         this.activeNewList = true;
         console.log('?')
       },
-      // close: function(){
-      //     this.dialog= false;
-      // },
       addTaskList: function () {
-        this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
+        if(!this.$store.state.isCreateListActive){
+          this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
+          this.$store.commit('setCreateListActive', true)
+        }
       },
       tasklistEventHandler: function ({added, moved, removed}) {
         if (moved) {
