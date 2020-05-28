@@ -22,7 +22,7 @@
                                 <div v-for="(alarm,index) in getAlarmList" :key="alarm">
                                     <a class="media" style="cursor: default;">
                                        <span class="media-body">
-                                            <!-- <span class="heading-font-family media-heading">Invitation accepted</span>  -->
+                                            
                                             <div class="heading-font-family media-heading">
                                                 {{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</div>
 
@@ -44,47 +44,13 @@
                                       
                                     </a>
                                 </div>    
-                                <!-- <a href="#" class="media">
-                                    <span class="d-flex">
-                                        <img src="img/users/1.jpg" class="rounded-circle" alt="">
-                                    </span>
-                                    <span class="media-body">
-                                        <span class="heading-font-family media-heading">Steve Smith</span> 
-                                        <span class="media-content">I slowly updated projects</span>
-                                    </span>
-                                </a>
-                                <a href="#" class="media">
-                                    <span class="d-flex">
-                                        <i class="ik ik-calendar"></i> 
-                                    </span>
-                                    <span class="media-body">
-                                        <span class="heading-font-family media-heading">To Do</span> 
-                                        <span class="media-content">Meeting with Nathan on Friday 8 AM ...</span>
-                                    </span>
-                                </a> -->
 
                             </div>
-                            <div class="footer"><a href="javascript:void(0);">See all activity</a></div>
+                    
                         </div>
                     </div>
-                    <button type="button" @click="rightSidebarToggle" class="nav-link ml-10 right-sidebar-toggle"><i class="ik ik-message-square"></i></button>
-                    <!-- <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ik ik-plus"></i></a>
-                        <div class="dropdown-menu dropdown-menu-right menu-grid" aria-labelledby="menuDropdown">
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Dashboard"><i class="ik ik-bar-chart-2"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Message"><i class="ik ik-mail"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Accounts"><i class="ik ik-users"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Sales"><i class="ik ik-shopping-cart"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Purchase"><i class="ik ik-briefcase"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Pages"><i class="ik ik-clipboard"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Chats"><i class="ik ik-message-square"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Contacts"><i class="ik ik-map-pin"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Blocks"><i class="ik ik-inbox"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Events"><i class="ik ik-calendar"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Notifications"><i class="ik ik-bell"></i></a>
-                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="More"><i class="ik ik-more-horizontal"></i></a>
-                        </div>
-                    </div> -->
+                    <button v-if="$store.state.userChannelList[0]!=null" type="button" @click="rightSidebarToggle" class="nav-link ml-10 right-sidebar-toggle"><i class="ik ik-message-square"></i></button>
+                    
                     <button type="button" class="nav-link ml-10" id="apps_modal_btn" data-toggle="modal" data-target="#appsModal"><i class="ik ik-grid"></i></button>
 
                     
@@ -94,7 +60,7 @@
                         <a class="dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img v-if="$store.state.currentUser.picture" class="avatar" :src="$store.state.currentUser.picture">
                             <img v-else class="avatar" src="../../assets/images/default-user-picture.png">
-                            <!-- <img class="avatar" src="img/user.jpg" alt=""> -->
+                            
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                             <a class="dropdown-item" @click="callComponent('user')" ><i class="ik ik-user dropdown-icon"></i> Profile</a>

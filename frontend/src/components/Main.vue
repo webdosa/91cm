@@ -40,18 +40,13 @@
 <script>
 
   import theme from '../../dist/js/theme.js'
-  // import perfectScrollbar from '../../plugins/perfect-scrollbar/dist/perfect-scrollbar.min.js'
-  // import LSidebar from '../views/main/LSidebar'
   import LSidebar from '../views/main/LSidebar'
-  // import RSidebar from '../views/main/RSidebar'
   import RSidebar from '../views/main/RSidebar'
-  // import MainHeader from '../views/main/MainHeader'
   import MainHeader from '../views/main/MainHeader'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
   import NotificationClass from '../service/notification'
   import EventListener from '../service/eventlistener'
-  // import UserInfo from "../views/user/UserInfo"
   import UserInfo from "../views/user/UserInfo"
   import EditProfile from "../views/user/EditProfile"
   import ChannelHeader from "../views/main/ChannelHeader"

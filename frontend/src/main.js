@@ -5,14 +5,6 @@ import 'expose-loader?$!expose-loader?jQuery!jquery'
 import '../plugins/fontawesome-free/css/all.min.css'
 import '../plugins/icon-kit/dist/css/iconkit.min.css'
 import '../plugins/ionicons/dist/css/ionicons.min.css'
-import '../plugins/perfect-scrollbar/css/perfect-scrollbar.css'
-import '../plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css'
-import '../plugins/jvectormap/jquery-jvectormap.css'
-import '../plugins/weather-icons/css/weather-icons.min.css'
-import '../plugins/c3/c3.min.css'
-import '../plugins/owl.carousel/dist/assets/owl.carousel.min.css'
-import '../plugins/owl.carousel/dist/assets/owl.theme.default.min.css'
-
 import '../plugins/bootstrap/dist/js/bootstrap.min.js'
 
  
@@ -28,7 +20,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
 import VueSession from 'vue-session'
-import "@/assets/css/app.scss"
 import AlertModal from "./plugins/AlertModal";
 import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
 import 'animate.css'
