@@ -1,7 +1,7 @@
 <template>
-  <div data-app >
+  <v-app data-app >
     <router-view/>
-  </div >
+  </v-app >
   
 </template>
 
@@ -23,9 +23,6 @@
   height:100vh;
   background-color:#fafafa;
 }
-// #app a{
-//   color:black;
-// }
 
 #app ul{
   padding-left:0;
@@ -49,4 +46,6 @@
   padding-top:0;
   padding-bottom:0;
 }
+
+
 </style>

@@ -5,7 +5,7 @@
         <MainHeader></MainHeader>
           <div class="page-wrap">
             <LSidebar @channelUpdate="channelUpdate" ></LSidebar>
-              <div class="main-content" style="padding-bottom:0;">
+              <div class="main-content" style="padding-bottom:0;" :class="{'disactive-padding': $store.state.selectComponent=='main' }">
                   <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
                     <keep-alive v-else>
                       <component :is="whichComponent"
@@ -15,7 +15,8 @@
                     </keep-alive>  
                   <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
               </div>
-              <footer class="footer">
+              
+              <footer class="footer" >
                   <div class="w-100 clearfix">
                       <span class="text-center text-sm-left d-md-inline-block">Copyright © 2018 ThemeKit</span>
                       <!-- <span class="float-none float-sm-right mt-1 mt-sm-0 text-center">Crafted with <i class="fa fa-heart text-danger"></i> by <a href="http://lavalite.org/" class="text-dark" target="_blank">Lavalite</a></span> -->
@@ -228,6 +229,10 @@
 
 </script>
 <style>
+.disactive-padding{
+  padding-top:0 !important;
+  padding-right:0 !important;
+  padding-left: 240px !important;
 
-
+}
 </style>

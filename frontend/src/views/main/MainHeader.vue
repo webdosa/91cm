@@ -227,3 +227,9 @@ import theme from '../../../dist/js/theme.js'
     ,
   }
 </script>
+<style scoped>
+
+.v-application .ml-10{
+  margin-left: 10px !important;
+}
+</style>

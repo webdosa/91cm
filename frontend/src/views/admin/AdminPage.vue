@@ -1,8 +1,8 @@
 <template>
-  <main class="mainwrapper" style="height: calc(100vh - 60px);">
-    <div style="height: inherit; padding: 15px;">
+  <main >
+    <div style="padding: 15px;">
       <div
-        style="height: calc(100vh - 90px); padding: 15px; display: flex; flex-direction: column; justify-content: center;"
+        style="padding: 15px; display: flex; flex-direction: column; justify-content: center;"
       >
         <v-tabs
           v-model="tab"

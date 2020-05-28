@@ -273,6 +273,10 @@
   }
 </script>
 <style scoped>
+
+  .v-application ol{
+      padding :0px !important;
+  }
   .task-list-enter-active, .task-list-leave-active {
     transition: all 1s;
   }

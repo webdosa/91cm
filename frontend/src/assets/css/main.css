@@ -85,8 +85,8 @@
 #c-c-preview {
     z-index: 998;
     position: fixed;
-    bottom: 141px;
-    width: calc(100% - 250px);
+    bottom: 175px;
+    width: calc(100% - 240px);
     background-color: rgba(80, 188, 223, 0.75);
     font-weight: bold;
     transition: all ease 0.3s 0s;
@@ -237,15 +237,15 @@ MainContents
 .c-c-wrapper {
     overflow-y: auto;
     overflow-x:hidden;
-    height: calc(100% - 141px);
+    height: calc(100% - 115px);
     padding: 20px 25px 0px 25px !important;
     margin-bottom: 0px;    
     position: relative;
 }
 
 .c-i-wrapper {
-    height: 141px;
-    padding: 0px 25px;
+    height: 115px;
+    padding: 0px 25px; 
     display: flex;
     /* border-top: 1px solid #e6e6e6; */
 }

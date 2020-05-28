@@ -34,16 +34,10 @@
     "vuex": "^3.4.0",
     "webstomp-client": "^1.2.6",
     "@claviska/jquery-minicolors": "^2.3.2",
-    "bootstrap-tagsinput": "^0.7.1",
-    "c3": "^0.6.8",
-    "datedropper": "^2.0.0",
     "flot.curvedlines": "^1.1.1",
-    "fullcalendar": "^3.9.0",
     "icon-kit": "^1.0.0",
     "ionicons": "^4.4.6",
-    "popper.js": "^1.14.3",
-    "screenfull": "^3.3.*",
-    "select2": "^4.0.6-rc.1"
+    "popper.js": "^1.14.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.3.1",
