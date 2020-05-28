@@ -1,64 +1,70 @@
 <template>
-  <nav id="r-sidebar" class="myflex-column" v-bind:class="{barRtoggle: $store.state.isRActive}">
-    <div class="r-header r-style">
-      <span>About this Channel</span>
-      <div style="flex-grow: 1;justify-content: flex-end;display: flex;">
-        <a @click="RSidebarClose">
-          <i class="im im-x-mark"></i>
-        </a>
-      </div>
-    </div>
-    <!-- content wrapper -->
-    <div style="overflow:auto;">
-      <!-- 채널 메뉴 시작 -->
-      <a class="r-style" v-b-toggle.channel-info>
-        <i class="im im-info"></i>
-        <span style="margin-left:20px;">Channel Details</span>
-        <div style="display: flex; flex-grow: 1; justify-content: flex-end;">
-          <i class="im im-care-down" style="font-size: 15px;"></i>
-        </div>
-      </a>
-      <!-- 채널 메뉴 끝 -->
-      <!-- 채널 메뉴 콜랩스 -->
-      <b-collapse id="channel-info">
-        <div class="s-coll-style">
-          <div>
-            <div style="display:flex;">
-              <p>Channel Name</p>
-                <a class="verti-align" style="color: #007bff;" data-mode="edit" @click="useModal('edit')">Edit</a>
-            </div>
-            <li class="list-unstyled">{{ $store.state.currentChannel.name }}</li>
-          </div>
-          <div style="display:flex; justify-content:flex-start;">
-            <b-button variant="primary" @click="leaveChannle">나가기</b-button>
-          </div>
-        </div>
-      </b-collapse>
+     <aside class="right-sidebar">
+                    <div class="sidebar-chat" data-plugin="chat-sidebar">
+                        <div class="sidebar-chat-info" style="margin: 16px 0px;">
+                            <h6>About this Channel</h6>
+                            
+                        </div>
+                        <div class="chat-list">
+                            <div class="list-group row">
+                                
+                                <a class="list-group-item " style="color: #444;" v-b-toggle.channel-info>
+                                  <i class="im im-info"></i>
+                                  <span style="margin-left:20px;">Channel Details</span>
+                                  <div style="display: flex; flex-grow: 1; justify-content: flex-end;">
+                                    <i class="im im-care-down" style="font-size: 15px;"></i>
+                                  </div>
+                                </a>
 
-      <!-- Users 메뉴 시작 -->
-      <a class="r-style" v-b-toggle.user-info>
-        <i class="im im-users"></i>
-        <span style="margin-left:20px;">{{channelUsers.length}} Users</span>
-      </a>
-      <!-- Users 메뉴 끝 -->
+                                <b-collapse id="channel-info">
+                                  <div class="s-coll-style">
+                                    <div>
+                                      <div style="display:flex;">
+                                        <p>Channel Name</p>
+                                          <a class="verti-align" style="color: #007bff;" data-mode="edit" @click="useModal('edit')">Edit</a>
+                                      </div>
+                                      <li class="list-unstyled">{{ $store.state.currentChannel.name }}</li>
+                                    </div>
+                                    <div style="display:flex; justify-content:flex-start;">
+                                      <b-button variant="primary" @click="leaveChannle">나가기</b-button>
+                                    </div>
+                                  </div>
+                                </b-collapse>
+                                
+                                 <!-- Users 메뉴 시작 -->
+                                <a class="list-group-item" v-b-toggle.user-info>
+                                  <i class="im im-users"></i>
+                                  <span style="margin-left:20px;">{{channelUsers.length}} Users</span>
+                                </a>
+                                <!-- Users 메뉴 끝 -->
 
-      <!-- to do list 메뉴 시작 -->
-      <a class="r-style" @click="callComponent('todoList')">
-        <i class="im im-task-o"></i>
-        <span style="margin-left:20px;">Todo List</span>
-      </a>
-      <!-- to do list 메뉴 끝 -->
-      <!-- calender 메뉴 시작 -->
-      <a class="r-style"  @click="callComponent('calendar')">
-        <i class="im im-calendar"></i>
-        <span style="margin-left:20px;">Calendar</span>
-      </a>
-      <!-- calender 메뉴 끝 -->
-    </div>
-  </nav>
+                                <!-- to do list 메뉴 시작 -->
+                                <a class="list-group-item" @click="callComponent('todoList')">
+                                  <i class="im im-task-o"></i>
+                                  <span style="margin-left:20px;">Todo List</span>
+                                </a>
+                                <!-- to do list 메뉴 끝 -->
+                                <!-- calender 메뉴 시작 -->
+                                <a class="list-group-item"  @click="callComponent('calendar')">
+                                  <i class="im im-calendar"></i>
+                                  <span style="margin-left:20px;">Calendar</span>
+                                </a>
+                                <!-- calender 메뉴 끝 -->
+                              
+                                <!-- <a href="javascript:void(0)" class="list-group-item" data-chat-user="Shelly Sullivan">
+                                    <figure class="user--offline">
+                                        <img src="" class="rounded-circle" alt="">
+                                    </figure><span><span class="name">Shelly Sullivan</span>  <span class="username">@shelly</span></span>
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
 </template>
+
 <script>
-  import {mapGetters} from "vuex";
+    import {mapGetters} from "vuex";
 
   export default {
     props: ['modalObj'],
@@ -122,5 +128,10 @@
       }
     }
   }
-
 </script>
+
+<style scope>
+.wrapper .page-wrap .right-sidebar .sidebar-chat .chat-list .list-group .list-group-item{
+    color: #444 !important;
+}
+</style>

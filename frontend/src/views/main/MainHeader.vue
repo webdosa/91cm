@@ -1,72 +1,120 @@
 <template>
-  <header>
-    <b-navbar toggleable="lg" type="light" variant="white">
-      <v-btn :ripple="false" depressed="true" style="min-width: 50px;max-width: 50px;padding: 0;" color="teal">
-        <v-icon large color="white"  v-if="$store.state.isLActive" @click="LSidebarToggle">keyboard_arrow_right</v-icon>
-        <!-- <i style="display: flex;" v-if="$store.state.isLActive" class="im im-angle-right-circle btn btn-info" @click="LSidebarToggle"></i> -->
-        <!-- <i style="display: flex;" v-else class="im im-angle-left-circle btn btn-info" @click="LSidebarToggle"></i> -->
-        <v-icon large color="white" v-else @click="LSidebarToggle">keyboard_arrow_left</v-icon>
-      </v-btn>
-      <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
-        <b-dropdown style="button:position: relative;" no-caret right toggle-class="nonoutline" class="verti-align dropwonInvite" variant="nonoutline" :disabled="getAlarmList.length <= 0">
-          <template v-slot:button-content>
-            <div style="position: relative;" ref="bell">
-              <b-badge style="position: absolute; right: -5px;font-size: 10px;" variant="danger" v-show="getAlarmList.length > 0">
-                {{alarmList.length}}
-              </b-badge>
-              <i class="im im-bell"></i>
-            </div>
-          </template>
+    <header class="header-top" header-theme="light">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between">
+                <div class="top-menu d-flex align-items-center">
+                    <button type="button" class="btn-icon mobile-nav-toggle d-lg-none"><span></span></button>
+                    <div class="header-search">
+                        <div class="input-group">
+                            <span class="input-group-addon search-close"><i class="ik ik-x"></i></span>
+                            <input type="text" class="form-control">
+                            <span class="input-group-addon search-btn"><i class="ik ik-search"></i></span>
+                        </div>
+                    </div>
+                    <button type="button" id="navbar-fullscreen" class="nav-link"><i class="ik ik-maximize"></i></button>
+                </div>
+                <div class="top-menu d-flex align-items-center">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notiDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ik ik-bell"></i><span class="badge bg-danger" v-show="getAlarmList.length > 0">{{alarmList.length}}</span></a>
+                        <div class="dropdown-menu dropdown-menu-right notification-dropdown" aria-labelledby="notiDropdown">
+                            <h4 class="header">Notifications</h4>
+                            <div class="notifications-wrap">
+                                <div v-for="(alarm,index) in getAlarmList" :key="alarm">
+                                    <a class="media" style="cursor: default;">
+                                       <span class="media-body">
+                                            <!-- <span class="heading-font-family media-heading">Invitation accepted</span>  -->
+                                            <div class="heading-font-family media-heading">
+                                                {{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</div>
 
-          <b-dropdown-text v-for="(alarm,index) in getAlarmList" style="min-width:10rem; border-bottom: 1px solid #dee2e6; padding-top: .5rem;" :key="alarm">
-            <div>
-              <div class="menulist-header-icon">
-                <b-button style="padding:0 .5rem 0 0; height: 16px;" id="esc" size="sm" variant="nonoutline" @click="getAlarmList.splice(index,1)">
-                  <i style="font-size:14px;" class="im im-x-mark"></i>
-                </b-button>
-              </div>
-              <div style="padding: .5rem;">
-                <p style="margin-bottom:0;">{{getUserNameByEmail(alarm.sender)}} 님이 채널에 초대했습니다. 수락하시겠습니까?</p>
-              </div>
-              <div class="menulist-header-icon">
-                <b-button style="padding: 0 0.5rem 0 0;" size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)">
-                  <i
-                  class="im im-check-mark-circle"
-                  style="color: #42b983;"></i>
-                </b-button>
-                <b-button style="padding: 0 0.5rem 0 0;" size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)" >
-                  <i
-                  class="im im-x-mark-circle"
-                  style="color: red;"></i>
-                </b-button>
-              </div>
+                                                
+                                                <div class="menulist-header-icon">
+                                                    <b-button style="padding: 0 0.5rem 0 0;" size="sm" variant="nonoutline" @click="inviteAccept(alarm,index)">
+                                                    <i
+                                                    class="im im-check-mark-circle"
+                                                    style="color: #42b983;"></i>
+                                                    </b-button>
+                                                    <b-button style="padding: 0 0.5rem 0 0;" size="sm" variant="nonoutline" @click="inviteRefuse(alarm,index)" >
+                                                        <i
+                                                            class="im im-x-mark-circle"
+                                                            style="color: red;"></i>
+                                                    </b-button>
+                                                </div>
+                                        </span>     
+
+                                      
+                                    </a>
+                                </div>    
+                                <!-- <a href="#" class="media">
+                                    <span class="d-flex">
+                                        <img src="img/users/1.jpg" class="rounded-circle" alt="">
+                                    </span>
+                                    <span class="media-body">
+                                        <span class="heading-font-family media-heading">Steve Smith</span> 
+                                        <span class="media-content">I slowly updated projects</span>
+                                    </span>
+                                </a>
+                                <a href="#" class="media">
+                                    <span class="d-flex">
+                                        <i class="ik ik-calendar"></i> 
+                                    </span>
+                                    <span class="media-body">
+                                        <span class="heading-font-family media-heading">To Do</span> 
+                                        <span class="media-content">Meeting with Nathan on Friday 8 AM ...</span>
+                                    </span>
+                                </a> -->
+
+                            </div>
+                            <div class="footer"><a href="javascript:void(0);">See all activity</a></div>
+                        </div>
+                    </div>
+                    <button type="button" @click="rightSidebarToggle" class="nav-link ml-10 right-sidebar-toggle"><i class="ik ik-message-square"></i></button>
+                    <!-- <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ik ik-plus"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right menu-grid" aria-labelledby="menuDropdown">
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Dashboard"><i class="ik ik-bar-chart-2"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Message"><i class="ik ik-mail"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Accounts"><i class="ik ik-users"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Sales"><i class="ik ik-shopping-cart"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Purchase"><i class="ik ik-briefcase"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Pages"><i class="ik ik-clipboard"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Chats"><i class="ik ik-message-square"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Contacts"><i class="ik ik-map-pin"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Blocks"><i class="ik ik-inbox"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Events"><i class="ik ik-calendar"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Notifications"><i class="ik ik-bell"></i></a>
+                            <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="More"><i class="ik ik-more-horizontal"></i></a>
+                        </div>
+                    </div> -->
+                    <button type="button" class="nav-link ml-10" id="apps_modal_btn" data-toggle="modal" data-target="#appsModal"><i class="ik ik-grid"></i></button>
+
+                    
+
+
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img v-if="$store.state.currentUser.picture" class="avatar" :src="$store.state.currentUser.picture">
+                            <img v-else class="avatar" src="../../assets/images/default-user-picture.png">
+                            <!-- <img class="avatar" src="img/user.jpg" alt=""> -->
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" @click="callComponent('user')" ><i class="ik ik-user dropdown-icon"></i> Profile</a>
+                            <a class="dropdown-item" @click="showModal('copyRight-modal')" ><i class="ik ik-navigation dropdown-icon"></i> Opensource license</a>
+                            <a class="dropdown-item" @click="SignOut"><i class="ik ik-power dropdown-icon"></i> Logout</a>
+                            <a class="dropdown-item" v-if="getUserRoles" @click="callComponent('admin')"><i class="ik ik-settings dropdown-icon"></i> Permission</a>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-          </b-dropdown-text>
-        </b-dropdown>
-        <div class="verti-align useridsty">{{ $store.state.currentUser.name }}</div>
-        <b-nav-item-dropdown no-caret right toggle-class="nonoutline">
-          <!-- Using 'button-content' slot -->
-          <template v-slot:button-content style="padding:0px;">
-            <!--                이미지 가지고 오는 것 느림-->
-            <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture"
-                 width="40" height="40">
-            <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="40" height="40">
-          </template>
-          <b-dropdown-item @click="callComponent('user')">Profile</b-dropdown-item>
-          <b-dropdown-item @click="showModal('copyRight-modal')">Opensource license</b-dropdown-item>
-          <b-dropdown-item @click="SignOut">Sign Out</b-dropdown-item>
-          <b-dropdown-item v-if="getUserRoles" @click="callComponent('admin')">Permission</b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </b-navbar>
-    <!-- 아래 modal은 임시코드 추후에 필히 삭제할것 -->
-    <CopyRight></CopyRight>
-  </header>
+        </div>
+        <CopyRight></CopyRight>
+    </header>
+
 </template>
 
 <script>
-  import {mapGetters} from "vuex";
+import theme from '../../../dist/js/theme.js'
+     import {mapGetters} from "vuex";
   import CopyRight from "../util/CopyRight";
   import AboutChannel from '../../service/aboutchannel'
   export default {
@@ -102,7 +150,7 @@
           this.alarmList.pop()
         }
         return this.alarmList
-      },
+      }
     },
     created() {
       this.$store.state.stompClient.subscribe("/sub/alarm/" + this.$store.state.currentUser.email, (e) => {
@@ -118,10 +166,18 @@
         })
     },
     mounted() {
-
+      
     },
     methods: {
+      rightSidebarToggle: function(e){
+        // console.log(e)
+        $('.right-sidebar-toggle')[0].classList.toggle('active');
+        $('.wrapper').toggleClass('right-sidebar-expand');
+        return false;
+      },
+
       showModal: function(modalId){
+        console.log('click')
         this.$bvModal.show(modalId)
       },
       shakeAnimation: function(){
@@ -205,4 +261,3 @@
     ,
   }
 </script>
-

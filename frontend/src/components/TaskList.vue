@@ -1,72 +1,111 @@
 <template>
-  <div style="padding: 0px; height: 100%;display: flex; flex-direction: column;" class="col-12 rounded-lg bg-light">
-    <div v-if="taskList.name != ''" style="padding: 10px;">
-      <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">
-        <div class="rounded-lg bg-secondary" style="padding:10px; display:flex;">
-          <div v-if="!edit" slot="header" style="width: 100%;display: flex;align-items: center;">
-            <span style="color: white; font-size:20px;">{{taskList.name}}</span>
-            <div style="flex-grow: 1;display: flex;align-items: center;justify-content: flex-end;">
-            <i class="im im-pencil" @click="editToggle" style="cursor:pointer;"></i>
-            <i class="im im-trash-can" @click="msgBox" style="cursor:pointer;"></i>
-            <i class="im im-plus" style="padding:0px; color: white; cursor:pointer;" @click="createFormToggle"></i>
-            </div>
-          </div>
-          <b-form-input v-else
+       <div class="card task-board">
+            <div v-if="taskList.name != ''">
+                <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">
+                    <div class="card-header">
+                        <div v-if="!edit">
+                            <h3>{{taskList.name}}</h3>
+                            <div class="card-header-right">
+                                <ul class="list-unstyled card-option">
+                                    <li><i class="ik ik-chevron-left action-toggle"></i></li>
+                                    <li><i class="ik ik-minus minimize-card"></i></li>
+                                    <li @click="msgBox" ><i class="ik ik-x close-card"></i></li>
+                                    <li @click="editToggle"><i class="ik ik-edit-2"></i></li>
+                                    <li @click="createFormToggle"><i class="ik ik-plus"  ></i></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <b-form-input v-else
                         @keydown.enter.exact="editTaskListName"
                         @keydown.esc="editToggle"
                         v-model="taskList.name"
                         autofocus></b-form-input>
-        </div>
-      </draggable>
-
-    </div>
-    <div v-else>
-      <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus
-                    @keydown.enter.exact="setTaskListName"></b-form-input>
-    </div>
-    
-    <div style="height: 100%;overflow-y: auto;">
-    <b-list-group style="width: 100%; padding: 10px;"> <!-- 임시로 정해주 높이 값 정확한 반응형 높이가 아님 -->
-      <b-list-group-item v-if="create" style="padding: 10px;">
-        <TaskEdit @createFormToggle="createFormToggle" :color="color" :date="date"
-                  :tasks="getTasks" :task-list-id="taskList.id"></TaskEdit>
-      </b-list-group-item>
-      <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">
-        <transition-group name="task-list">
-          <b-list-group-item v-for="(task,index) in getTasks" :key="task" style="margin-bottom: 10px; padding: 10px 10px;" class="item">
-            <div v-if="index != editSelector">
-              <div style="display: flex; align-items: center;">
-              <span class="small text-muted" v-if="task.start_date">{{getDateFormat(task.start_date)}} ~ {{getDateFormat(task.end_date)}}</span>
-              <div class="td-dd-wrapper" style="flex-grow: 1;display: flex;justify-content: flex-end;">
-                <b-dropdown no-caret variant="nonoutline" toggle-class="text-decoration-none"
-                            style="padding: 0px;">
-                  <template v-slot:button-content>
-                    <i class="im im-menu-dot-h"></i>
-                  </template>
-                  <b-dropdown-item @click="editFormToggle(index)">Edit</b-dropdown-item>
-                  <b-dropdown-item v-if="task.state" @click="editTask(task,false)">Done</b-dropdown-item>
-                  <b-dropdown-item v-else @click="editTask(task,true)">Revoke</b-dropdown-item>
-                  <b-dropdown-item @click="deleteTask(task,index)" variant="danger">Delete</b-dropdown-item>
-                </b-dropdown>
-              </div>
-              </div>
-              <p id="content" style="margin:0">{{task.content}}</p>
-              <footer style="display: flex;justify-content: flex-end;">
-                <small>created by {{channelUsers.find(user => user.email ==
-                  task.member_email).name}}</small>
-              </footer>
+                        
+                    </div>
+                </draggable>
             </div>
             <div v-else>
-              <TaskEdit @editFormToggle="editFormToggle" :color="color" :date="date"
-                        :tasks="getTasks" :task-list-id="taskList.id" :index="index"></TaskEdit>
+              <div class="card-header">
+                <b-form-input placeholder="내용을 입력해주세요" v-model="taskListName" autofocus @keydown.enter.exact="setTaskListName"></b-form-input>
+                </div>
             </div>
-          </b-list-group-item>
-        </transition-group>
-      </draggable>
-    </b-list-group>
-    </div>
-  </div>
+
+            <div class="card-body">
+                <div v-if="create">
+                    <li class="dd-item list-unstyled">
+                        <div class="dd-handle">
+                                <TaskEdit @createFormToggle="createFormToggle" :color="color" :date="date"
+                                    :tasks="getTasks" :task-list-id="taskList.id"></TaskEdit>
+                        </div>
+                    </li>
+                    <!-- <ol class="dd-list">
+                        <li class="dd-item" data-id="1">
+                            <div class="dd-handle">
+                                <h6>Dashbaord</h6>
+                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                            </div>
+                        </li>
+                        <li class="dd-item" data-id="2">
+                            <div class="dd-handle">
+                                <h6>New project</h6>
+                                <p>It is a long established fact that a reader will be distracted.</p>
+                            </div>
+                        </li>
+                        <li class="dd-item" data-id="3">
+                            <div class="dd-handle">
+                                <h6>Feed Details</h6>
+                                <p>here are many variations of passages of Lorem Ipsum available, but the majority have suffered.</p>
+                            </div>
+                        </li>
+                    </ol> -->
+
+                </div>
+                
+                        <ol class="dd-list" name="task-list">
+                            <draggable :list="getTasks" :group="'tasks'" @change="taskEventHandler" draggable=".item">            
+                            <li class="dd-item item" v-for="(task,index) in getTasks" :key="index" >
+                                
+                            <div class="dd-handle" v-if="index != editSelector">
+                                <div>
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="small text-muted" v-if="task.start_date">{{getDateFormat(task.start_date)}} ~ {{getDateFormat(task.end_date)}}</span>
+                                        <div class="dropdown d-inline-block" style="position: absolute;right: 0;">
+                                            <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ik ik-more-horizontal"></i></a>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="moreDropdown" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-140px, 30px, 0px);">
+                                                <a class="dropdown-item" @click="editFormToggle(index)" >Edit</a>
+                                                <a class="dropdown-item" v-if="task.state" @click="editTask(task,false)" >Done</a>
+                                                <a class="dropdown-item" v-else @click="editTask(task,true)" >Revoke</a>
+                                                <a class="dropdown-item"  @click="deleteTask(task,index)" style="color:red;" >Delete</a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                             
+                                    <p id="content" style="margin:0">{{task.content}}</p>
+                                    <footer style="display: flex;justify-content: flex-end;">
+                                        <small>created by {{channelUsers.find(user => user.email ==
+                                        task.member_email).name}}</small>
+                                    </footer>
+                                </div>
+                                <div class="task-color" :style="{'background-color':task.color}"></div>
+
+                            </div>
+                            <div class="dd-handle" v-else>
+                                <TaskEdit @editFormToggle="editFormToggle" :color="color" :date="date"
+                                    :tasks="getTasks" :task-list-id="taskList.id" :index="index"></TaskEdit>
+                            </div>
+                        </li>   
+                        </draggable>
+                        </ol>
+                    
+            </div>
+
+            
+
+        </div>
 </template>
+
 <script>
   import draggable from 'vuedraggable'
   import DatePicker from 'vue2-datepicker'
@@ -93,7 +132,7 @@
         this.taskList.tasks.forEach(task => {
           task.position = this.taskList.tasks.indexOf(task)
         })
-      },
+      }
     },
     components: {
       TaskEdit,
@@ -295,5 +334,15 @@
     word-wrap: break-word;
   }
 
+    .task-color {
+        width: 5px;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .dd-handle{
+        overflow:visible;
+    }
 
 </style>

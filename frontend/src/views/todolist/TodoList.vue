@@ -1,22 +1,42 @@
 <template>
-  <div class="mainwrapper" style="height: calc(100vh - 150px);">
-    <div class="scrolling-wrapper h-inherit">
-      <b-list-group horizontal style="overflow-x:auto; height: inherit;" id="wheelReverse">
-        <draggable :list="getTaskBoard" style="display:flex; flex-wrap:nowrap" v-bind="dragOptions" @change="tasklistEventHandler">
-          <b-list-group-item v-for="item in getTaskBoard" :key="item" style="min-width: 355px; max-width: 355px;">
-            <TaskList :taskList="item"></TaskList>
-          </b-list-group-item>
-        </draggable>
-        <b-list-group-item style="min-width: 355px; max-width: 355px;">
-          <div>
-            <b-card class="btn" align="center" style="border-style: dotted" @click="addTaskList()">
-              <i class="im im-plus" style="font-size: small"></i>
-              Add New TaskList
-            </b-card>
-          </div>
-        </b-list-group-item>
-      </b-list-group>
+  <div >
+     <div class="container-fluid">
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-lg-8">
+                    <div class="page-header-title">
+                        <i class="ik ik-server bg-blue"></i>
+                        <div class="d-inline">
+                            <h5>Taskboard</h5>
+                            <span>해당 채널 이름을 넣어줍시다</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <nav class="breadcrumb-container" aria-label="breadcrumb">
+                       <ol class="breadcrumb" style="display: flex;align-items: center;">
+                           
+                           <li class="breadcrumb-item"> 리스트 생성</li>
+                            <li class="breadcrumb-item" @click="addTaskList">
+                                <i class="ik ik-plus-circle" style="font-size:1.8rem;"></i>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <draggable :list="getTaskBoard" v-bind="dragOptions" @change="tasklistEventHandler" style="width: 100%;flex-direction: row;display: flex;flex-wrap: wrap;">
+                <div class="col-md-4" v-for="item in getTaskBoard" :key="item.id">
+                    <TaskList :taskList="item" ></TaskList>
+                </div>
+            </draggable>
+  
+        </div>
     </div>
+
   </div>
 </template>
 <script>
@@ -87,6 +107,7 @@
     },
     data() {
       return {
+        activeNewList: false,
         taskSubscribe: null,
         connetionCheck: false,
         taskList: [],
@@ -100,6 +121,30 @@
       }
     },
     methods: {
+      // setTaskListName: function () {
+      //   this.taskList.channel_id = this.currentChannel.id
+      //   this.taskList.name = this.taskListName
+      //   this.$http.post('/api/tasklist/insert', JSON.stringify(this.taskList), {
+      //     headers: {
+      //       'Content-Type': 'application/json'
+      //     }
+      //   })
+      //     .then(res => {
+      //       this.taskList.id = res.data.id
+      //       this.$store.state.stompClient.send('/sub/todo/' + this.currentChannel.id, {}, {typename: 'taskUpdate'})
+            
+      //     })
+      //     .catch(error => {
+      //       console.error(error)
+      //     })
+      // },
+      activeNewList: function(){
+        this.activeNewList = true;
+        console.log('?')
+      },
+      // close: function(){
+      //     this.dialog= false;
+      // },
       addTaskList: function () {
         this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))
       },
@@ -141,4 +186,11 @@
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
   }
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    display: inline-block;
+    padding-right: 0.5rem;
+    color: #6c757d;
+    content: "";
+    }
 </style>

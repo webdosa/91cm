@@ -42,17 +42,17 @@
   import theme from '../../dist/js/theme.js'
   // import perfectScrollbar from '../../plugins/perfect-scrollbar/dist/perfect-scrollbar.min.js'
   // import LSidebar from '../views/main/LSidebar'
-  import LSidebar from '../views/main/LSidebarV2'
+  import LSidebar from '../views/main/LSidebar'
   // import RSidebar from '../views/main/RSidebar'
-  import RSidebar from '../views/main/RSidebarV2'
+  import RSidebar from '../views/main/RSidebar'
   // import MainHeader from '../views/main/MainHeader'
-  import MainHeader from '../views/main/MainHeaderV2'
+  import MainHeader from '../views/main/MainHeader'
   import ContentWrapper from '../views/main/ContentWrapper'
   import AboutChannel from '../service/aboutchannel'
   import NotificationClass from '../service/notification'
   import EventListener from '../service/eventlistener'
   // import UserInfo from "../views/user/UserInfo"
-  import UserInfo from "../views/user/UserInfoV2"
+  import UserInfo from "../views/user/UserInfo"
   import EditProfile from "../views/user/EditProfile"
   import ChannelHeader from "../views/main/ChannelHeader"
   import CommonClass from '../service/common'
@@ -60,7 +60,7 @@
   import Loading from '../views/main/Loading'
   import Stomp from "webstomp-client";
   import SockJS from "sockjs-client";
-  import TodoList from '../views/todolist/TodoListV2'
+  import TodoList from '../views/todolist/TodoList'
   import Calendar from "../views/calendar/Calendar";
   import AdminPage from "../views/admin/AdminPage"
   import AppsModal from "../views/main/AppsModal"

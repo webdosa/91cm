@@ -1,52 +1,69 @@
 <template>
-  <main class="mainwrapper" style="height: calc(100vh - 60px);">
-    <div class="h-inherit " style="padding: 40px;">
-      <div class="info-w verti-align">
-        <h4  style="padding-top: 40px;">회원정보 수정</h4>
-      <div class="info-wrapper cetered-align">
-        <br>
-        <div class="hori-align" style="margin: 0px 0px 35px 0;">
-          <b-button v-if="$store.state.currentUser.picture" variant="light" v-b-modal.modal-prevent-closing>
-            <img class="icon-round" :src="$store.state.currentUser.picture" width="200" height="200">
-          </b-button>
-          <b-button v-else variant="light" v-b-modal.modal-prevent-closing>
-            <img class="icon-round" src="../../assets/images/default-user-picture.png" width="200" height="200">
-          </b-button>
-        </div>
-        <table>
-          <tbody>
-          <tr>
-            <th>
-              <label>이름</label>
-            </th>
-            <td>
-              <b-input type="text" @keyup="symbolsFormatter" name="name" v-model="user.name"></b-input>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              <label>이메일</label>
-            </th>
-            <td>
-              <b-input type="email" name="email" disabled="true" v-model="user.email"></b-input>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              <label>전화번호</label>
-            </th>
-            <td>
-              <b-input type="text" @keyup="phoneFormatter" name="phone" v-model="user.phone"></b-input>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <b-button style="margin:15px;" variant="primary" @click="edit">수정</b-button>
-      </div>
-    </div>
+  <main class="mainwrapper" style="height: calc(100vh - 150px);overflow: auto;">
+    <div class="container-fluid">
+            <div class="page-header">
+                <div class="row align-items-end">
+                    <div class="col-lg-8">
+                        <div class="page-header-title">
+                            <i class="ik ik-file-text bg-blue"></i>
+                            <div class="d-inline">
+                                <h5>Profile</h5>
+                                <span>개인 프로필 수정</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <b-modal
+            <div class="row no-gutters">
+                <div class="col-lg-2 col-md-3" >
+
+                </div>
+                <div class="col-lg-8 col-md-7">
+                    <div class="card">
+                        <div class="info-w verti-align">
+                            
+                                <div class="info-wrapper cetered-align card-body">
+                                    <div style="margin: 20px 0px 35px;">
+                                        <img v-if="$store.state.currentUser.picture" class="icon-round" :src="$store.state.currentUser.picture" width="200" height="200">
+                                        <img v-else class="icon-round" src="../../assets/images/default-user-picture.png" width="200" height="200">
+                                    </div>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                    <label for="name">이름</label>
+                                                </th>
+                                                <td>
+                                                    <b-input type="text" @keyup="symbolsFormatter" name="name" v-model="user.name"></b-input>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <label for="email">이메일</label>
+                                                </th>
+                                                <td>
+                                                    <b-input type="email" name="email" disabled="true" v-model="user.email"></b-input>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <label for="phone">전화번호</label>
+                                                </th>
+                                                <td>
+                                                    <b-input type="text" @keyup="phoneFormatter" name="phone" v-model="user.phone"></b-input>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                     <b-button style="margin:15px;" variant="primary" @click="edit">수정</b-button>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <b-modal
       id="modal-prevent-closing"
       ref="modal"
       title="프로필 사진"

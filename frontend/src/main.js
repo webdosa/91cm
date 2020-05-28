@@ -8,12 +8,10 @@ import '../plugins/ionicons/dist/css/ionicons.min.css'
 import '../plugins/perfect-scrollbar/css/perfect-scrollbar.css'
 import '../plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css'
 import '../plugins/jvectormap/jquery-jvectormap.css'
-import '../plugins/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css'
 import '../plugins/weather-icons/css/weather-icons.min.css'
 import '../plugins/c3/c3.min.css'
 import '../plugins/owl.carousel/dist/assets/owl.carousel.min.css'
 import '../plugins/owl.carousel/dist/assets/owl.theme.default.min.css'
-// import '../src/assets/js/vendor/modernizr-2.8.3.min.js'
 
 import '../plugins/bootstrap/dist/js/bootstrap.min.js'
 

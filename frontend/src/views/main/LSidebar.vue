@@ -1,68 +1,88 @@
 <template>
-  <nav id="sidebar" class="myflex-column" v-bind:class="{active: $store.state.isLActive}">
-    <div class="sidebar-header">
-      <div class="menulist-header-icon">
-        <a @click="LSidebarToggle" v-if="$store.state.isSmallWidth">
-          <i class="im im-x-mark" style="color:white;margin-bottom: 15px;"></i>
-        </a>
-      </div>
-      <a href="/main">
-        <img style="width: 100%;" src="../../assets/images/nineone.png">
-      </a>
-      <h3>91CM</h3>
-    </div>
-    <div class="myflex-column menulist">
-      <ul class="list-unstyled components">
-        <div class="menulist-header">
-          <span>Channels</span>
-          <div class="menulist-header-icon">
-            <a @click="prepareModal('create')" style="margin-right: 5px;">
-              <i class="im im-plus-circle"></i>
-            </a>
-          </div>
-        </div>
-        <li>
-          <a v-b-toggle.collapse-1 class="dropdown-toggle">Channels</a>
-          <b-collapse id="collapse-1" visible>
-            <ul class="list-unstyled">
-              <li v-for="(channel, index ) in userChannelList" :key="channel.id">
-                <a @click="sendSelectChannel(index)" style="display: flex;">
-                  <div>{{ channel.name }}</div>
-                  <div class="menulist-header-icon">
-                    <b-badge v-if="channel.count!=0" variant="danger" class="verti-align channel-nowrap">{{
-                      channel.count }}
-                    </b-badge>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </b-collapse>
-        </li>
-        <div class="menulist-header">
-          <span>Users</span>
-        </div>
-        <ul class="list-unstyled">
-          <li v-for="(user) in channelUsers" :key="user.email">
-            <a href="#">{{ user.name }}</a>
-          </li>
-        </ul>
-      </ul>
-    </div>
-    <b-modal id="channelCU" centered ref="modal" @hidden="resetModal" @ok="handleOk">
-      <template #modal-title>
-        {{ channelmode }}
-      </template>
-      <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
-        <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
-          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required autofocus>
-          </b-form-input>
-        </b-form-group>
-      </form>
-    </b-modal>
-  </nav>
-</template>
+  <div class="app-sidebar colored" @mouseover="activeBlock" @mouseleave="activeNone">
+                    <div class="sidebar-header">
+                        <a class="header-brand" href="/main">
+                            <!-- <div class="logo-img">
+                               <img src="" class="header-brand-img" alt="lavalite"> 
+                            </div> -->
+                            <span class="text">91CM</span>
+                        </a>
+                        <button type="button" class="nav-toggle"><i data-toggle="expanded" class="ik ik-toggle-right toggle-icon"></i></button>
+                        <button id="sidebarClose" class="nav-close"><i class="ik ik-x"></i></button>  
+                    </div>
+                    
+                    <div class="sidebar-content">
+                        <div class="nav-container">
+                            <nav id="main-menu-navigation" class="navigation-main">
+                                <div class="nav-lavel">Channels
+                                  <div style="flex-grow: 1;display: flex;justify-content: flex-end;">
+                                    <!-- <button @click="prepareModal('create')" style="margin-right: 5px;display: flex;color: white;">
+                                      <i class="im im-plus-circle"></i>
+                                    </button>  -->
+                                  </div>
 
+                                </div>
+                                
+                                <!-- <div class="nav-item active">
+                                    <a href="index.html"><i class="ik ik-bar-chart-2"></i><span>Dashboard</span></a>
+                                </div> -->
+
+                                  <div class="nav-item has-sub open" >
+                                    <a href="javascript:void(0)">
+                                      <div style="display: flex;align-items: center;">
+                                      <i class="ik ik-layers"></i><span>Channels</span>
+                                        
+                                            <div style="flex-grow: 1;display: flex;justify-content: flex-end;">
+                                                <button @click="prepareModal('create')" style="margin-right: 5px;display: flex;color: white;">
+                                                <i class="im im-plus-circle" style="margin-right: 15px;display: flex;"></i>
+                                                </button> 
+                                            </div>
+
+                                        
+                                        </div>
+                                    </a>
+                                    <div class="submenu-content">
+                                        <div v-for="(channel, index ) in userChannelList" :key="channel.id">
+                                            <a @click="sendSelectChannel(index)" class="menu-item" style="display: flex;">
+                                                 <div>{{ channel.name }}</div>
+                                                <div style="display: flex;justify-content: flex-end;flex-grow: 1;" v-if="channel.count!=0">
+                                                    <span class="badge badge-danger" style="position: inherit;" >{{channel.count }}</span>
+                                                    <!-- <b-badge  variant="danger"  >
+                                                        {{channel.count }}
+                                                    </b-badge> -->
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                  </div>
+                                
+                                <div class="nav-lavel">Users</div>
+                               <div class="nav-item">
+                                  <div v-for="(user) in channelUsers" :key="user.email">
+                                    <a style="cursor:default;"><span>{{ user.name }}</span></a>
+                                  </div>
+                              </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <b-modal id="channelCU" centered ref="modal" @hidden="resetModal" @ok="handleOk">
+                      <template #modal-title>
+                        {{ channelmode }}
+                      </template>
+                      <form ref="channelCreateForm" @submit.stop.prevent="channelForm">
+                        <b-form-group label="채널 이름" :state="nameState" label-for="channel-input" invalid-feedback="채널 이름이 필요합니다.">
+                          <b-form-input id="channel-input" :state="nameState" v-model="channelTitle" required autofocus>
+                          </b-form-input>
+                        </b-form-group>
+                      </form>
+                    </b-modal>
+
+                   
+                </div>
+          
+</template>
 <script>
+  // import theme from '../../../dist/js/theme.js'
   import AboutChannel from '../../service/aboutchannel'
   import {mapGetters} from "vuex";
 
@@ -83,6 +103,7 @@
         userChannelList: 'getUserChannelList',
         currentChannel: 'getCurrentChannel',
         syncChannelUser: 'getSyncChannelUser'
+        
       }),
     },
     name: 'LSidebar',
@@ -96,16 +117,54 @@
       }
     },
     created() {
-      this.updateUserList(this.currentChannel)
+     this.updateUserList(this.currentChannel)
     },
     mounted() {
       this.$eventBus.$on('useModal', res => {
         this.prepareModal(res)
       })
+      // if(window.innerWidth < 500){
+      //   this.$nextTick(function() {
+      //     let el = document.querySelector('.app-sidebar')  
+      //     el.classList.add("hide-sidebar")
+      //   });
+        
+        
+      // }
     },
     updated() {
+      
     },
     methods: {
+      activeBlock:function(){
+        this.$nextTick(function() {
+          let el = document.querySelector('.wrapper')
+          let t = $(".sidebar-content")
+          if(el.classList.contains('nav-collapsed')){
+            el.classList.remove( 'menu-collapsed' );
+            var e = $(".navigation-main .nav-item.nav-collapsed-open");
+            e.children(".submenu-content").hide().slideDown(300, function() {
+                $(this).css("display", "")
+            }), t.find(".nav-item.active").parents(".nav-item").addClass("open"), e.addClass("open").removeClass("nav-collapsed-open")
+          }
+        })
+      },
+      activeNone: function(){
+        function a(e, s) {
+            e.children(".submenu-content").show().slideUp(200, function() {
+                i(this).css("display", ""), i(this).find(".menu-item").removeClass("is-shown"), e.removeClass("open"), s && s()
+            })
+        }
+        let l = $(".wrapper")
+        if (l.hasClass("nav-collapsed")) {
+            l.addClass("menu-collapsed");
+            let s = $(".navigation-main .nav-item.open"),
+                a = s.children(".submenu-content");
+            s.addClass("nav-collapsed-open"), a.show().slideUp(300, function() {
+                $(this).css("display", "")
+            }), s.removeClass("open")
+        }
+      },
       updateUserList: function (currentChannel) {
         this.$http.get('/api/user/channel/' + currentChannel.id)
           .then(res => {
