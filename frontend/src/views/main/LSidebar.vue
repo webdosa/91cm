@@ -167,11 +167,14 @@
         }
       },
       updateUserList: function (currentChannel) {
-        this.$http.get('/api/user/channel/' + currentChannel.id)
+        console.log(currentChannel,'updateUserList')
+        if(currentChannel!=null){
+          this.$http.get('/api/user/channel/' + currentChannel.id)
           .then(res => {
             this.channelUsers = res.data
             this.$store.commit('setChannelUsers', res.data)
           })
+        }
       },
       LSidebarToggle: function () {
         this.$store.state.isLActive = !this.$store.state.isLActive
