@@ -11,10 +11,16 @@ import Todolist from '../views/todolist/TodoList'
 import About from "../views/About";
 import Calendar from "../views/calendar/Calendar";
 import DevelopView from "../views/util/DevelopView";
+import VideoChat from "../components/VideoChat";
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/video',
+    name: 'VideoChat',
+    component: VideoChat
+  },
   {
     path: '/',
     name: 'Home',
