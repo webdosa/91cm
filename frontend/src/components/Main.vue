@@ -44,7 +44,7 @@
   import LSidebar from '../views/main/LSidebar'
   import RSidebar from '../views/main/RSidebar'
   import MainHeader from '../views/main/MainHeader'
-  import ContentWrapper from '../views/main/ContentWrapper'
+  import ContentWrapper from '../views/main/ContentWrapperV2'
   import AboutChannel from '../service/aboutchannel'
   import NotificationClass from '../service/notification'
   import EventListener from '../service/eventlistener'

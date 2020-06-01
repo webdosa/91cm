@@ -65,7 +65,8 @@
                 @keydown.shift.alt.50='inviteToggle'
               ></b-form-textarea>
             </div>
-            <div style="position: relative" v-if="$store.state.isInviteMode">
+
+            <!-- <div style="position: relative" v-if="$store.state.isInviteMode">
               <i style="position:absolute;left: 15px;top: calc(50% - 12px);" class="im im-user-circle"></i>
               <b-form-input
                 autocomplete="off"
@@ -81,7 +82,63 @@
               <datalist id="user-info-list">
                 <option v-for="user in userList" :key="user.email">{{ user.name }}-{{ user.email }}</option>
               </datalist>
+            </div> -->
+
+
+
+            <div v-if="$store.state.isInviteMode">
+              <v-row>
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="friends"
+                    
+                    :items="userList"
+                    @keydown.enter="enter"
+                    @keydown.esc.exact="inviteToggle"
+                    filled
+                    chips
+                    label="Select"
+                    item-text="name"
+                    item-value="email"
+                    multiple
+                  >
+                    <template v-slot:selection="data">
+                      <v-chip
+                        v-bind="data.attrs"
+                        :input-value="data.selected"
+                        close
+                        @click="data.select"
+                        @click:close="remove(data.item)"
+                      >
+                        <v-avatar left>
+                          <v-img :src="data.item.picture"></v-img>
+                        </v-avatar>
+                        {{ data.item.name }}
+                      </v-chip>
+                    </template>
+                    <template v-slot:item="data">
+                      <template v-if="typeof data.item !== 'object'">
+                        <v-list-item-content v-text="data.item"></v-list-item-content>
+                      </template>
+                      <template v-else>
+                        <v-list-item-avatar>
+                          <img :src="data.item.picture">
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                          <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
+                        </v-list-item-content>
+                      </template>
+                    </template>
+                  </v-autocomplete>
+                </v-col>
+              </v-row>
             </div>
+
+
+
+
+
             <SearchInput
               :msgArray="msgArray"
               :cursorPoint="cursorPoint"
@@ -115,6 +172,7 @@
     },
     data() {
       return {
+        friends:[],
         sendMail:false,
         tempImg: '',
         stringByteLength: 0,
@@ -168,6 +226,37 @@
       }
     },
     methods: {
+      enter: async function() {
+        await InviteService.invite(this.$store.state.currentUser.email, this.$store.state.currentChannel.id, this.friends)
+          .then(res => {
+            
+            //메일 보내는 비동기 통신 있어야 함
+
+            for(let i=0; i < this.friends.length; i++){
+              const user = this.userList.find(el=> el.email == this.friends[i] )
+              this.message.content += user.name + '님 ' 
+            }
+            
+            //메일 오류 계속 떠서 일단 임시로 주석 처리함
+          //   this.$http.post('/api/invite/mail', invite).then(res=>{
+          //     console.log(res.data)
+          //   })
+            this.message.content += '을 초대했습니다.'
+            this.$eventBus.$emit('getUserList', true)
+            this.send()
+            this.inviteToggle()
+
+          }).catch(error => {
+            this.$alertModal('error', error.response.data.message)
+            console.error(error.response)
+            this.message.content = ''
+            this.inviteToggle()
+          })
+      },
+      remove(item) {
+        const index = this.friends.indexOf(item.email);
+        if (index >= 0) this.friends.splice(index, 1);
+      },
       sendMailToggle(){
         this.sendMail =!this.sendMail
         if(this.sendMail){
@@ -279,6 +368,7 @@
       inviteToggle: function (e) {
         this.message.content = ''
         this.$store.state.isInviteMode = !this.$store.state.isInviteMode
+        console.log(this.userList)
       },
       send: async function (e) {
         if (e != null) {

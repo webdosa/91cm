@@ -1,12 +1,13 @@
 package com.nineone.nocm.domain;
 
+import java.util.List;
+
 import com.nineone.nocm.domain.enums.InviteState;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,6 +17,7 @@ public class Invite {
    private int channel_id;
    private String sender;
    private String recipient;
+   private List<String> recipients;
    private String send_date;
    private InviteState invite_state;
    @Builder
