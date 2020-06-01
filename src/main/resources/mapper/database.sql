@@ -2,6 +2,9 @@ drop database nocm;
 create database nocm default character set = utf8;
 use nocm;
 
+create user '91cm'@'localhost' identified by '91cm';
+grant all privileges on *.* to 91cm@localhost identified by '91cm' with grant option;
+flush privileges;
 
 create table member (
 email varchar(100) primary key not null,
@@ -113,3 +116,4 @@ insert roles (authority, description) values ('ROLE_ANON', '제한된 사용자'
 insert roles (authority, description) values ('ROLE_USER', '일반 사용자');
 insert roles (authority, description) values ('ROLE_ADMIN', '관리자');
 
+insert authorities (member_email, roles_authority) values ('user이름','ROLE_ADMIN');
