@@ -2,7 +2,7 @@
     <div>
       <div class="wrapper">
         <template v-if="connectionCheck">
-        <MainHeader></MainHeader>
+        <MainHeader @channelUpdate="channelUpdate"></MainHeader>
           <div class="page-wrap">
             <LSidebar @channelUpdate="channelUpdate" ></LSidebar>
               <div class="main-content" style="padding-bottom:0;" :class="{'disactive-padding': $store.state.selectComponent=='main' }">
@@ -171,6 +171,7 @@
         })
       },
       channelUpdate() {
+        console.log(this.$store.state.currentChannel.id,'??')
         this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.$store.state.currentChannel.id, (e) => {
           let data = JSON.parse(e.body)
           if (data.message == 'updateChannel') {

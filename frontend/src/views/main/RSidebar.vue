@@ -1,9 +1,11 @@
 <template>
      <aside class="right-sidebar">
                     <div class="sidebar-chat" data-plugin="chat-sidebar">
-                        <div class="sidebar-chat-info" style="margin: 16px 0px;">
+                        <div class="sidebar-chat-info" style="margin: 16px 0px;display:flex;">
                             <h6>About this Channel</h6>
-                            
+                            <li @click="rightSidebarToggle" class="list-unstyled" style="flex-grow: 1;display: flex;justify-content: flex-end;align-items: center;font-size: 20px;margin-bottom: 8px;">
+                              <i class="ik ik-x close-card" style="cursor: pointer;"></i>
+                            </li>
                         </div>
                         <div class="chat-list">
                             <div class="list-group row">
@@ -84,6 +86,12 @@
 
     },
     methods: {
+      rightSidebarToggle: function(e){
+        // console.log(e)
+        $('.right-sidebar-toggle')[0].classList.toggle('active');
+        $('.wrapper').toggleClass('right-sidebar-expand');
+        return false;
+      },
       callComponent: function (componentName) {
         if(this.$store.state.isSmallWidth){
           this.RSidebarClose()
