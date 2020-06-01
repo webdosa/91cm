@@ -1,7 +1,25 @@
 package com.nineone.nocm.controller.api;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.nineone.nocm.annotation.Socialuser;
-import com.nineone.nocm.domain.*;
+import com.nineone.nocm.domain.ApiResponse;
+import com.nineone.nocm.domain.Channel;
+import com.nineone.nocm.domain.Invite;
+import com.nineone.nocm.domain.JoinInfo;
+import com.nineone.nocm.domain.User;
 import com.nineone.nocm.domain.enums.InviteState;
 import com.nineone.nocm.repository.ChannelRepository;
 import com.nineone.nocm.repository.UserRepository;
@@ -9,15 +27,8 @@ import com.nineone.nocm.service.ChannelService;
 import com.nineone.nocm.service.InviteService;
 import com.nineone.nocm.service.JoinInfoService;
 import com.nineone.nocm.util.GoogleMailSender;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -51,9 +62,12 @@ public class InviteApiController {
                         .build(), HttpStatus.METHOD_NOT_ALLOWED);
             }
             if (joinInfoService.AuthorityCheck(invite)) {
-                inviteService.saveInvite(invite);
-                messagingTemplate.convertAndSend("/sub/alarm/" + invite.getRecipient(), invite);
-                return new ResponseEntity<>("{}", HttpStatus.OK);
+                for(String recipient : invite.getRecipients()) {
+                	invite.setRecipient(recipient);
+                	inviteService.saveInvite(invite);
+                    messagingTemplate.convertAndSend("/sub/alarm/" + invite.getRecipient(), invite);
+                }
+            	return new ResponseEntity<>("{}", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(ApiResponse.builder().error("403")
                         .message("채널에 대한 권한이 없습니다.").build(), HttpStatus.FORBIDDEN);

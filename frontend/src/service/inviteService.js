@@ -2,16 +2,16 @@ import axios from 'axios'
 
 class InviteService {
 
-  async invite(sender, channelId, recipient) {
+  async invite(sender, channelId, recipients) {
     console.log(channelId)
     return await axios.post('/api/invite', {
       channel_id: channelId,
       sender: sender,
-      recipient: recipient
+      recipients: recipients
     })
   }
   sendMail(){
-    re
+    
   }
 
 
