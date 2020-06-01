@@ -2,15 +2,12 @@
   <div>
     <v-card v-bind:class="{moHeight:  $store.state.isSmallWidth }">
       <v-card-title>사용자 리스트</v-card-title>
-
       <v-data-table
         :headers="headers"
         :items="authUserList"
         :items-per-page="5"
         :calculate-width="true"
-        class="elevation-1"
-
-      >
+        class="elevation-1">
         <template v-slot:item.actions="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
         </template>
@@ -21,7 +18,6 @@
         <v-card-title>
           <span class="headline">회원 정보 수정</span>
         </v-card-title>
-
         <v-card-text>
           <v-container>
             <v-row>
@@ -34,7 +30,6 @@
               <v-col cols="12">
                 <v-text-field :disabled="true" v-model="editedItem.email" label="User email"></v-text-field>
               </v-col>
-
               <v-col cols="12">
                 <v-autocomplete
                   v-model="editedItem.authority"
@@ -45,7 +40,6 @@
             </v-row>
           </v-container>
         </v-card-text>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
@@ -96,7 +90,7 @@
         ],
       }
     },
-    methods:{
+    methods: {
       close() {
         this.dialog = false;
       },

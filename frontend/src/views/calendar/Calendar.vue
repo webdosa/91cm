@@ -15,7 +15,6 @@
         label-for="textarea-content">
         <b-textarea id="textarea-content" v-model="taskContent"></b-textarea>
       </b-form-group>
-
     </b-modal>
   </div>
 </template>
@@ -163,11 +162,9 @@ export default {
     -1px 1px 0 #2d2d2d,
     1px 1px 0 #2d2d2d;
   }
-
   .fc-time {
     display: none;
   }
-
   .fc-content {
     text-align: center;
   }
