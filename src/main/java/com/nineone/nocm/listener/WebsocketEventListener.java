@@ -28,7 +28,7 @@ public class WebsocketEventListener {
 		SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.wrap(event.getMessage()); 
 //		String userid = getId(headerAccessor);
 //		sessions.put(userid, headerAccessor.getSessionId());
-		log.info(event.getUser()+"");
+//		log.info(event.getUser()+"");
 	}
 //	
 //	@EventListener

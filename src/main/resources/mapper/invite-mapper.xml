@@ -16,4 +16,8 @@
     <update id="updateInvite">
         update invite set invite_state = #{invite_state} where id = #{id}
     </update>
+    
+    <select id="isExistInvite" resultType="java.lang.Boolean">
+		select exists (select * from invite where channel_id = #{channel_id} and recipient = #{recipient} )
+    </select>
 </mapper>

@@ -107,7 +107,7 @@
     },
     data() {
       return {
-        activeNewList: false,
+      
         taskSubscribe: null,
         connetionCheck: false,
         taskList: [],
@@ -125,10 +125,7 @@
         this.taskList.pop()
         this.$store.commit('setCreateListActive', false)
       },
-      activeNewList: function(){
-        this.activeNewList = true;
-        console.log('?')
-      },
+      
       addTaskList: function () {
         if(!this.$store.state.isCreateListActive){
           this.taskList.push(JSON.parse(JSON.stringify(this.taskListItem)))

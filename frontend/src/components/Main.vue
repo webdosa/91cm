@@ -180,6 +180,7 @@
         // this.$store.commit('setChannelList', newChannelList)
       },
       msgArrayUpdate(newmsgArray) {
+        
         this.msgArray = newmsgArray
       },
       channelSubscribeCallBack(e, fail) {

@@ -14,32 +14,19 @@
                     <div class="sidebar-content">
                         <div class="nav-container">
                             <nav id="main-menu-navigation" class="navigation-main">
-                                <div class="nav-lavel">Channels
-                                  <div style="flex-grow: 1;display: flex;justify-content: flex-end;">
-                                    <!-- <button @click="prepareModal('create')" style="margin-right: 5px;display: flex;color: white;">
-                                      <i class="im im-plus-circle"></i>
-                                    </button>  -->
-                                  </div>
-
-                                </div>
-                                
-                                <!-- <div class="nav-item active">
-                                    <a href="index.html"><i class="ik ik-bar-chart-2"></i><span>Dashboard</span></a>
-                                </div> -->
-
+                            
                                   <div class="nav-item has-sub open" >
                                     <a href="javascript:void(0)">
                                       <div style="display: flex;align-items: center;">
-                                      <i class="ik ik-layers"></i><span>Channels</span>
+                                        <i class="ik ik-layers"></i><span>Channels</span>
                                         
-                                            <div style="flex-grow: 1;display: flex;justify-content: flex-end;">
-                                                <button @click="prepareModal('create')" style="margin-right: 5px;display: flex;color: white;">
-                                                <i class="im im-plus-circle" style="margin-right: 15px;display: flex;"></i>
-                                                </button> 
-                                            </div>
-
-                                        
+                                        <div style="flex-grow: 1;display: flex;justify-content: flex-end;">
+                                            <button @click="prepareModal('create')" style="margin-right: 5px;display: flex;color: white;">
+                                            <i class="im im-plus-circle" style="margin-right: 15px;display: flex;"></i>
+                                            </button> 
                                         </div>
+
+                                      </div>
                                     </a>
                                     <div class="submenu-content">
                                         <div v-for="(channel, index ) in userChannelList" :key="channel.id">
@@ -53,12 +40,24 @@
                                     </div>
                                   </div>
                                 
-                                <div class="nav-lavel">Users</div>
-                               <div class="nav-item">
+                                <!-- <div class="nav-lavel">Users</div> -->
+
+                                <div class="nav-item has-sub open">
+                                    <a href="javascript:void(0)" style="display: flex;align-items: center;"><i class="ik ik-users"></i><span>Users</span> </a>
+                                    <div class="submenu-content" >
+                                        <a style="cursor:default;" v-for="(user) in channelUsers" :key="user.email" class="menu-item"><span>{{ user.name }}</span></a>  
+                                        
+                                    </div>
+                                </div>
+
+
+
+
+                               <!-- <div class="nav-item">
                                   <div v-for="(user) in channelUsers" :key="user.email">
                                     <a style="cursor:default;"><span>{{ user.name }}</span></a>
                                   </div>
-                              </div>
+                              </div> -->
                             </nav>
                         </div>
                     </div>
@@ -176,12 +175,15 @@
           })
         }
       },
-      LSidebarToggle: function () {
-        this.$store.state.isLActive = !this.$store.state.isLActive
+      LSidebarClose: function () {
+        var n = $(".app-sidebar")
+        n.addClass("hide-sidebar")
+        // 아래는 옛날 코드 isLActive 이 변수를 안쓰니 없어도 될 것같기도하고..
+        // this.$store.state.isLActive = !this.$store.state.isLActive
       },
       sendSelectChannel: function (index) {
         if(window.innerWidth<600){
-          this.LSidebarToggle()
+          this.LSidebarClose()
         }
         console.log("user select channel list index " + index)
         console.log("select channel info : "+this.$store.state.userChannelList[index].id)
@@ -207,9 +209,6 @@
         const valid = this.$refs.channelCreateForm.checkValidity()
         this.nameState = valid
         return valid
-      },
-      RSidebarClose: function () {
-        this.$store.state.isRActive = false
       },
       resetModal() {
         this.channelTitle = ''

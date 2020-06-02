@@ -110,10 +110,8 @@
         return false;
       },
       callComponent: function (componentName) {
-        if (this.$store.state.isSmallWidth) {
-          this.RSidebarClose()
-        }
-        this.$store.commit('getSelectComponent', componentName)
+        this.RSidebarClose()
+        this.$store.commit('getSelectComponent',componentName)
       },
       leaveChannle: function () {
         this.$http.post('/api/channel/leave', {
@@ -131,7 +129,9 @@
         })
       },
       RSidebarClose: function () {
-        this.$store.state.isRActive = false
+        $('.right-sidebar-toggle')[0].classList.toggle('active');
+        $('.wrapper').removeClass('right-sidebar-expand');
+        // this.$store.state.isRActive = false
       },
       useModal: function (mode) {
         if (mode == 'edit') {

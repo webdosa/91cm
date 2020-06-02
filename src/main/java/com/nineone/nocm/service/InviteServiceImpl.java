@@ -32,4 +32,9 @@ public class InviteServiceImpl implements InviteService {
     public boolean updateInvite(Invite invite) {
         return (inviteRepository.updateInvite(invite) > 0);
     }
+
+	@Override
+	public boolean isExistInvite(Invite invite) {
+		return inviteRepository.isExistInvite(invite);
+	}
 }

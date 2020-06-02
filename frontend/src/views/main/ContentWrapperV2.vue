@@ -205,7 +205,6 @@
       if(this.$store.state.currentChannel!=null){
         this.getMessage()
       }
-      
     },
     mounted() {
       this.$nextTick(() => {
@@ -224,6 +223,9 @@
       if (this.$store.state.oldComponent != 'main' && this.$store.state.selectComponent == 'main') {
         this.scrollToEnd(true)
       }
+      this.friends= []
+      this.$store.state.isInviteMode = false
+      this.$store.state.isSearchMode = false
     },
     methods: {
       enter: async function() {
@@ -247,10 +249,20 @@
             this.inviteToggle()
 
           }).catch(error => {
-            this.$alertModal('error', error.response.data.message)
+            let alertmsg = ''
+            if(error.response.data.list != null){
+              const alertList = error.response.data.list
+              for(let i=0; i < alertList.length; i++){
+                const user = this.userList.find(el=> el.email == alertList[i] )
+                alertmsg += user.name + '님 ' 
+              }
+              alertmsg += '은 이미 이 채널에 초대 받았습니다. 확인해주세요.'
+              this.$alertModal('error', alertmsg)
+            }else{
+              this.$alertModal('error', error.response.data.message)
+            }
             console.error(error.response)
             this.message.content = ''
-            this.inviteToggle()
           })
       },
       remove(item) {
@@ -362,10 +374,10 @@
             this.$alertModal('error', error.response.data.message)
             console.error(error.response)
             this.message.content = ''
-            this.inviteToggle()
           })
       },
       inviteToggle: function (e) {
+        this.friends = []
         this.message.content = ''
         this.$store.state.isInviteMode = !this.$store.state.isInviteMode
         console.log(this.userList)
@@ -471,6 +483,9 @@
         this.msgPreviewBool = false
       },
       initData() {
+        this.friends= []
+        this.$store.state.isInviteMode = false
+        this.$store.state.isSearchMode = false
         this.message.channel_id = this.getCurrentChannel.id
         this.message.sender = this.$store.state.currentUser.email
         this.cursorPoint.channel_id = this.$store.state.currentChannel
@@ -478,8 +493,8 @@
         this.cursorPoint.cursorId = 0
         this.cursorPoint.empty = false
         this.msgArray = []
-        this.firstLoad = true,
-          this.scrollHeight = 0,
+        this.firstLoad = true
+        this.scrollHeight = 0
           this.$emit('msgArrayUpdate', this.msgArray)
       },
       byteCheck(e) {

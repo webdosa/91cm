@@ -8,4 +8,5 @@ public interface InviteRepository{
     int saveInvite(Invite invite);
     List<Invite> receiveInvites(String recipient);
     int updateInvite(Invite invite);
+    boolean isExistInvite(Invite invite);
 }
