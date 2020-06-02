@@ -1,20 +1,20 @@
 <template>
   <div>
-    <b-card
-  </div>
-<!--  <div class="video-list">-->
+    <p>test6</p>
 <!--    <div v-for="item in videoList"-->
 <!--         v-bind:video="item"-->
 <!--         v-bind:key="item.id"-->
 <!--         class="video-item">-->
-<!--      <video controls autoplay playsinline ref="videos" :height="cameraHeight" :muted="item.muted"-->
-<!--             :id="item.id"></video>-->
+<!--      <p>test</p>-->
+<!--&lt;!&ndash;      <video controls autoplay playsinline ref="videos" :height="cameraHeight" :muted="item.muted"&ndash;&gt;-->
+<!--&lt;!&ndash;             :id="item.id"></video>&ndash;&gt;-->
 <!--    </div>-->
-<!--  </div>-->
+  </div>
 </template>
 
 <script>
   import RTCMultiConnection from 'rtcmulticonnection';
+
   require('adapterjs');
   export default {
     name: "vue-webRTC",
@@ -69,14 +69,13 @@
     },
     watch: {},
     mounted() {
-      var that = this;
-      this.rtcmConnection = new RTCMultiConnection();
+      let that = this;
+      // this.rtcmConnection = new RTCMultiConnection();
       this.rtcmConnection.socketURL = this.socketURL;
-      this.rtcmConnection.iceServers.push({
-        urls: this.iceServer
-      });
-      this.
-      this.rtcmConnection.autoCreateMediaElement = false;
+      // this.rtcmConnection.iceServers.push({
+      //   urls: this.iceServer
+      // });
+      this.this.rtcmConnection.autoCreateMediaElement = false;
       this.rtcmConnection.enableLogs = this.enableLogs;
       this.rtcmConnection.session = {
         audio: this.enableAudio,
@@ -86,44 +85,44 @@
         OfferToReceiveAudio: this.enableAudio,
         OfferToReceiveVideo: this.enableVideo
       };
-      this.rtcmConnection.onstream = function (stream) {
-        let found = that.videoList.find(video => {
-          return video.id === stream.streamid
-        })
-        if (found === undefined) {
-          let video = {
-            id: stream.streamid,
-            muted: stream.type === 'local'
-          };
-
-          that.videoList.push(video);
-
-          if (stream.type === 'local') {
-            that.localVideo = video;
-          }
-        }
-
-        setTimeout(function () {
-          for (var i = 0, len = that.$refs.videos.length; i < len; i++) {
-            if (that.$refs.videos[i].id === stream.streamid) {
-              that.$refs.videos[i].srcObject = stream.stream;
-              break;
-            }
-          }
-        }, 1000);
-
-        that.$emit('joined-room', stream.streamid);
-      };
-      this.rtcmConnection.onstreamended = function (stream) {
-        var newList = [];
-        that.videoList.forEach(function (item) {
-          if (item.id !== stream.streamid) {
-            newList.push(item);
-          }
-        });
-        that.videoList = newList;
-        that.$emit('left-room', stream.streamid);
-      };
+      // this.rtcmConnection.onstream = function (stream) {
+      //   let found = that.videoList.find(video => {
+      //     return video.id === stream.streamid
+      //   })
+      //   if (found === undefined) {
+      //     let video = {
+      //       id: stream.streamid,
+      //       muted: stream.type === 'local'
+      //     };
+      //
+      //     // that.videoList.push(video);
+      //
+      //     if (stream.type === 'local') {
+      //       that.localVideo = video;
+      //     }
+      //   }
+      //
+      //   setTimeout(function () {
+      //     for (var i = 0, len = that.$refs.videos.length; i < len; i++) {
+      //       if (that.$refs.videos[i].id === stream.streamid) {
+      //         that.$refs.videos[i].srcObject = stream.stream;
+      //         break;
+      //       }
+      //     }
+      //   }, 1000);
+      //
+      //   that.$emit('joined-room', stream.streamid);
+      // };
+      // this.rtcmConnection.onstreamended = function (stream) {
+      //   var newList = [];
+      //   that.videoList.forEach(function (item) {
+      //     if (item.id !== stream.streamid) {
+      //       newList.push(item);
+      //     }
+      //   });
+      //   that.videoList = newList;
+      //   that.$emit('left-room', stream.streamid);
+      // };
     },
     methods: {
       join() {
@@ -211,5 +210,17 @@
 </script>
 
 <style scoped>
+  .video-list {
+    background: whitesmoke;
+    height: auto;
+  }
 
+  .video-list div {
+    padding: 0px;
+  }
+
+  .video-item {
+    background: #c5c4c4;
+    display: inline-block;
+  }
 </style>

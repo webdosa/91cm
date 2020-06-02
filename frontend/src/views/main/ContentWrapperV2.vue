@@ -91,9 +91,9 @@
                 <v-col cols="12">
                   <v-autocomplete
                     v-model="friends"
-                    
+                    autofocus
                     :items="userList"
-                    @keydown.enter="enter"
+                    @keydown.enter.exact="enter"
                     @keydown.esc.exact="inviteToggle"
                     filled
                     chips
@@ -231,14 +231,14 @@
       enter: async function() {
         await InviteService.invite(this.$store.state.currentUser.email, this.$store.state.currentChannel.id, this.friends)
           .then(res => {
-            
+
             //메일 보내는 비동기 통신 있어야 함
 
             for(let i=0; i < this.friends.length; i++){
               const user = this.userList.find(el=> el.email == this.friends[i] )
-              this.message.content += user.name + '님 ' 
+              this.message.content += user.name + '님 '
             }
-            
+
             //메일 오류 계속 떠서 일단 임시로 주석 처리함
           //   this.$http.post('/api/invite/mail', invite).then(res=>{
           //     console.log(res.data)
@@ -254,7 +254,7 @@
               const alertList = error.response.data.list
               for(let i=0; i < alertList.length; i++){
                 const user = this.userList.find(el=> el.email == alertList[i] )
-                alertmsg += user.name + '님 ' 
+                alertmsg += user.name + '님 '
               }
               alertmsg += '은 이미 이 채널에 초대 받았습니다. 확인해주세요.'
               this.$alertModal('error', alertmsg)
@@ -563,7 +563,7 @@
 @media only screen and (max-width: 1023px){
   .wrapper .page-wrap .main-content {
     padding-left: 0px !important;
-  }  
+  }
 }
 
 
