@@ -1,5 +1,6 @@
 package com.nineone.nocm.controller.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +57,39 @@ public class InviteApiController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> inviteUser(@RequestBody Invite invite) {
         try {
-            if (joinInfoService.isExistUser(invite)) {
-                return new ResponseEntity<>(ApiResponse.builder().error("405")
-                        .message("해당 유저는 이미 채널에 가입되어 있습니다.")
-                        .build(), HttpStatus.METHOD_NOT_ALLOWED);
-            }
+        	
+        	
+        	
+        	for(String recipient : invite.getRecipients()) {
+        		invite.setRecipient(recipient);
+        		if(joinInfoService.isExistUser(invite)) {
+        			return new ResponseEntity<>(ApiResponse.builder().error("405")
+                            .message("이미 가입되어 있는 유저가 있습니다. 확인해주세요.")
+                            .build(), HttpStatus.METHOD_NOT_ALLOWED);
+        		}
+        	}
+        	
+        	
+        	for(String recipient : invite.getRecipients()) {
+        		invite.setRecipient(recipient);
+        		List<String> list = new ArrayList<>();
+        		if(inviteService.isExistInvite(invite)) {
+        			list.add(recipient);
+        		}
+        		
+        		if(list.size() > 0){
+        			return new ResponseEntity<>(ApiResponse.builder().error("405")
+        					.list(list)
+                            .build(), HttpStatus.METHOD_NOT_ALLOWED);
+        		}
+        	}
+        	
+        	
+//            if (joinInfoService.isExistUser(invite)) {
+//                return new ResponseEntity<>(ApiResponse.builder().error("405")
+//                        .message("해당 유저는 이미 채널에 가입되어 있습니다.")
+//                        .build(), HttpStatus.METHOD_NOT_ALLOWED);
+//            }
             if (joinInfoService.AuthorityCheck(invite)) {
                 for(String recipient : invite.getRecipients()) {
                 	invite.setRecipient(recipient);

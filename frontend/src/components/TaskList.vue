@@ -15,13 +15,15 @@
                                 </ul>
                             </div>
                         </div>
-                        
-                        <b-form-input v-else
-                        @keydown.enter.exact="editTaskListName"
-                        @keydown.esc="editToggle"
-                        v-model="taskList.name"
-                        autofocus></b-form-input>
-                        
+                        <template v-else>
+                          <b-form-input 
+                          @keydown.enter.exact="editTaskListName"
+                          @keydown.esc="editToggle"
+                          v-model="taskList.name"
+                          autofocus></b-form-input>
+                          <li class="list-unstyled" @click="editToggle"><i class="ik ik-x close-card" style="cursor: pointer;"></i></li>
+                          <li class="list-unstyled" @click="editTaskListName"><i class="ik ik-plus" style="cursor: pointer;"></i></li>
+                        </template>
                     </div>
                 </draggable>
             </div>
