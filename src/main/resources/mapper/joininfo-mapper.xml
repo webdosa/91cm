@@ -5,9 +5,7 @@
 
 <mapper namespace="com.nineone.nocm.mapper.joininfo">
     <delete id="leaveUser">
-    	delete t1, t2 from joininfo as t1 join invite as t2 
-    		on t1.channel_id = t2.channel_id and t1.member_email = t2.recipient 
-    		where t1.channel_id = #{channel_id} and t1.member_email = #{email}
+        delete from joininfo where channel_id = #{channel_id} and member_email = #{email}
     </delete>
     <select id="isExistUser" resultType="java.lang.Boolean" parameterType="com.nineone.nocm.domain.Invite">
         select exists (select * from joininfo where channel_id = #{channel_id}

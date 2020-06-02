@@ -37,6 +37,11 @@ public class InviteRepositoryImpl implements InviteRepository{
 	public boolean isExistInvite(Invite invite) {
 		return sqlSession.selectOne(namespace + ".isExistInvite",invite);
 	}
+
+	@Override
+	public boolean deleteInvite(Map<String, Object> info) {
+		return (sqlSession.delete(namespace + ".deleteInvite",info)>= 0);
+	}
     
     
 

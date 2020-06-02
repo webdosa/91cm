@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nineone.nocm.domain.Invite;
 import com.nineone.nocm.domain.JoinInfo;
+import com.nineone.nocm.repository.InviteRepository;
 import com.nineone.nocm.repository.JoinInfoRepository;
 import com.nineone.nocm.util.DateUtil;
 
@@ -17,13 +19,22 @@ public class JoinInfoServiceImpl implements JoinInfoService {
 	@Autowired
 	private MessageService messageService;
 	
+	
+	
     @Autowired
     private JoinInfoRepository joinInfoRepository;
     
-
+    @Autowired
+    private InviteRepository inviteRepository;
+    
     @Override
+    @Transactional
     public boolean leaveUser(Map<String, Object> info) {
-        return joinInfoRepository.leaveUser(info);
+    	if(joinInfoRepository.leaveUser(info)&&inviteRepository.deleteInvite(info)) {
+    		return true;
+    	}else {
+    		return false;
+    	}
     }
 
     @Override
