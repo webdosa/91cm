@@ -33,4 +33,11 @@ public class InviteRepositoryImpl implements InviteRepository{
         return sqlSession.update(namespace + ".updateInvite",invite);
     }
 
+	@Override
+	public boolean isExistInvite(Invite invite) {
+		return sqlSession.selectOne(namespace + ".isExistInvite",invite);
+	}
+    
+    
+
 }

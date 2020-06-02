@@ -96,7 +96,9 @@
         var  t = i(".sidebar-content")
          
         var e = i(this).parent(".nav-item");
-            if (e.hasClass("has-sub") && e.hasClass("open")) a(e);
+            if (e.hasClass("has-sub") && e.hasClass("open")){
+                a(e);
+            } 
             else {
                 if (e.hasClass("has-sub") && function(e, s) {
                         var a = e.children(".submenu-content"),
@@ -107,7 +109,7 @@
                             n.addClass("is-shown"), n.removeClass("is-hidden")
                         }, 0)
                     }(e), t.data("collapsible")) return !1;
-                a(e.siblings(".open")), e.siblings(".open").find(".nav-item.open").removeClass("open")
+                // a(e.siblings(".open")), e.siblings(".open").find(".nav-item.open").removeClass("open")
             }
     });
 

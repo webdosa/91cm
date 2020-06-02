@@ -56,7 +56,10 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                     <b-button style="margin:15px;" variant="primary" @click="edit">수정</b-button>
+                                    <div style="margin-top: 25px;">
+                                      <b-button style="margin:15px;" variant="primary" @click="edit">수정</b-button>
+                                      <b-button style="margin:15px;" variant="primary" @click="callComponent" >취소</b-button>
+                                    </div>
                                 </div>
                             </div>
                     </div>
@@ -101,6 +104,9 @@
       }
     },
     methods: {
+      callComponent: function () {
+        this.$store.commit('getSelectComponent','user')
+      },
       handleOk: function (bvModalEvt) {
         bvModalEvt.preventDefault()
         this.handleSubmit()
