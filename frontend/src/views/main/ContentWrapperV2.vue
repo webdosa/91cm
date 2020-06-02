@@ -91,11 +91,11 @@
                 <v-col cols="12">
                   <v-autocomplete
                     v-model="friends"
-                    
                     :items="userList"
-                    @keydown.enter="enter"
+                    @keydown.enter.exact="enter"
                     @keydown.esc.exact="inviteToggle"
-                    filled
+                    filled  
+                    autofocus
                     chips
                     label="Select"
                     item-text="name"
