@@ -1,41 +1,16 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12 my-3">
-        <h2>Room</h2>
-        <input v-model="roomId">
+      <div class="col-md-4">
+        <content-wrapper :msg-array="msgArray" @msgArrayUpdate="msgArrayUpdate">
+        </content-wrapper>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="">
-          <vue-webrtc ref="webrtc"
-                      width="100%"
-                      :roomId="roomId"
-                      :socket-u-r-l="'http://91cm.nineonesoft.com:9001/'"
-                      v-on:joined-room="logEvent"
-                      v-on:left-room="logEvent"
-                      v-on:open-room="logEvent"
-                      v-on:share-started="logEvent"
-                      v-on:share-stopped="logEvent"
-                      @error="onError" />
-        </div>
-        <div class="row">
-          <div class="col-md-12 my-3">
-            <button type="button" class="btn btn-primary" @click="onJoin">Join</button>
-            <button type="button" class="btn btn-primary" @click="onLeave">Leave</button>
-            <button type="button" class="btn btn-primary" @click="onCapture">Capture Photo</button>
-            <button type="button" class="btn btn-primary" @click="onShareScreen">Share Screen</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <h2>Captured Image</h2>
-        <figure class="figure">
-          <img :src="img" class="img-responsive" />
-        </figure>
+      <div class="col-md-8">
+        <vue-webrtc
+          ref="webrtc"
+          :room-id="$store.state.currentChannel.id"
+          :socket-u-r-l="'http://91cm.nineonesoft.com:9001/'"
+        ></vue-webrtc>
       </div>
     </div>
   </div>
@@ -43,19 +18,32 @@
 
 <script>
   import * as io from 'socket.io-client'
+  import ContentWrapper from "../views/main/ContentWrapper";
+
   export default {
     name: "VideoChat",
-    data(){
+    props: ['msgArray'],
+    components: {ContentWrapper},
+    data() {
       return {
         img: null,
         roomId: "public-room"
       };
     },
     created() {
-      this.WebRTC
       window.io = io
+      this.$eventBus.$on(command => {
+
+      })
+    },
+    mounted() {
+      this.$refs.webrtc.join();
     },
     methods: {
+      msgArrayUpdate: function(newMsgArray){
+        this.msgArray = newMsgArray
+        this.$emit('msgArrayUpdate', newMsgArray)
+      },
       onCapture() {
         this.img = this.$refs.webrtc.capture();
       },

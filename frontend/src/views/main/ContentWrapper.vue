@@ -62,7 +62,7 @@
                 @keydown.ctrl.shift.70="toggleSearchMode"
                 @keydown.enter.exact="send"
                 @keyup="byteCheck"
-                @keydown.shift.alt.50='inviteToggle'
+                @keydown.shift.ctrl.50='inviteToggle'
               ></b-form-textarea>
             </div>
             <div style="position: relative" v-if="$store.state.isInviteMode">
@@ -113,6 +113,7 @@
     components: {
       MsgBox, SearchInput
     },
+
     data() {
       return {
         sendMail:false,
@@ -147,7 +148,7 @@
       if(this.$store.state.currentChannel!=null){
         this.getMessage()
       }
-      
+
     },
     mounted() {
       this.$nextTick(() => {
@@ -410,7 +411,8 @@
         return this.$store.state.currentChannel
       },
       ...mapGetters({
-        userList: 'getUserList'
+        userList: 'getUserList',
+
       })
     },
     watch: {
@@ -458,7 +460,7 @@
 @media only screen and (max-width: 1023px){
   .wrapper .page-wrap .main-content {
     padding-left: 0px !important;
-  }  
+  }
 }
 
 

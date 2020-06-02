@@ -1,13 +1,16 @@
 <template>
-  <div class="video-list">
-    <div v-for="item in videoList"
-         v-bind:video="item"
-         v-bind:key="item.id"
-         class="video-item">
-      <video controls autoplay playsinline ref="videos" :height="cameraHeight" :muted="item.muted"
-             :id="item.id"></video>
-    </div>
+  <div>
+    <b-card
   </div>
+<!--  <div class="video-list">-->
+<!--    <div v-for="item in videoList"-->
+<!--         v-bind:video="item"-->
+<!--         v-bind:key="item.id"-->
+<!--         class="video-item">-->
+<!--      <video controls autoplay playsinline ref="videos" :height="cameraHeight" :muted="item.muted"-->
+<!--             :id="item.id"></video>-->
+<!--    </div>-->
+<!--  </div>-->
 </template>
 
 <script>
@@ -27,6 +30,10 @@
       };
     },
     props: {
+      iceServer: {
+        type: String,
+        default: 'stun:stun.1.google.com:19302'
+      },
       roomId: {
         type: String,
         default: 'public-room'
@@ -63,9 +70,12 @@
     watch: {},
     mounted() {
       var that = this;
-
       this.rtcmConnection = new RTCMultiConnection();
       this.rtcmConnection.socketURL = this.socketURL;
+      this.rtcmConnection.iceServers.push({
+        urls: this.iceServer
+      });
+      this.
       this.rtcmConnection.autoCreateMediaElement = false;
       this.rtcmConnection.enableLogs = this.enableLogs;
       this.rtcmConnection.session = {

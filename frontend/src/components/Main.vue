@@ -1,42 +1,33 @@
 <template>
-    <div>
-      <div class="wrapper">
-        <template v-if="connectionCheck">
+  <div>
+    <div class="wrapper">
+      <template v-if="connectionCheck">
         <MainHeader @channelUpdate="channelUpdate"></MainHeader>
-          <div class="page-wrap">
-            <LSidebar @channelUpdate="channelUpdate" ></LSidebar>
-              <div class="main-content" style="padding-bottom:0;" :class="{'disactive-padding': $store.state.selectComponent=='main' }">
-                  <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
-                    <keep-alive v-else>
-                      <component :is="whichComponent"
-                      :msgArray="msgArray"
-                      @msgArrayUpdate="msgArrayUpdate"
-                      ></component>
-                    </keep-alive>  
-                  <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
-              </div>
-              
-              <footer class="footer" >
-                  <div class="w-100 clearfix">
-                      <span class="text-center text-sm-left d-md-inline-block">Copyright © 2018 ThemeKit</span>
-                      <!-- <span class="float-none float-sm-right mt-1 mt-sm-0 text-center">Crafted with <i class="fa fa-heart text-danger"></i> by <a href="http://lavalite.org/" class="text-dark" target="_blank">Lavalite</a></span> -->
-                  </div>
-              </footer>
-                
+        <div class="page-wrap">
+          <LSidebar @channelUpdate="channelUpdate"></LSidebar>
+          <div class="main-content" style="padding-bottom:0;"
+               :class="{'disactive-padding': $store.state.selectComponent=='main' }">
+            <NoChannel v-if="$store.state.userChannelList[0]==null && $store.state.selectComponent=='main'"/>
+            <keep-alive v-else>
+              <component :is="whichComponent"
+                         :msgArray="msgArray"
+                         @msgArrayUpdate="msgArrayUpdate"
+              ></component>
+            </keep-alive>
+            <RSidebar v-if="$store.state.currentChannel!=null"></RSidebar>
           </div>
-          
-          </template>
-          <Loading v-else/>
-      </div>
-
-
-      <AppsModal></AppsModal>
-
-
-      
+          <footer class="footer">
+            <div class="w-100 clearfix">
+              <span class="text-center text-sm-left d-md-inline-block">Copyright © 2018 ThemeKit</span>
+              <!-- <span class="float-none float-sm-right mt-1 mt-sm-0 text-center">Crafted with <i class="fa fa-heart text-danger"></i> by <a href="http://lavalite.org/" class="text-dark" target="_blank">Lavalite</a></span> -->
+            </div>
+          </footer>
+        </div>
+      </template>
+      <Loading v-else/>
     </div>
-
-
+    <AppsModal></AppsModal>
+  </div>
 </template>
 <script>
 
@@ -60,7 +51,8 @@
   import Calendar from "../views/calendar/Calendar";
   import AdminPage from "../views/admin/AdminPage"
   import AppsModal from "../views/main/AppsModal"
-  
+  import VideoChat from "./VideoChat";
+
   export default {
     name: 'Main',
     components: {
@@ -76,7 +68,8 @@
       'TodoList': TodoList,
       'Calendar': Calendar,
       'AdminPage': AdminPage,
-      'AppsModal' : AppsModal
+      'AppsModal': AppsModal,
+      'VideoChat' : VideoChat
     },
     data() {
       return {
@@ -103,6 +96,8 @@
             return 'Calendar'
           case 'admin':
             return 'AdminPage'
+          case 'videoChat':
+            return 'VideoChat'
           default:
             return 'ContentWrapper'
         }
@@ -129,7 +124,7 @@
       EventListener.focusEvt(this)
       EventListener.blurEvt()
       NotificationClass.requestPermission()
-      this.$store.commit('setSmallWidth',(window.innerWidth < 600) ? true : false)
+      this.$store.commit('setSmallWidth', (window.innerWidth < 600) ? true : false)
     },
     updated() {
     },
@@ -163,15 +158,15 @@
             //메시지 전송 실패시
             this.channelSubscribeCallBack(e, true)
           })
-        }, ()=> {  
-          console.log('stomp close',this.$store.state.isLogout)      
-          if(!this.$store.state.isLogout){
-            window.location.href = "/" 
+        }, () => {
+          console.log('stomp close', this.$store.state.isLogout)
+          if (!this.$store.state.isLogout) {
+            window.location.href = "/"
           }
         })
       },
       channelUpdate() {
-        console.log(this.$store.state.currentChannel.id,'??')
+        console.log(this.$store.state.currentChannel.id, '??')
         this.$store.state.stompClient.subscribe("/sub/chat/room/" + this.$store.state.currentChannel.id, (e) => {
           let data = JSON.parse(e.body)
           if (data.message == 'updateChannel') {
@@ -230,10 +225,10 @@
 
 </script>
 <style>
-.disactive-padding{
-  padding-top:0 !important;
-  padding-right:0 !important;
-  padding-left: 240px !important;
+  .disactive-padding {
+    padding-top: 0 !important;
+    padding-right: 0 !important;
+    padding-left: 240px !important;
 
-}
+  }
 </style>

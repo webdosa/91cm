@@ -1,4 +1,5 @@
 export default {
+  msgArray: [],
   channelUsers: [],
   taskBoard: [],
   syncSignal: {
