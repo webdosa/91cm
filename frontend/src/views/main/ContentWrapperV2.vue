@@ -88,11 +88,11 @@
 
             <div v-if="$store.state.isInviteMode">
               <v-row>
-                <v-col cols="12">
+                <v-col cols="11">
                   <v-autocomplete
                     v-model="friends"
                     :items="userList"
-                    @keydown.enter.exact="enter"
+                    
                     @keydown.esc.exact="inviteToggle"
                     filled  
                     autofocus
@@ -132,6 +132,11 @@
                     </template>
                   </v-autocomplete>
                 </v-col>
+                  <div style="padding: 15px;">
+                    <b-button @click="enter"
+                      style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
+                    </b-button>
+                </div>
               </v-row>
             </div>
 
