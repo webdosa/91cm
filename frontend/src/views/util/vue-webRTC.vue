@@ -1,20 +1,26 @@
 <template>
   <div>
-    <b-card
+    <v-layout row wrap>
+      <v-col cols="9">
+        <v-card
+          v-for="item in videoList"
+          v-bind:video="item"
+          v-bind:key="item.id"
+          class="video-item">
+          <video controls autoplay playsinline ref="videos" :muted="item.muted"
+                 :id="item.id" style="max-width: 100%;"></video>
+          <v-card-title>
+            {{$store.state.currentUser.name}}
+          </v-card-title>
+        </v-card>
+      </v-col>
+    </v-layout>
   </div>
-<!--  <div class="video-list">-->
-<!--    <div v-for="item in videoList"-->
-<!--         v-bind:video="item"-->
-<!--         v-bind:key="item.id"-->
-<!--         class="video-item">-->
-<!--      <video controls autoplay playsinline ref="videos" :height="cameraHeight" :muted="item.muted"-->
-<!--             :id="item.id"></video>-->
-<!--    </div>-->
-<!--  </div>-->
 </template>
 
 <script>
   import RTCMultiConnection from 'rtcmulticonnection';
+
   require('adapterjs');
   export default {
     name: "vue-webRTC",
@@ -69,13 +75,12 @@
     },
     watch: {},
     mounted() {
-      var that = this;
+      let that = this;
       this.rtcmConnection = new RTCMultiConnection();
       this.rtcmConnection.socketURL = this.socketURL;
       this.rtcmConnection.iceServers.push({
         urls: this.iceServer
       });
-      this.
       this.rtcmConnection.autoCreateMediaElement = false;
       this.rtcmConnection.enableLogs = this.enableLogs;
       this.rtcmConnection.session = {

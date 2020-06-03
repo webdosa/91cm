@@ -10,9 +10,9 @@ import router from './router'
 import store from './store'
 import BootstrapVue from 'bootstrap-vue'
 import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vuetify/dist/vuetify.min.css'
 import axios from 'axios'
 import VueSession from 'vue-session'
 import AlertModal from "./plugins/AlertModal";
@@ -20,11 +20,8 @@ import './assets/font/iconmonstr/css/iconmonstr-iconic-font.min.css';
 import 'animate.css'
 import './assets/css/main.css'
 import '../dist/css/theme.css'
-import WebRTC from 'vue-webrtc'
 
 
-
-Vue.use(WebRTC)
 Vue.use(BootstrapVue)
 Date.prototype.addDays = function (days) {
   var date = new Date(this.valueOf());

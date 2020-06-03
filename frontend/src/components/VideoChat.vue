@@ -6,11 +6,11 @@
         </content-wrapper>
       </div>
       <div class="col-md-8">
-        <vue-webrtc
+        <VueWebRTC
           ref="webrtc"
           :room-id="$store.state.currentChannel.id"
           :socket-u-r-l="'http://91cm.nineonesoft.com:9001/'"
-        ></vue-webrtc>
+        ></VueWebRTC>
       </div>
     </div>
   </div>
@@ -19,11 +19,12 @@
 <script>
   import * as io from 'socket.io-client'
   import ContentWrapper from "../views/main/ContentWrapper";
+  import VueWebRTC from "../views/util/vue-webRTC"
 
   export default {
     name: "VideoChat",
     props: ['msgArray'],
-    components: {ContentWrapper},
+    components: {ContentWrapper, VueWebRTC},
     data() {
       return {
         img: null,
@@ -40,7 +41,7 @@
       this.$refs.webrtc.join();
     },
     methods: {
-      msgArrayUpdate: function(newMsgArray){
+      msgArrayUpdate: function (newMsgArray) {
         this.msgArray = newMsgArray
         this.$emit('msgArrayUpdate', newMsgArray)
       },
@@ -67,5 +68,17 @@
 </script>
 
 <style scoped>
+  /*.video-list {*/
+  /*  background: whitesmoke;*/
+  /*  height: auto;*/
+  /*}*/
 
+  /*.video-list div {*/
+  /*  padding: 0px;*/
+  /*}*/
+
+  /*.video-item {*/
+  /*  background: #c5c4c4;*/
+  /*  display: inline-block;*/
+  /*}*/
 </style>
