@@ -68,17 +68,17 @@
 </script>
 
 <style scoped>
-  .video-list {
-    background: whitesmoke;
-    height: auto;
-  }
+  /*.video-list {*/
+  /*  background: whitesmoke;*/
+  /*  height: auto;*/
+  /*}*/
 
-  .video-list div {
-    padding: 0px;
-  }
+  /*.video-list div {*/
+  /*  padding: 0px;*/
+  /*}*/
 
-  .video-item {
-    background: #c5c4c4;
-    display: inline-block;
-  }
+  /*.video-item {*/
+  /*  background: #c5c4c4;*/
+  /*  display: inline-block;*/
+  /*}*/
 </style>

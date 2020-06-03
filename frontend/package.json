@@ -12,6 +12,7 @@
   "dependencies": {
     "@claviska/jquery-minicolors": "^2.3.2",
     "@mdi/js": "^5.2.45",
+    "adapterjs": "^0.15.4",
     "animate.css": "^4.1.0",
     "axios": "^0.19.2",
     "babel-polyfill": "^6.26.0",
@@ -35,7 +36,6 @@
     "vue-router": "^3.1.5",
     "vue-session": "^1.0.0",
     "vue-swatches": "^2.0.3",
-    "vue-webrtc": "^1.2.1",
     "vue2-datepicker": "^3.5.0",
     "vuedraggable": "^2.23.2",
     "vuetify": "^2.2.28",
