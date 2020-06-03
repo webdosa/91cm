@@ -11,7 +11,7 @@ email varchar(100) primary key not null,
 password varchar(255),
 name varchar(100) not null,
 phone varchar(20) not null,
-picture varchar(200)
+picture text
 );
 
 create table sns_info (
