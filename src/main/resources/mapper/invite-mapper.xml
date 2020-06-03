@@ -20,4 +20,8 @@
     <select id="isExistInvite" resultType="java.lang.Boolean">
 		select exists (select * from invite where channel_id = #{channel_id} and recipient = #{recipient} )
     </select>
+    
+    <delete id="deleteInvite">
+    	delete from invite where channel_id = #{channel_id} and recipient = #{email} 
+    </delete>
 </mapper>
