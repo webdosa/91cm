@@ -88,11 +88,11 @@
 
             <div v-if="$store.state.isInviteMode">
               <v-row>
-                <v-col cols="11">
+                <v-col cols="12">
                   <v-autocomplete
                     v-model="friends"
                     :items="userList"
-                    
+                    @keydown.enter.exact="enter"  
                     @keydown.esc.exact="inviteToggle"
                     filled  
                     autofocus
@@ -132,11 +132,6 @@
                     </template>
                   </v-autocomplete>
                 </v-col>
-                  <div style="padding: 15px;">
-                    <b-button @click="enter"
-                      style="height: 57px; width: 70px; margin-left:20px;" variant="primary">전송
-                    </b-button>
-                </div>
               </v-row>
             </div>
 
@@ -234,41 +229,49 @@
     },
     methods: {
       enter: async function() {
-        await InviteService.invite(this.$store.state.currentUser.email, this.$store.state.currentChannel.id, this.friends)
-          .then(res => {
-            
-            //메일 보내는 비동기 통신 있어야 함
+        // 대신에 다른 곳에서 menuable__content__active라는 클래스가 쓰여진다면
+        // 이 작동은 제대로 동작 안할 수도 있음
+        let el = document.querySelector(".menuable__content__active")
+        if(el == null){
+          if(this.friends.length!=0){
+            await InviteService.invite(this.$store.state.currentUser.email, this.$store.state.currentChannel.id, this.friends)
+            .then(res => {
+              //메일 보내는 비동기 통신 있어야 함
 
-            for(let i=0; i < this.friends.length; i++){
-              const user = this.userList.find(el=> el.email == this.friends[i] )
-              this.message.content += user.name + '님 ' 
-            }
-            
-            //메일 오류 계속 떠서 일단 임시로 주석 처리함
-          //   this.$http.post('/api/invite/mail', invite).then(res=>{
-          //     console.log(res.data)
-          //   })
-            this.message.content += '을 초대했습니다.'
-            this.$eventBus.$emit('getUserList', true)
-            this.send()
-            this.inviteToggle()
-
-          }).catch(error => {
-            let alertmsg = ''
-            if(error.response.data.list != null){
-              const alertList = error.response.data.list
-              for(let i=0; i < alertList.length; i++){
-                const user = this.userList.find(el=> el.email == alertList[i] )
-                alertmsg += user.name + '님 ' 
+              for(let i=0; i < this.friends.length; i++){
+                const user = this.userList.find(el=> el.email == this.friends[i] )
+                this.message.content += user.name + '님 ' 
               }
-              alertmsg += '은 이미 이 채널에 초대 받았습니다. 확인해주세요.'
-              this.$alertModal('error', alertmsg)
-            }else{
-              this.$alertModal('error', error.response.data.message)
-            }
-            console.error(error.response)
-            this.message.content = ''
-          })
+              
+              //메일 오류 계속 떠서 일단 임시로 주석 처리함
+              //   this.$http.post('/api/invite/mail', invite).then(res=>{
+              //     console.log(res.data)
+              //   })
+              this.message.content += '을 초대했습니다.'
+              this.$eventBus.$emit('getUserList', true)
+              this.send()
+              this.inviteDataInit()
+
+            }).catch(error => {
+              let alertmsg = ''
+              if(error.response.data.list != null){
+                const alertList = error.response.data.list
+                for(let i=0; i < alertList.length; i++){
+                  const user = this.userList.find(el=> el.email == alertList[i] )
+                  alertmsg += user.name + '님 ' 
+                }
+                alertmsg += '은 이미 이 채널에 초대 받았습니다. 확인해주세요.'
+                this.$alertModal('error', alertmsg)
+              }else{
+                this.$alertModal('error', error.response.data.message)
+              }
+              console.error(error.response)
+              this.message.content = ''
+            })
+          }else{
+            this.$alertModal('alert','초대할 사용자를 선택해주세요')
+          }  
+        }  
       },
       remove(item) {
         const index = this.friends.indexOf(item.email);
@@ -372,8 +375,7 @@
             this.message.content = userName + '님을 초대했습니다.'
             this.$eventBus.$emit('getUserList', true)
             this.send()
-            this.inviteToggle()
-
+            this.inviteDataInit()
 
           }).catch(error => {
             this.$alertModal('error', error.response.data.message)
@@ -382,10 +384,19 @@
           })
       },
       inviteToggle: function (e) {
+        let el = document.querySelector(".menuable__content__active")
+        if(this.$store.state.isInviteMode == false){
+          this.$store.state.isInviteMode = !this.$store.state.isInviteMode
+        }else{
+          if(el == null){
+            this.inviteDataInit()
+          }
+        }
+      },
+      inviteDataInit: function(){
         this.friends = []
         this.message.content = ''
         this.$store.state.isInviteMode = !this.$store.state.isInviteMode
-        console.log(this.userList)
       },
       send: async function (e) {
         if (e != null) {
